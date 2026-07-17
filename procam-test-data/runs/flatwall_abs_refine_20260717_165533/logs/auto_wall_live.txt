@@ -1,0 +1,40 @@
+STATE PREFLIGHT
+STATE DISCOVER_CAMERA
+STATE DISCOVER_PROJECTOR
+ERROR in DISCOVER_PROJECTOR: No module named 'AppKit'
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 312, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 343, in stage_discover_projector
+    displays = list_displays()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/display_control.py", line 30, in list_displays
+    from AppKit import NSScreen
+ModuleNotFoundError: No module named 'AppKit'
+
+STATE DISCOVER_PROJECTOR
+ERROR in DISCOVER_PROJECTOR: No module named 'AppKit'
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 312, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 343, in stage_discover_projector
+    displays = list_displays()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/display_control.py", line 30, in list_displays
+    from AppKit import NSScreen
+ModuleNotFoundError: No module named 'AppKit'
+
+STATE DISCOVER_PROJECTOR
+ERROR in DISCOVER_PROJECTOR: No module named 'AppKit'
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 312, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 343, in stage_discover_projector
+    displays = list_displays()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/display_control.py", line 30, in list_displays
+    from AppKit import NSScreen
+ModuleNotFoundError: No module named 'AppKit'
+
+STATE DISCOVER_PROJECTOR
+STATE HOMOGRAPHY_CALIBRATE
+Rebound camera on resume: iPhone Camera
+STATE MEASURE_RESIDUAL
+STATE FINAL_REPRODUCTION

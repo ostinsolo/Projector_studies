@@ -100,6 +100,12 @@ def measure_charuco_against_projector(
             },
         }
     else:
+        exp_ids = None
+        if expected_visible is not None:
+            exp_ids = list(expected_visible.get("expected_visible_ids") or [])
+            result_pre = {"expected_visible": expected_visible}
+        else:
+            result_pre = {}
         result = measure_against_desired_target(
             cam_ids,
             desired,
@@ -107,25 +113,39 @@ def measure_charuco_against_projector(
             det_meta=det,
             match_meta=match_meta,
             proj_ids=proj_ids,
+            expected_visible_ids=exp_ids,
         )
+        result.update(result_pre)
+        eval_ids = result.get("evaluation_ids") or []
+        cam_for_cov = {i: cam_ids[i] for i in eval_ids if i in cam_ids}
         if expected_visible is not None:
-            exp_n = int(expected_visible["expected_visible_corners"])
+            exp_n = int(expected_visible.get("expected_visible_corners") or len(exp_ids or []))
             excl = list(expected_visible.get("intentionally_excluded_ids") or [])
-            vis = set(expected_visible.get("expected_visible_ids") or cam_ids.keys())
-            cam_for_cov = {i: p for i, p in cam_ids.items() if i in vis}
-            result["expected_visible"] = expected_visible
         else:
             exp_n = len(desired.get("desired_cam_by_id") or proj_ids)
             excl = []
-            cam_for_cov = cam_ids
-        region = np.array(list((desired.get("desired_cam_by_id") or {}).values()), dtype=np.float64)
+        # Region extent from desired positions of the same evaluation_ids
+        region = (
+            np.array([desired["desired_cam_by_id"][i] for i in eval_ids], dtype=np.float64)
+            if eval_ids
+            else np.zeros((0, 2))
+        )
         result["coverage"] = detection_coverage(
             cam_for_cov,
             img.shape[:2],
-            expected_visible=exp_n,
+            expected_visible=max(exp_n, 1),
             intentionally_excluded=excl,
             region_pts=region if len(region) else None,
         )
+        # Align coverage matched count with evaluation set
+        result["coverage"]["matched_corners"] = len(eval_ids)
+        result["coverage"]["detected_corners"] = len(eval_ids)
+        if exp_n > 0:
+            result["coverage"]["coverage_fraction"] = float(len(eval_ids) / exp_n)
+            result["coverage"]["coverage_pass"] = bool(len(eval_ids) / exp_n >= 0.80)
+            result["coverage"]["coverage_gate_pass"] = bool(
+                result["coverage"]["coverage_pass"] and result["coverage"].get("spatial_spread_pass")
+            )
         result["calibration_fit_health"] = {
             "median_fit_residual_px": fit_health.get("median_reproj_px"),
             "p95_fit_residual_px": fit_health.get("p95_reproj_px"),
@@ -137,10 +157,16 @@ def measure_charuco_against_projector(
     result["capture_path"] = str(capture_path)
     result["image_size"] = [img.shape[1], img.shape[0]]
     vis_img = img.copy()
-    for p in pts_c.astype(int):
+    eval_ids = result.get("evaluation_ids") or common
+    for i in eval_ids:
+        if i not in cam_ids:
+            continue
+        p = cam_ids[i]
         cv2.circle(vis_img, (int(p[0]), int(p[1])), 4, (0, 255, 0), -1)
     if desired is not None:
-        for i in common:
+        for i in eval_ids:
+            if i not in desired["desired_cam_by_id"] or i not in cam_ids:
+                continue
             d = desired["desired_cam_by_id"][i]
             cv2.circle(vis_img, (int(d[0]), int(d[1])), 4, (0, 0, 255), 1)
             c = cam_ids[i]
@@ -271,7 +297,9 @@ def measure_pair_with_homography(
     exp_cor = exp_unc
     if prewarp_pattern_path is not None and Path(prewarp_pattern_path).exists():
         exp_cor = expected_visible_from_pattern(cv2.imread(str(prewarp_pattern_path)), proj_ids)
-        mask_path = Path(prewarp_pattern_path).parent / "expected_visible_mask.json"
+        # Write mask beside metrics output, not next to immutable prewarp artifacts
+        out_dir.mkdir(parents=True, exist_ok=True)
+        mask_path = out_dir / "expected_visible_mask.json"
         mask_path.write_text(json.dumps(exp_cor, indent=2, default=str))
     unc = measure_charuco_against_projector(
         unc_path,

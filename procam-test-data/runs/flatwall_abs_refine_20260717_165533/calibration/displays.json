@@ -1,0 +1,46 @@
+{
+  "displays": [
+    {
+      "index": 0,
+      "screen_id": 1,
+      "width": 2056,
+      "height": 1329,
+      "pixel_width": 4112,
+      "pixel_height": 2658,
+      "origin_x": 0.0,
+      "origin_y": 0.0,
+      "scale": 2.0,
+      "is_main": true,
+      "name": "Built-in Retina Display"
+    },
+    {
+      "index": 1,
+      "screen_id": 7,
+      "width": 1920,
+      "height": 1080,
+      "pixel_width": 1920,
+      "pixel_height": 1080,
+      "origin_x": -1920.0,
+      "origin_y": 249.0,
+      "scale": 1.0,
+      "is_main": false,
+      "name": "USB Display: MStar Demo"
+    }
+  ],
+  "selected": {
+    "index": 1,
+    "screen_id": 7,
+    "width": 1920,
+    "height": 1080,
+    "pixel_width": 1920,
+    "pixel_height": 1080,
+    "origin_x": -1920.0,
+    "origin_y": 249.0,
+    "scale": 1.0,
+    "is_main": false,
+    "name": "USB Display: MStar Demo"
+  },
+  "extended_display_available": true,
+  "mirror_or_missing_external": false,
+  "note": "Exact projector-space output requires a separate extended display. Current external may be AirPlay/Apple TV or a wired adapter."
+}

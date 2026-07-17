@@ -1,43 +1,36 @@
 # PROJECT_STATE
 
-## Status
+## Flat-wall MVP
 
-**DONE** — flat-wall production path **VALIDATED**
-(ChArUco + planar homography)
+**DONE / VALIDATED**
 
-## Validation
+## Absolute-accuracy enhancement
 
-`VALIDATION_STATE.md` → **VALIDATED**  
-Report: `FINAL_VALIDATION_REPORT.md`  
-Matrix: `docs/VALIDATION_MATRIX.md`
+**COMPLETE**
 
-## Runs
+## Production
 
-| Role | Path |
-|------|------|
-| Canonical (immutable) | `procam-test-data/runs/flatwall_20260717_141610` |
-| Fresh live regression | `procam-test-data/runs/flatwall_live_20260717_154312` |
+ChArUco + planar homography + optional planar residual refinement
 
-## Production command
+## Best physical runs
 
-```bash
-procam-calibrate auto-wall --run-dir <NEW_RUN_DIR>
-```
+| Role | Run ID |
+|------|--------|
+| Absolute-pass calibrate | `flatwall_abs_20260717_165506` |
+| Absolute-pass refine | `flatwall_abs_refine_20260717_165533` |
 
-## Decisions
+## Best corrected results
 
-- Production = classical ChArUco + planar homography (`--pipeline homography`).
-- Shared module: `procam_calibrate/charuco.py`.
-- Acceptance uses **independent desired target** metrics (category B), not
-  fit residuals or contour AA alone.
-- CSPR-Net: experimental non-planar only — not in production state machine.
-- GS-ProCams: `REUSABLE_COMPONENTS_ONLY`.
+| Metric | Value |
+|--------|-------|
+| target_median_err_px | **0.34** |
+| target_p95_err_px | **0.64** |
 
-## Live before / after (target-based)
+See `ACCURACY_STATE.md` for full before/after and residual diagnosis.
 
-| Metric | Uncorrected | Corrected |
-|--------|-------------|-----------|
-| target_median_err_px | 66.89 | 20.81 |
-| target_p95_err_px | 139.59 | 24.56 |
-| horizontal_axis_deviation_deg | 11.27 | 0.025 |
-| orthogonality_error_deg | 3.00 | 0.084 |
+## Experimental
+
+| Component | Status |
+|-----------|--------|
+| CSPR-Net | experimental non-planar only |
+| GS-ProCams | `REUSABLE_COMPONENTS_ONLY` |

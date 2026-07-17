@@ -18,6 +18,7 @@ from .charuco import (
     define_desired_target,
     detect_charuco,
     estimate_H_cam_from_proj,
+    expected_visible_from_pattern,
     generate_charuco_image,
     match_correspondences,
     measure_independent_residuals,
@@ -30,6 +31,69 @@ from .metrics import measure_charuco_against_projector, measure_pair_with_homogr
 from .patterns import make_validation_target
 
 
+def forward_H_proj_from_source(
+    H_cam_from_proj: np.ndarray,
+    H_desired_cam_from_proj: np.ndarray,
+) -> np.ndarray:
+    """Forward point transform: source content (ProjFB layout) → ProjFB display coords.
+
+    Column-vector: p_proj ~ H_proj_from_source @ p_source
+    Chosen so H_cam_from_proj @ H_proj_from_source ≈ H_desired_cam_from_proj.
+    """
+    H = np.linalg.inv(H_cam_from_proj) @ H_desired_cam_from_proj
+    return (H / H[2, 2]).astype(np.float64)
+
+
+def prewarp_from_forward_H(
+    content_projfb: np.ndarray,
+    H_proj_from_source: np.ndarray,
+    proj_w: int,
+    proj_h: int,
+) -> np.ndarray:
+    """Rasterize content with OpenCV warpPerspective using forward H_proj_from_source.
+
+    OpenCV: dst(p) = src(H^{-1} p). Passing H_proj_from_source makes content point s
+    appear at projector pixel p = H_proj_from_source @ s.
+    """
+    return cv2.warpPerspective(
+        content_projfb,
+        H_proj_from_source.astype(np.float64),
+        (proj_w, proj_h),
+        flags=cv2.INTER_LINEAR,
+        borderMode=cv2.BORDER_CONSTANT,
+        borderValue=(0, 0, 0),
+    )
+
+
+def save_forward_prewarp_meta(
+    out_dir: Path,
+    H_proj_from_source: np.ndarray,
+    proj_w: int,
+    proj_h: int,
+) -> Path:
+    np.save(out_dir / "H_proj_from_source_current.npy", H_proj_from_source)
+    meta = {
+        "matrix_name": "H_proj_from_source_current",
+        "source_space": "SourceContent_ProjFB_layout",
+        "destination_space": "ProjFB",
+        "source_resolution": [proj_w, proj_h],
+        "projector_resolution": [proj_w, proj_h],
+        "matrix": H_proj_from_source.tolist(),
+        "matrix_normalization": "H /= H[2,2]",
+        "opencv_warpPerspective_convention": (
+            "dst(p)=src(H^{-1} p); matrix passed is H_proj_from_source (forward point map)"
+        ),
+        "interpolation": "INTER_LINEAR",
+        "border_mode": "BORDER_CONSTANT",
+        "border_value": [0, 0, 0],
+        "pixel_centre_convention": "OpenCV top-left origin; +u right +v down",
+        "distortion_state": "none_applied",
+    }
+    path = out_dir / "H_proj_from_source_current.json"
+    path.write_text(json.dumps(meta, indent=2))
+    return path
+
+
 def prewarp_projfb_content(
     content_projfb: np.ndarray,
     H_cam_from_proj: np.ndarray,
@@ -37,13 +101,7 @@ def prewarp_projfb_content(
     proj_h: int,
     H_desired_cam_from_proj: Optional[np.ndarray] = None,
 ) -> np.ndarray:
-    """Build ProjFB pre-warp so physical H maps content toward desired CamImg AA rect.
-
-    OpenCV warpPerspective(M) maps source → destination with inverse sampling.
-    Here M = inv(H_desired)^{-1} @ H_cam = H_desired @ inv(H_cam) ... we use
-    M_sample = inv(H_desired) @ H_cam_from_proj so that projector pixel p samples
-    content at H_desired^{-1} H p  (content laid out in ProjFB).
-    """
+    """Build ProjFB pre-warp so physical H maps content toward desired CamImg AA rect."""
     if H_desired_cam_from_proj is None:
         corners_p = np.array(
             [[0, 0], [proj_w - 1, 0], [proj_w - 1, proj_h - 1], [0, proj_h - 1]],
@@ -59,15 +117,8 @@ def prewarp_projfb_content(
             dtype=np.float32,
         )
         H_desired_cam_from_proj = cv2.getPerspectiveTransform(corners_p, desired).astype(np.float64)
-    M = np.linalg.inv(H_desired_cam_from_proj) @ H_cam_from_proj
-    return cv2.warpPerspective(
-        content_projfb,
-        np.linalg.inv(M),
-        (proj_w, proj_h),
-        flags=cv2.INTER_LINEAR,
-        borderMode=cv2.BORDER_CONSTANT,
-        borderValue=(0, 0, 0),
-    )
+    H_fwd = forward_H_proj_from_source(H_cam_from_proj, H_desired_cam_from_proj)
+    return prewarp_from_forward_H(content_projfb, H_fwd, proj_w, proj_h)
 
 
 def homography_dir(run_dir: Path) -> Path:
@@ -255,7 +306,10 @@ def remeasure_saved_captures(run_dir: Path) -> dict:
 
     proj_ids = load_proj_ids_json(ids_path)
     H = np.load(h_path)
-    metrics_dir = out / "remeasure"
+    immutable = run_dir.name in {
+        "flatwall_20260717_141610",
+        "flatwall_live_20260717_154312",
+    }
     # Resolve projector resolution from pattern if present
     proj_w, proj_h = 1920, 1080
     pat = out / "patterns" / "charuco_calib.png"
@@ -269,8 +323,23 @@ def remeasure_saved_captures(run_dir: Path) -> dict:
     if dt_path.exists():
         desired = load_desired_target(dt_path)
     else:
+        if immutable:
+            return {
+                "valid": False,
+                "error": "missing_desired_target_on_immutable_run",
+                "comparison": {
+                    "valid": False,
+                    "acceptance_pass": False,
+                    "failure_reason": "immutable_missing_desired_target",
+                },
+            }
         desired = define_desired_target(H, proj_w, proj_h, proj_ids)
         save_desired_target(dt_path, desired)
+    if immutable:
+        metrics_dir = run_dir / "analysis_remeasure_replay" / "metrics"
+    else:
+        metrics_dir = out / "remeasure"
+    metrics_dir.mkdir(parents=True, exist_ok=True)
     # Prefer ROI ids for corrected if present (board was constrained)
     ids_roi = out / "proj_corner_ids_roi.json"
     if ids_roi.exists():
@@ -303,8 +372,16 @@ def remeasure_saved_captures(run_dir: Path) -> dict:
             prewarp_pattern_path=out / "prewarp_charuco.png",
         )
     result["valid"] = bool(result.get("comparison", {}).get("valid"))
-    (out / "remeasure_metrics.json").write_text(json.dumps(result, indent=2, default=str))
-    (run_dir / "metrics.json").write_text(json.dumps(result, indent=2, default=str))
+    if immutable:
+        # Never overwrite original metrics / remeasure on preserved MVP runs
+        side = run_dir / "analysis_remeasure_replay"
+        side.mkdir(parents=True, exist_ok=True)
+        (side / "remeasure_metrics.json").write_text(json.dumps(result, indent=2, default=str))
+        result["immutable_run"] = True
+        result["metrics_write_path"] = str(side / "remeasure_metrics.json")
+    else:
+        (out / "remeasure_metrics.json").write_text(json.dumps(result, indent=2, default=str))
+        (run_dir / "metrics.json").write_text(json.dumps(result, indent=2, default=str))
     return result
 
 
@@ -473,8 +550,15 @@ def run_flatwall_homography_baseline(
 
         from .metrics import measure_charuco_against_projector as _meas
 
+        exp_unc = expected_visible_from_pattern(pattern, proj_ids)
         unc_metrics = _meas(
-            unc_path, proj_ids, H_cam_from_proj, out / "remeasure", "uncorrected", desired=desired
+            unc_path,
+            proj_ids,
+            H_cam_from_proj,
+            out / "remeasure",
+            "uncorrected",
+            desired=desired,
+            expected_visible=exp_unc,
         )
         vis_b = unc_img.copy()
         for p in pts_c.astype(int):
@@ -484,8 +568,11 @@ def run_flatwall_homography_baseline(
         # Pre-warp full board + validation target (same H_desired as metrics)
         content = make_validation_target(proj_h, proj_w)
         Hd = desired["H_desired_cam_from_proj"]
-        prewarp = prewarp_projfb_content(content, H_cam_from_proj, proj_w, proj_h, Hd)
-        prewarp_board = prewarp_projfb_content(pattern, H_cam_from_proj, proj_w, proj_h, Hd)
+        H_fwd = forward_H_proj_from_source(H_cam_from_proj, Hd)
+        save_forward_prewarp_meta(out, H_fwd, proj_w, proj_h)
+        save_forward_prewarp_meta(cal, H_fwd, proj_w, proj_h)
+        prewarp = prewarp_from_forward_H(content, H_fwd, proj_w, proj_h)
+        prewarp_board = prewarp_from_forward_H(pattern, H_fwd, proj_w, proj_h)
         pre_path = out / "prewarp_validation.png"
         pre_board_path = out / "prewarp_charuco.png"
         cv2.imwrite(str(pre_path), prewarp)
@@ -497,6 +584,10 @@ def run_flatwall_homography_baseline(
         pv = run_dir / "projected_validation"
         pv.mkdir(exist_ok=True)
         cv2.imwrite(str(pv / "prewarp_to_project.png"), prewarp_board)
+        result["H_proj_from_source_current"] = {
+            "path": str(out / "H_proj_from_source_current.npy"),
+            "meta": str(out / "H_proj_from_source_current.json"),
+        }
 
         # --- corrected board ---
         projector.show_black()
@@ -540,9 +631,11 @@ def run_flatwall_homography_baseline(
             proj_ids_cor = proj_ids2
             desired_cor = define_desired_target(H_cam_from_proj, proj_w, proj_h, proj_ids_cor)
             save_desired_target(out / "desired_target_roi.json", desired_cor)
+            projected_prewarp_path = pre_board_path2
         else:
             proj_ids_cor = proj_ids
             desired_cor = desired
+            projected_prewarp_path = pre_board_path
 
         if len(common2) < MIN_CORNERS_VALIDATE:
             result["error"] = f"Insufficient matches after correction: {len(common2)}"
@@ -550,8 +643,22 @@ def run_flatwall_homography_baseline(
             result["uncorrected_metrics"] = unc_metrics
             return result
 
+        # Expected-visible from the pre-warped board actually projected (not full 54)
+        prewarp_for_mask = cv2.imread(str(projected_prewarp_path))
+        if prewarp_for_mask is None:
+            prewarp_for_mask = prewarp_board
+        exp_cor = expected_visible_from_pattern(prewarp_for_mask, proj_ids_cor)
+        (out / "expected_visible_mask.json").write_text(
+            json.dumps(exp_cor, indent=2, default=str)
+        )
         cor_metrics = _meas(
-            cor_path, proj_ids_cor, H_cam_from_proj, out / "remeasure", "corrected", desired=desired_cor
+            cor_path,
+            proj_ids_cor,
+            H_cam_from_proj,
+            out / "remeasure",
+            "corrected",
+            desired=desired_cor,
+            expected_visible=exp_cor,
         )
         comparison = compare_reproj(unc_metrics, cor_metrics)
 

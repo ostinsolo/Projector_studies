@@ -51,12 +51,30 @@ STATES = [
     "PROJECT_VALIDATION",
     "CAPTURE_VALIDATION",
     "MEASURE_RESIDUAL",
+    "MEASURE_CORRECTED_TARGET",
+    "DIAGNOSE_PLANAR_RESIDUAL",
+    "REFINE_HOMOGRAPHY",
+    "PROJECT_REFINED",
+    "CAPTURE_REFINED",
+    "MEASURE_REFINED",
+    "ACCEPT_OR_ROLLBACK",
     "REFINE_PREWARP",
     "FINAL_REPRODUCTION",
     "DONE",
     "BLOCKED_EXTERNAL",
     "ACCEPTANCE_FAILED",
 ]
+
+# Homography residual-refinement states (not diverted to CSPR / remeasure).
+HOMOGRAPHY_REFINE_STATES = {
+    "MEASURE_CORRECTED_TARGET",
+    "DIAGNOSE_PLANAR_RESIDUAL",
+    "REFINE_HOMOGRAPHY",
+    "PROJECT_REFINED",
+    "CAPTURE_REFINED",
+    "MEASURE_REFINED",
+    "ACCEPT_OR_ROLLBACK",
+}
 
 
 @dataclass
@@ -75,6 +93,9 @@ class AutoWallConfig:
     prefer_screen_id: Optional[int] = None
     # Production flat-wall path is planar ChArUco homography (not CSPR).
     pipeline: str = "homography"
+    # If set, live auto-wall status is written here. None = do not write project state.
+    # Tests must always pass a temporary path; never leave this pointing at the repo root.
+    project_state_path: Optional[Path] = None
 
 
 class AutoWall:
@@ -159,8 +180,14 @@ class AutoWall:
         self._save_state()
 
     def _update_project_state_file(self) -> None:
-        ps = self.roots.integration.parent / "PROJECT_STATE.md"
-        status = "RUNNING"
+        """Write live auto-wall status only to the configured path (never inferred).
+
+        When ``project_state_path`` is None, this is a no-op so tests and offline
+        replay cannot mutate the repository-level PROJECT_STATE.md.
+        """
+        ps = self.cfg.project_state_path
+        if ps is None:
+            return
         st = self.state["state"]
         if st == "DONE":
             status = "DONE"
@@ -170,7 +197,7 @@ class AutoWall:
             status = "BLOCKED_EXTERNAL"
         else:
             status = "RUNNING"
-        body = f"""# PROJECT_STATE
+        body = f"""# PROJECT_STATE (live auto-wall)
 
 ## Status
 
@@ -190,6 +217,8 @@ See `{self.state_path}` for full machine state.
 """
         if st in ("BLOCKED_EXTERNAL", "ACCEPTANCE_FAILED"):
             body += f"\n## Notes\n\n{self.state.get('data', {}).get('blocker', '')}\n"
+        ps = Path(ps)
+        ps.parent.mkdir(parents=True, exist_ok=True)
         ps.write_text(body)
 
     def _log(self, msg: str) -> None:
@@ -209,12 +238,22 @@ See `{self.state_path}` for full machine state.
             "HOMOGRAPHY_CALIBRATE",
             "PROJECT_VALIDATION",
             "CAPTURE_VALIDATION",
+            "REFINE_HOMOGRAPHY",
+            "PROJECT_REFINED",
+            "CAPTURE_REFINED",
+            "MEASURE_REFINED",
+            "ACCEPT_OR_ROLLBACK",
         }
         need_cam = self.state["state"] in {
             "VERIFY_CAPTURE",
             "CAPTURE_CALIBRATION",
             "HOMOGRAPHY_CALIBRATE",
             "CAPTURE_VALIDATION",
+            "REFINE_HOMOGRAPHY",
+            "PROJECT_REFINED",
+            "CAPTURE_REFINED",
+            "MEASURE_REFINED",
+            "ACCEPT_OR_ROLLBACK",
         }
         if need_cam and self.camera is None:
             devices = list_avfoundation_video_devices()
@@ -258,6 +297,7 @@ See `{self.state_path}` for full machine state.
             self.state["state"] = "MEASURE_RESIDUAL"
             self._save_state()
         # Legacy CSPR mid-states: divert to production homography path
+        # (do not divert homography residual-refinement states or REFINE_PREWARP→refine)
         if self.cfg.pipeline == "homography" and self.state.get("state") in {
             "VERIFY_CAPTURE",
             "GENERATE_PATTERNS",
@@ -267,7 +307,6 @@ See `{self.state_path}` for full machine state.
             "GENERATE_PREWARP",
             "PROJECT_VALIDATION",
             "CAPTURE_VALIDATION",
-            "REFINE_PREWARP",
         }:
             # If homography artifacts already exist, jump to remeasure; else calibrate
             hb = self.run_dir / "homography_baseline"
@@ -296,6 +335,13 @@ See `{self.state_path}` for full machine state.
             "PROJECT_VALIDATION": self.stage_project_validation,
             "CAPTURE_VALIDATION": self.stage_capture_validation,
             "MEASURE_RESIDUAL": self.stage_measure_residual,
+            "MEASURE_CORRECTED_TARGET": self.stage_measure_corrected_target,
+            "DIAGNOSE_PLANAR_RESIDUAL": self.stage_diagnose_planar_residual,
+            "REFINE_HOMOGRAPHY": self.stage_refine_homography,
+            "PROJECT_REFINED": self.stage_refine_homography,
+            "CAPTURE_REFINED": self.stage_refine_homography,
+            "MEASURE_REFINED": self.stage_refine_homography,
+            "ACCEPT_OR_ROLLBACK": self.stage_refine_homography,
             "REFINE_PREWARP": self.stage_refine,
             "FINAL_REPRODUCTION": self.stage_final_reproduction,
             "DONE": lambda: None,
@@ -454,13 +500,23 @@ See `{self.state_path}` for full machine state.
             }
         acceptance = bool(result.get("pass") and result.get("valid"))
         self.state["data"]["acceptance_pass"] = acceptance
+        comp = result.get("comparison") or (self.state["data"].get("metrics") or {}).get("comparison") or {}
+        abs_ok = bool(comp.get("absolute_gate_pass"))
+        rel_ok = bool(comp.get("relative_gate_pass"))
+        self.state["data"]["absolute_gate_pass"] = abs_ok
+        self.state["data"]["relative_gate_pass"] = rel_ok
         self._mark_completed("HOMOGRAPHY_CALIBRATE")
-        # Skip legacy CSPR project/capture; go straight to finalize (or remeasure)
-        if acceptance:
-            self._transition("FINAL_REPRODUCTION", "homography acceptance passed")
-        elif result.get("error") in ("no_projector_display", "no_iphone_camera"):
+        if result.get("error") in ("no_projector_display", "no_iphone_camera"):
             self.state["data"]["blocker"] = str(result.get("error"))
             self._transition("BLOCKED_EXTERNAL", "device missing during homography")
+        elif abs_ok:
+            self._transition("FINAL_REPRODUCTION", "homography absolute gate passed")
+        elif acceptance or rel_ok:
+            # Relative MVP ok — enter planar residual refinement for absolute accuracy
+            self._transition(
+                "MEASURE_CORRECTED_TARGET",
+                "relative pass; start planar residual absolute-accuracy loop",
+            )
         else:
             # Remeasure / ROI path may still recover from saved or new captures
             self._transition("MEASURE_RESIDUAL", "homography needs remeasure or ROI")
@@ -795,10 +851,130 @@ See `{self.state_path}` for full machine state.
             raise RuntimeError("Devices required for ROI validation recapture")
         return self.projector, self.camera
 
+    def stage_measure_corrected_target(self) -> None:
+        """Homography absolute-accuracy: remeasure corrected capture with evaluation_ids."""
+        from .residual_refine import remeasure_run_v2
+
+        self._log("MEASURE_CORRECTED_TARGET")
+        v2 = remeasure_run_v2(self.run_dir)
+        self.state["data"]["metrics_v2"] = {
+            k: (v2.get("corrected") or {}).get(k)
+            for k in (
+                "target_median_err_px",
+                "target_p95_err_px",
+                "evaluation_ids",
+                "id_sets",
+                "valid",
+            )
+        }
+        self.state["data"]["comparison_v2"] = v2.get("comparison")
+        self._mark_completed("MEASURE_CORRECTED_TARGET")
+        self._transition("DIAGNOSE_PLANAR_RESIDUAL", "corrected target measured (v2 ids)")
+
+    def stage_diagnose_planar_residual(self) -> None:
+        """Homography absolute-accuracy: classify residual field before correction."""
+        from .charuco import (
+            build_evaluation_ids,
+            detect_charuco,
+            expected_visible_from_pattern,
+            load_desired_target,
+            load_proj_ids_json,
+        )
+        from .homography_baseline import homography_dir
+        from .residual_refine import diagnose_residuals
+        import cv2
+
+        self._log("DIAGNOSE_PLANAR_RESIDUAL")
+        out = homography_dir(self.run_dir)
+        cor = out / "captures" / "charuco_corrected.png"
+        desired = load_desired_target(out / "desired_target.json")
+        proj_ids = load_proj_ids_json(out / "proj_corner_ids.json")
+        img = cv2.imread(str(cor))
+        cam_ids, _ = detect_charuco(img)
+        exp = None
+        pre = out / "prewarp_charuco.png"
+        if pre.exists():
+            exp = expected_visible_from_pattern(cv2.imread(str(pre)), proj_ids)
+        id_sets = build_evaluation_ids(
+            cam_ids,
+            desired["desired_cam_by_id"],
+            proj_ids,
+            exp.get("expected_visible_ids") if exp else None,
+        )
+        diag = diagnose_residuals(
+            cam_ids,
+            desired,
+            id_sets["evaluation_ids"],
+            self.run_dir / "homography_refinement" / "diagnosis",
+            image_bgr=img,
+        )
+        self.state["data"]["residual_diagnosis"] = {
+            k: diag.get(k)
+            for k in (
+                "dominant_residual_class",
+                "median_mag_px",
+                "p95_mag_px",
+                "median_dx",
+                "median_dy",
+                "constant_translation_hypothesis",
+                "remaining_after_translation_median_px",
+                "remaining_after_homography_median_px",
+            )
+        }
+        self._mark_completed("DIAGNOSE_PLANAR_RESIDUAL")
+        self._transition("REFINE_HOMOGRAPHY", f"residual class={diag.get('dominant_residual_class')}")
+
+    def stage_refine_homography(self) -> None:
+        """Homography-only residual loop (not CSPR). Covers PROJECT/CAPTURE/MEASURE/ACCEPT."""
+        from .residual_refine import run_homography_refinement
+
+        self._log("REFINE_HOMOGRAPHY → PROJECT_REFINED → CAPTURE_REFINED → MEASURE_REFINED → ACCEPT_OR_ROLLBACK")
+        assert self.projector and self.camera
+        # Record intermediate state names for observability
+        for st in ("PROJECT_REFINED", "CAPTURE_REFINED", "MEASURE_REFINED", "ACCEPT_OR_ROLLBACK"):
+            self.state["history"].append(
+                {"state": st, "at": datetime.now().isoformat(), "note": "homography residual refine substep"}
+            )
+        result = run_homography_refinement(
+            self.run_dir,
+            self.projector,
+            self.camera,
+            self.cfg.proj_w,
+            self.cfg.proj_h,
+            settle_s=max(self.cfg.settle_s, 0.8),
+        )
+        self.state["data"]["homography_refinement"] = {
+            k: result.get(k)
+            for k in (
+                "status",
+                "absolute_gate_pass",
+                "relative_gate_pass",
+                "physical_limit_documented",
+                "best_metrics",
+                "baseline_metrics",
+                "remaining_residual_class",
+                "best_iteration",
+                "best_strength",
+                "best_prewarp",
+            )
+        }
+        self.state["data"]["absolute_gate_pass"] = bool(result.get("absolute_gate_pass"))
+        if (self.run_dir / "metrics.json").exists():
+            self.state["data"]["metrics"] = json.loads((self.run_dir / "metrics.json").read_text())
+        self._mark_completed("REFINE_HOMOGRAPHY")
+        self._mark_completed("ACCEPT_OR_ROLLBACK")
+        self._transition(
+            "FINAL_REPRODUCTION",
+            f"homography refine done: {result.get('status')}",
+        )
+
     def stage_refine(self) -> None:
         if self.cfg.pipeline == "homography":
-            # Homography MVP does not use CSPR-style iterative prewarp refine.
-            self._transition("FINAL_REPRODUCTION", "homography skips CSPR refine")
+            # Replace CSPR refine skip with planar residual absolute-accuracy loop
+            self._transition(
+                "MEASURE_CORRECTED_TARGET",
+                "homography residual refine (not CSPR REFINE_PREWARP)",
+            )
             return
         data = self.state["data"]
         it = int(data.get("refine_iteration", 0)) + 1
