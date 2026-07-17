@@ -593,16 +593,39 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
         self._mark_completed("PROPOSE_TARGET_REGION")
         self._transition("VERIFY_TWO_PLANE_SETUP")
 
-    def _project_and_capture(self, img: np.ndarray, stem: str, flush_n: int = 24) -> tuple[np.ndarray, dict]:
+    def _project_and_capture(
+        self,
+        img: np.ndarray,
+        stem: str,
+        flush_n: int = 24,
+        *,
+        expect_texture: bool = False,
+        retries: int = 3,
+    ) -> tuple[np.ndarray, dict]:
         assert self.projector and self.camera
         path_p = self.run_dir / "preflight" / f"{stem}_proj.png"
         cv2.imwrite(str(path_p), img)
         self.projector.show_path(path_p)
         time.sleep(self.cfg.settle_s)
         cap_path = self.run_dir / "preflight" / f"{stem}_cam.png"
-        meta = self.camera.capture_frame(cap_path, settle_s=0.35, flush_n=flush_n)
-        frame = cv2.imread(str(cap_path))
-        return frame, meta
+        last_err: Optional[Exception] = None
+        for attempt in range(retries):
+            try:
+                meta = self.camera.capture_frame(
+                    cap_path,
+                    settle_s=0.35 + 0.15 * attempt,
+                    flush_n=flush_n + 4 * attempt,
+                    expect_texture=expect_texture,
+                )
+                frame = cv2.imread(str(cap_path))
+                if frame is None:
+                    raise RuntimeError(f"unreadable capture {cap_path}")
+                return frame, meta
+            except RuntimeError as e:
+                last_err = e
+                self._log(f"capture {stem} attempt {attempt + 1}/{retries}: {e}")
+                time.sleep(0.4)
+        raise RuntimeError(f"capture failed for {stem}: {last_err}")
 
     def step_verify_two_plane_setup(self) -> None:
         if self.cfg.offline:
