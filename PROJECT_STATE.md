@@ -28,6 +28,15 @@ ChArUco + planar homography + optional planar residual refinement
 
 See `ACCURACY_STATE.md` for full before/after and residual diagnosis.
 
+## Two-plane piecewise homography
+
+**RUNNING** (synthetic / software only)
+
+- Command: `procam-calibrate auto-two-plane --run-dir <NEW_RUN_DIR>`
+- State: `TWO_PLANE_STATE.md`
+- Synthetic suite: **PASS** (`docs/TWO_PLANE_SYNTHETIC_RESULTS.md`)
+- Physical setup: **blocked** (`docs/TWO_PLANE_PHYSICAL_SETUP_REQUEST.md`)
+
 ## Experimental
 
 | Component | Status |

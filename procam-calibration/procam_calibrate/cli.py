@@ -408,6 +408,26 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--screen-id", type=int, default=None)
     s.set_defaults(func=cmd_refine_homography)
 
+    s = sub.add_parser(
+        "auto-two-plane",
+        help="Two connected planes: dual-homography fit + seam + piecewise pre-warp",
+    )
+    s.add_argument("--run-dir", required=True)
+    s.add_argument(
+        "--synthetic-only",
+        action="store_true",
+        default=True,
+        help="Run synthetic gates only (default; no physical devices)",
+    )
+    s.add_argument(
+        "--allow-physical",
+        action="store_true",
+        help="Reserved: physical capture (blocked until synthetic gates documented PASS)",
+    )
+    s.add_argument("--proj-w", type=int, default=1920)
+    s.add_argument("--proj-h", type=int, default=1080)
+    s.set_defaults(func=cmd_auto_two_plane)
+
     return p
 
 
@@ -470,6 +490,33 @@ def cmd_refine_homography(args: argparse.Namespace) -> int:
         projector.shutdown()
     print(json.dumps(result, indent=2, default=str))
     return 0 if result.get("absolute_gate_pass") else 1
+
+
+def cmd_auto_two_plane(args: argparse.Namespace) -> int:
+    """Software-first two-plane entry. Physical path stays blocked by default."""
+    from .synthetic_two_plane import run_synthetic_suite
+
+    run_dir = Path(args.run_dir)
+    run_dir.mkdir(parents=True, exist_ok=True)
+    if args.allow_physical:
+        report = {
+            "error": "physical_two_plane_blocked",
+            "reason": (
+                "Synthetic gates must remain PASS and an explicit physical setup "
+                "request must be approved. Use --synthetic-only."
+            ),
+            "see": "docs/TWO_PLANE_PHYSICAL_SETUP_REQUEST.md",
+        }
+        (run_dir / "two_plane_blocked.json").write_text(json.dumps(report, indent=2))
+        print(json.dumps(report, indent=2))
+        return 2
+
+    summary = run_synthetic_suite(run_dir / "suite")
+    (run_dir / "TWO_PLANE_SYNTHETIC_SUMMARY.json").write_text(
+        json.dumps(summary, indent=2, default=str)
+    )
+    print(json.dumps({"all_pass": summary["all_pass"], "n_pass": summary["n_pass"], "n_cases": summary["n_cases"]}, indent=2))
+    return 0 if summary.get("all_pass") else 1
 
 
 def main(argv: list[str] | None = None) -> int:
