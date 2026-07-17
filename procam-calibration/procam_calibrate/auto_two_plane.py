@@ -1487,16 +1487,23 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
         control = np.array([[x, y] for y in ys for x in xs], dtype=np.float64)
 
         for it in range(self.cfg.max_refine_iters):
-            cands = propose_coupled_candidates(
-                best_Ha,
-                best_Hb,
-                keys_a,
-                keys_b,
-                known,
-                cor_obs,
-                H_des,
-                control,
-            )
+            try:
+                cands = propose_coupled_candidates(
+                    best_Ha,
+                    best_Hb,
+                    keys_a,
+                    keys_b,
+                    known,
+                    cor_obs,
+                    H_des,
+                    control,
+                )
+            except Exception as e:
+                self._log(f"refine candidate generation failed (keep best): {e}")
+                break
+            if not cands:
+                self._log("no refine candidates — keep best")
+                break
             accepted_any = False
             for cand in cands:
                 pre = build_piecewise_from_forwards(
