@@ -82,6 +82,68 @@ from .video_playback import prepare_playback_calibration, write_diagnostic_video
 from .video_region import maximum_inscribed_rectangle, parse_aspect, save_video_region
 
 
+def evaluate_projection_preflight(
+    gray_black: np.ndarray,
+    gray_white: np.ndarray,
+    *,
+    diff_threshold: float = 25.0,
+    min_contrast: float = 35.0,
+    min_area_frac: float = 0.04,
+    min_side_brightness: float = 20.0,
+) -> dict:
+    """Score projector visibility inside the illuminated region (camera FOV-safe)."""
+    gb = np.asarray(gray_black, dtype=np.float32)
+    gw = np.asarray(gray_white, dtype=np.float32)
+    if gb.shape != gw.shape:
+        raise ValueError("black/white captures must match shape")
+    diff = gw - gb
+    mask = (diff > diff_threshold).astype(np.uint8) * 255
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((15, 15), np.uint8))
+    m = mask > 0
+    frac = float(m.mean())
+    global_contrast = float(gw.mean() - gb.mean())
+    if m.sum() < 500:
+        return {
+            "pass": False,
+            "checks": {
+                "black_white_contrast": global_contrast,
+                "projected_contrast": 0.0,
+                "contrast_ok": False,
+                "bright_fraction": frac,
+                "substantial_area": False,
+                "left_brightness": 0.0,
+                "right_brightness": 0.0,
+                "both_sides_lit": False,
+                "metric": "projected_region_diff",
+            },
+        }
+    contrast = float(diff[m].mean())
+    ys, xs = np.where(m)
+    mid = int(np.median(xs))
+    xx = np.arange(gw.shape[1])[None, :]
+    left = m & (xx < mid)
+    right = m & (xx >= mid)
+    left_b = float(gw[left].mean()) if left.any() else 0.0
+    right_b = float(gw[right].mean()) if right.any() else 0.0
+    checks = {
+        "black_white_contrast": global_contrast,
+        "projected_contrast": contrast,
+        "contrast_ok": contrast >= min_contrast,
+        "bright_fraction": frac,
+        "substantial_area": frac >= min_area_frac,
+        "left_brightness": left_b,
+        "right_brightness": right_b,
+        "both_sides_lit": left_b >= min_side_brightness and right_b >= min_side_brightness,
+        "metric": "projected_region_diff",
+        "proj_bbox_cam": [int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())],
+    }
+    return {
+        "pass": bool(checks["contrast_ok"] and checks["substantial_area"] and checks["both_sides_lit"]),
+        "checks": checks,
+    }
+
+
 STATES = [
     "PREFLIGHT",
     "DISCOVER_PROJECTOR",
@@ -543,34 +605,16 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
 
         gb = cv2.cvtColor(black, cv2.COLOR_BGR2GRAY)
         gw = cv2.cvtColor(white, cv2.COLOR_BGR2GRAY)
-        contrast = float(gw.mean() - gb.mean())
-        report["checks"]["black_white_contrast"] = contrast
-        report["checks"]["contrast_ok"] = contrast >= 40.0
-        # projected area proxy: bright region in white capture
-        _, thr = cv2.threshold(gw, 0, 255, cv2.THRESH_OTSU)
-        frac = float((gw > thr).mean())
-        report["checks"]["bright_fraction"] = frac
-        report["checks"]["substantial_area"] = frac >= 0.08
+        # Oblique / partial-FOV: score the *projected* region (white−black), not the
+        # full camera frame mean (dark surround would falsely fail contrast).
+        pre = evaluate_projection_preflight(gb, gw)
+        report["checks"].update(pre["checks"])
         report["checks"]["blur_white"] = blur_score(gw)
         report["checks"]["contrast_score_white"] = contrast_score(gw)
         report["checks"]["framebuffer"] = [w, h]
         report["checks"]["external_projector"] = True
-        # Both sides usable: left/right thirds have brightness
-        left = float(gw[:, : w // 3].mean()) if gw.shape[1] >= 3 else 0
-        right = float(gw[:, -w // 3 :].mean()) if gw.shape[1] >= 3 else 0
-        # camera space thirds
-        cw = gw.shape[1]
-        left_c = float(gw[:, : cw // 3].mean())
-        right_c = float(gw[:, -cw // 3 :].mean())
-        report["checks"]["left_brightness"] = left_c
-        report["checks"]["right_brightness"] = right_c
-        report["checks"]["both_sides_lit"] = left_c >= 20 and right_c >= 20
         # Do not reject on camera height/offset
-        report["pass"] = bool(
-            report["checks"]["contrast_ok"]
-            and report["checks"]["substantial_area"]
-            and report["checks"]["both_sides_lit"]
-        )
+        report["pass"] = bool(pre["pass"])
         (self.run_dir / "preflight" / "preflight_report.json").write_text(
             json.dumps(report, indent=2, default=str)
         )
