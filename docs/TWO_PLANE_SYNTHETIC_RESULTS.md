@@ -36,4 +36,12 @@ Artifacts: `procam-test-data/runs/two_plane_synthetic_20260717/suite/`
 
 ## Physical action
 
-**Not requested yet.** See `docs/TWO_PLANE_PHYSICAL_SETUP_REQUEST.md` (blocked until this suite stays green).
+Synthetic checkpoint preserved (immutable). Physical gate is open:
+
+See `docs/TWO_PLANE_PHYSICAL_SETUP_REQUEST.md` (**USER_ACTION_REQUIRED**).
+
+Re-run suite without overwriting the checkpoint:
+
+```bash
+procam-calibrate auto-two-plane --run-dir <NEW_RUN_DIR> --mode synthetic
+```

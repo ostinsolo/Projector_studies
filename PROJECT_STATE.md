@@ -2,7 +2,7 @@
 
 ## Flat-wall MVP
 
-**DONE / VALIDATED**
+**DONE / VALIDATED / ABSOLUTE PASS**
 
 ## Absolute-accuracy enhancement
 
@@ -30,12 +30,13 @@ See `ACCURACY_STATE.md` for full before/after and residual diagnosis.
 
 ## Two-plane piecewise homography
 
-**RUNNING** (synthetic / software only)
+**USER_ACTION_REQUIRED**
 
-- Command: `procam-calibrate auto-two-plane --run-dir <NEW_RUN_DIR>`
+- Flat-wall status above is unchanged and must not be replaced by two-plane state
+- Command: `procam-calibrate auto-two-plane --run-dir <NEW_RUN_DIR> --mode physical`
 - State: `TWO_PLANE_STATE.md`
 - Synthetic suite: **PASS** (`docs/TWO_PLANE_SYNTHETIC_RESULTS.md`)
-- Physical setup: **blocked** (`docs/TWO_PLANE_PHYSICAL_SETUP_REQUEST.md`)
+- Physical setup: **USER_ACTION_REQUIRED** (`docs/TWO_PLANE_PHYSICAL_SETUP_REQUEST.md`)
 
 ## Experimental
 

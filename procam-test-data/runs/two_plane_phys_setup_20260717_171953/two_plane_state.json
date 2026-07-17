@@ -1,0 +1,15 @@
+{
+  "state": "USER_ACTION_REQUIRED",
+  "mode": "physical",
+  "completed": [],
+  "history": [
+    {
+      "from": "PREFLIGHT",
+      "to": "USER_ACTION_REQUIRED",
+      "note": "awaiting physical fold setup",
+      "t": "2026-07-17T17:19:53.255495"
+    }
+  ],
+  "data": {},
+  "updated_at": "2026-07-17T17:19:53.255499"
+}

@@ -410,22 +410,49 @@ def build_parser() -> argparse.ArgumentParser:
 
     s = sub.add_parser(
         "auto-two-plane",
-        help="Two connected planes: dual-homography fit + seam + piecewise pre-warp",
+        help=(
+            "Two connected planes: dual-H + seam + piecewise pre-warp. "
+            "Use --mode synthetic (no hardware) or --mode physical (projector + iPhone)."
+        ),
     )
     s.add_argument("--run-dir", required=True)
     s.add_argument(
+        "--mode",
+        choices=("synthetic", "physical"),
+        default=None,
+        help="synthetic: software suite only (no devices). physical: full hardware pipeline.",
+    )
+    s.add_argument(
         "--synthetic-only",
         action="store_true",
-        default=True,
-        help="Run synthetic gates only (default; no physical devices)",
+        default=False,
+        help="Deprecated alias for --mode synthetic (conflicts with --mode physical).",
     )
     s.add_argument(
         "--allow-physical",
         action="store_true",
-        help="Reserved: physical capture (blocked until synthetic gates documented PASS)",
+        default=False,
+        help="Deprecated alias for --mode physical (conflicts with --mode synthetic).",
+    )
+    s.add_argument(
+        "--setup-confirmed",
+        action="store_true",
+        help="Resume physical pipeline after USER_ACTION_REQUIRED hardware placement.",
+    )
+    s.add_argument(
+        "--offline",
+        action="store_true",
+        help="Physical state machine without devices (fixture / tests only).",
     )
     s.add_argument("--proj-w", type=int, default=1920)
     s.add_argument("--proj-h", type=int, default=1080)
+    s.add_argument("--settle", type=float, default=0.8)
+    s.add_argument("--screen-id", type=int, default=None)
+    s.add_argument(
+        "--two-plane-state-path",
+        default=None,
+        help="Optional path for live TWO_PLANE_STATE write (default: run_dir only).",
+    )
     s.set_defaults(func=cmd_auto_two_plane)
 
     return p
@@ -492,31 +519,77 @@ def cmd_refine_homography(args: argparse.Namespace) -> int:
     return 0 if result.get("absolute_gate_pass") else 1
 
 
-def cmd_auto_two_plane(args: argparse.Namespace) -> int:
-    """Software-first two-plane entry. Physical path stays blocked by default."""
-    from .synthetic_two_plane import run_synthetic_suite
+def _resolve_two_plane_mode(args: argparse.Namespace) -> str:
+    """Resolve --mode vs deprecated flags; reject conflicts before device access."""
+    mode = getattr(args, "mode", None)
+    syn = bool(getattr(args, "synthetic_only", False))
+    phys = bool(getattr(args, "allow_physical", False))
+    if syn and phys:
+        raise SystemExit(
+            "Conflicting flags: --synthetic-only and --allow-physical. "
+            "Use --mode synthetic or --mode physical."
+        )
+    if mode == "synthetic" and phys:
+        raise SystemExit("Conflicting flags: --mode synthetic with --allow-physical.")
+    if mode == "physical" and syn:
+        raise SystemExit("Conflicting flags: --mode physical with --synthetic-only.")
+    if mode is not None:
+        return mode
+    if syn:
+        return "synthetic"
+    if phys:
+        return "physical"
+    raise SystemExit(
+        "auto-two-plane requires --mode synthetic|physical "
+        "(or deprecated --synthetic-only / --allow-physical)."
+    )
 
+
+def cmd_auto_two_plane(args: argparse.Namespace) -> int:
+    """Two-plane entry: synthetic suite or physical state machine."""
+    from .auto_two_plane import AutoTwoPlane, AutoTwoPlaneConfig, run_synthetic_mode
+
+    mode = _resolve_two_plane_mode(args)
     run_dir = Path(args.run_dir)
     run_dir.mkdir(parents=True, exist_ok=True)
-    if args.allow_physical:
-        report = {
-            "error": "physical_two_plane_blocked",
-            "reason": (
-                "Synthetic gates must remain PASS and an explicit physical setup "
-                "request must be approved. Use --synthetic-only."
-            ),
-            "see": "docs/TWO_PLANE_PHYSICAL_SETUP_REQUEST.md",
-        }
-        (run_dir / "two_plane_blocked.json").write_text(json.dumps(report, indent=2))
-        print(json.dumps(report, indent=2))
-        return 2
 
-    summary = run_synthetic_suite(run_dir / "suite")
-    (run_dir / "TWO_PLANE_SYNTHETIC_SUMMARY.json").write_text(
-        json.dumps(summary, indent=2, default=str)
+    if mode == "synthetic":
+        summary = run_synthetic_mode(run_dir, args.proj_w, args.proj_h)
+        print(
+            json.dumps(
+                {
+                    "mode": "synthetic",
+                    "hardware": False,
+                    "all_pass": summary["all_pass"],
+                    "n_pass": summary["n_pass"],
+                    "n_cases": summary["n_cases"],
+                },
+                indent=2,
+            )
+        )
+        return 0 if summary.get("all_pass") else 1
+
+    cfg = AutoTwoPlaneConfig(
+        run_dir=run_dir,
+        mode="physical",
+        proj_w=args.proj_w,
+        proj_h=args.proj_h,
+        settle_s=args.settle,
+        prefer_screen_id=args.screen_id,
+        setup_confirmed=bool(args.setup_confirmed),
+        offline=bool(args.offline),
+        two_plane_state_path=Path(args.two_plane_state_path) if args.two_plane_state_path else None,
+        project_state_path=None,  # never pollute root PROJECT_STATE.md
     )
-    print(json.dumps({"all_pass": summary["all_pass"], "n_pass": summary["n_pass"], "n_cases": summary["n_cases"]}, indent=2))
-    return 0 if summary.get("all_pass") else 1
+    machine = AutoTwoPlane(cfg)
+    result = machine.run()
+    print(json.dumps({"mode": "physical", "hardware": not args.offline, **result}, indent=2, default=str))
+    st = result.get("state")
+    if st == "DONE":
+        return 0
+    if st == "USER_ACTION_REQUIRED":
+        return 3
+    return 1
 
 
 def main(argv: list[str] | None = None) -> int:

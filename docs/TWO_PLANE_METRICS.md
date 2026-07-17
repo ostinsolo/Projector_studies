@@ -25,7 +25,19 @@ If one H fails these, evaluate the two-H model.
 |--------|----------|---------------------|
 | median reprojection | ≤ 1 px | ≤ 2 px |
 
-## Seam
+## Physical target accuracy (absolute gate)
+
+| Scope | median | p95 |
+|-------|--------|-----|
+| Plane A / B independently | ≤ 5 cam px | ≤ 12 cam px |
+| Combined global | ≤ 5 cam px | ≤ 12 cam px |
+| Seam mismatch | ≤ 3 cam px | ≤ 6 cam px |
+| Coverage per plane | ≥ 0.80 vs expected-visible | |
+
+Corrected must beat uncorrected; improvement must exceed burst jitter.
+Empty/invalid measurements must not report zero error.
+
+## Seam (geometry)
 
 | Metric | Target |
 |--------|--------|
@@ -33,6 +45,9 @@ If one H fails these, evaluate the two-H model.
 | p95 seam mismatch | ≤ 6 camera px |
 
 Feathering is not used until geometric seam alignment passes.
+
+Observation keys use `"<pattern_index>:<corner_id>"` — never merge repeated
+ChArUco IDs across patterns.
 
 ## Assignment
 

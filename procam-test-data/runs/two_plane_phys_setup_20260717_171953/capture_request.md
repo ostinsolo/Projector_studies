@@ -25,6 +25,3 @@ Reply that the setup is ready. The agent will then run:
 ```
 procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup-confirmed
 ```
-
-
-Run directory: `procam-test-data/runs/two_plane_phys_setup_20260717_171953`

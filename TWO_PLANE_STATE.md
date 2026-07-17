@@ -8,22 +8,32 @@ Do not modify or weaken flat-wall production artifacts from two-plane work.
 
 ## Two-plane piecewise homography
 
-**RUNNING** (software / synthetic phase)
+**USER_ACTION_REQUIRED**
 
 | Phase | Status |
 |-------|--------|
 | Two-homography model fit | implemented |
-| Seam model (straight) | implemented |
-| Piecewise pre-warp | implemented |
-| Synthetic acceptance gates | **PASS** |
-| Physical setup | **blocked** until software gates remain green |
-| Physical capture / validation | not started |
+| Seam model (straight) + exclusion band | implemented |
+| Exclusive masks + piecewise pre-warp | implemented |
+| Multi-frame observation keys | implemented |
+| Physical state machine | implemented |
+| Coupled residual refinement | implemented |
+| Synthetic acceptance gates | **PASS** (14/14) |
+| CLI `--mode synthetic\|physical` | implemented |
+| Physical setup | **USER_ACTION_REQUIRED** |
+| Physical capture / validation | pending user hardware placement |
 
-## Command
+## Commands
 
 ```bash
-procam-calibrate auto-two-plane --run-dir <NEW_RUN_DIR> --synthetic-only
+# software only (no devices)
+procam-calibrate auto-two-plane --run-dir <NEW_RUN_DIR> --mode synthetic
+
+# physical (stops at setup request until confirmed)
+procam-calibrate auto-two-plane --run-dir <NEW_RUN_DIR> --mode physical
+
+# after user confirms fold / devices placed
+procam-calibrate auto-two-plane --run-dir <NEW_RUN_DIR> --mode physical --setup-confirmed
 ```
 
-Physical projection/capture is not requested until synthetic gates pass and a
-setup request is issued explicitly.
+Immutable synthetic run: `procam-test-data/runs/two_plane_synthetic_20260717`

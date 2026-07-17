@@ -150,6 +150,14 @@ def fit_two_homographies(
         H_a, _, _ = fit_single_homography(pts_proj[labels == 0], pts_cam[labels == 0], ransac_threshold)
         H_b, _, _ = fit_single_homography(pts_proj[labels == 1], pts_cam[labels == 1], ransac_threshold)
 
+    # Canonicalize: plane A = left/top projector centroid
+    from .two_plane_observations import canonicalize_plane_labels
+
+    labels_before = labels.copy()
+    labels = canonicalize_plane_labels(pts_proj, labels)
+    if not np.array_equal(labels, labels_before):
+        H_a, H_b = H_b, H_a
+
     err_a = np.linalg.norm(apply_H(H_a, pts_proj) - pts_cam, axis=1)
     err_b = np.linalg.norm(apply_H(H_b, pts_proj) - pts_cam, axis=1)
     err_two = np.where(labels == 0, err_a, err_b)
@@ -511,3 +519,254 @@ def run_two_plane_fit_from_points(
         result["seam_metrics"] = seam_metrics
     save_two_plane_artifacts(out_dir, result, seam, masks)
     return {**result, "seam": seam, "masks_meta": {k: masks[k] for k in masks if k not in ("mask_a", "mask_b", "viz", "prewarp", "H_fwd_a", "H_fwd_b")}}
+
+
+SEAM_EXCLUSION_HALF_WIDTH_PX = 12.0
+
+
+def seam_exclusion_mask(
+    seam: dict, keys: list[str], pts_proj: np.ndarray, half_width: float = SEAM_EXCLUSION_HALF_WIDTH_PX
+) -> dict:
+    """Mark observations too close to the fold for plane-H fitting (not validation)."""
+    a, b, c = seam["line_abc"]
+    n = float(np.hypot(a, b)) + 1e-12
+    dist = np.abs(a * pts_proj[:, 0] + b * pts_proj[:, 1] + c) / n
+    excluded = dist <= half_width
+    return {
+        "half_width_px": half_width,
+        "excluded_keys": [keys[i] for i in np.where(excluded)[0]],
+        "n_excluded": int(excluded.sum()),
+        "keep_mask": (~excluded).tolist(),
+    }
+
+
+def bootstrap_seam_stability(
+    pts_proj: np.ndarray,
+    labels: np.ndarray,
+    H_a: np.ndarray,
+    H_b: np.ndarray,
+    proj_w: int,
+    proj_h: int,
+    n_boot: int = 20,
+    rng: Optional[np.random.Generator] = None,
+) -> dict:
+    rng = rng or np.random.default_rng(0)
+    mids = []
+    for _ in range(n_boot):
+        idx = rng.choice(len(pts_proj), size=len(pts_proj), replace=True)
+        if len(np.unique(labels[idx])) < 2:
+            continue
+        if (labels[idx] == 0).sum() < 8 or (labels[idx] == 1).sum() < 8:
+            continue
+        s = estimate_straight_seam(pts_proj[idx], labels[idx], proj_w, proj_h, H_a, H_b)
+        mids.append(s["midpoint"])
+    if not mids:
+        return {"n_boot": 0, "stable": False, "midpoint_std_px": None}
+    arr = np.array(mids, dtype=np.float64)
+    std = arr.std(axis=0)
+    return {
+        "n_boot": len(mids),
+        "midpoint_mean": arr.mean(axis=0).tolist(),
+        "midpoint_std_px": std.tolist(),
+        "stable": bool(float(np.linalg.norm(std)) <= 25.0),
+    }
+
+
+def define_desired_target_two_plane(
+    H_a: np.ndarray,
+    H_b: np.ndarray,
+    mask_a: np.ndarray,
+    mask_b: np.ndarray,
+    seam: dict,
+    proj_w: int,
+    proj_h: int,
+    cam_w: int,
+    cam_h: int,
+    source_pts_by_key: dict[str, list[float]],
+    labels_by_key: dict[str, str],
+) -> dict:
+    """Predetermined desired camera target independent of corrected capture."""
+    # Global desired: AA bounding box of the union of both physical planes mapped by each H
+    corners = np.array(
+        [[0, 0], [proj_w - 1, 0], [proj_w - 1, proj_h - 1], [0, proj_h - 1]], dtype=np.float64
+    )
+    cam_a = apply_H(H_a, corners)
+    cam_b = apply_H(H_b, corners)
+    all_c = np.vstack([cam_a, cam_b])
+    x0, y0 = all_c.min(0)
+    x1, y1 = all_c.max(0)
+    # clamp into camera with margin
+    pad = 20.0
+    x0, y0 = max(pad, x0), max(pad, y0)
+    x1, y1 = min(cam_w - 1 - pad, x1), min(cam_h - 1 - pad, y1)
+    desired_poly = [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
+    # Map source (ProjFB layout = source) corners → desired AA via a shared H_desired_cam_from_source
+    H_des = cv2.getPerspectiveTransform(
+        corners.astype(np.float32), np.array(desired_poly, dtype=np.float32)
+    ).astype(np.float64)
+    desired_by_key = {}
+    for k, src in source_pts_by_key.items():
+        p = apply_H(H_des, np.array([src], dtype=np.float64))[0]
+        desired_by_key[k] = [float(p[0]), float(p[1])]
+    # Seam samples in source/projector (same layout) → desired
+    p0 = np.array(seam["endpoint_0"], dtype=np.float64)
+    p1 = np.array(seam["endpoint_1"], dtype=np.float64)
+    ts = np.linspace(0.05, 0.95, 21)
+    seam_src = (1 - ts)[:, None] * p0 + ts[:, None] * p1
+    seam_des = apply_H(H_des, seam_src)
+    return {
+        "source_resolution": [proj_w, proj_h],
+        "camera_resolution": [cam_w, cam_h],
+        "projector_resolution": [proj_w, proj_h],
+        "desired_camera_polygon": desired_poly,
+        "H_desired_cam_from_source": H_des.tolist(),
+        "desired_point_by_key": desired_by_key,
+        "desired_seam_samples": seam_des.tolist(),
+        "labels_by_key": labels_by_key,
+        "pixel_centre_convention": "OpenCV top-left origin; +u right +v down",
+        "axis_convention": "+u right, +v down",
+        "distortion_state": "none_applied",
+        "note": "Desired geometry fixed before corrected capture analysis",
+    }
+
+
+def measure_two_plane_against_desired(
+    obs_cam_by_key: dict[str, list[float]],
+    desired: dict,
+    labels_by_key: dict[str, str],
+    expected_keys: Optional[list[str]] = None,
+    seam_keys: Optional[list[str]] = None,
+) -> dict:
+    """Production target metrics with one evaluation key population."""
+    detected = sorted(obs_cam_by_key.keys())
+    desired_ids = set(desired["desired_point_by_key"].keys())
+    expected = sorted(expected_keys) if expected_keys is not None else sorted(desired_ids)
+    evaluation = sorted(set(detected) & desired_ids & set(expected))
+    id_sets = {
+        "detected_raw_keys": detected,
+        "expected_visible_keys": expected,
+        "evaluation_keys": evaluation,
+        "expected_but_not_detected_keys": sorted(set(expected) - set(detected)),
+        "detected_but_not_expected_keys": sorted(set(detected) - set(expected)),
+    }
+    if len(evaluation) < MIN_POINTS_PER_PLANE:
+        return {
+            "valid": False,
+            "failure_reason": f"insufficient_evaluation_keys:{len(evaluation)}",
+            "id_sets": id_sets,
+            "target_median_err_px": None,
+            "target_p95_err_px": None,
+        }
+
+    def _plane_stats(plane: str) -> dict:
+        keys = [k for k in evaluation if labels_by_key.get(k) == plane]
+        if len(keys) < 4:
+            return {"valid": False, "n": len(keys), "target_median_err_px": None, "target_p95_err_px": None}
+        err = np.array(
+            [
+                np.linalg.norm(
+                    np.array(obs_cam_by_key[k]) - np.array(desired["desired_point_by_key"][k])
+                )
+                for k in keys
+            ]
+        )
+        return {
+            "valid": True,
+            "n": len(keys),
+            "evaluation_keys": keys,
+            "target_median_err_px": float(np.median(err)),
+            "target_p95_err_px": float(np.percentile(err, 95)),
+            "target_max_err_px": float(err.max()),
+            "target_mean_err_px": float(err.mean()),
+        }
+
+    err_all = np.array(
+        [
+            np.linalg.norm(np.array(obs_cam_by_key[k]) - np.array(desired["desired_point_by_key"][k]))
+            for k in evaluation
+        ]
+    )
+    plane_a = _plane_stats("A")
+    plane_b = _plane_stats("B")
+    # Seam mismatch from desired seam samples vs measured if provided
+    seam_report = None
+    if seam_keys:
+        sk = [k for k in seam_keys if k in obs_cam_by_key and k in desired["desired_point_by_key"]]
+        if sk:
+            se = np.array(
+                [
+                    np.linalg.norm(
+                        np.array(obs_cam_by_key[k]) - np.array(desired["desired_point_by_key"][k])
+                    )
+                    for k in sk
+                ]
+            )
+            seam_report = {
+                "n": len(sk),
+                "median_seam_mismatch_px": float(np.median(se)),
+                "p95_seam_mismatch_px": float(np.percentile(se, 95)),
+                "max_seam_mismatch_px": float(se.max()),
+            }
+
+    return {
+        "valid": True,
+        "id_sets": id_sets,
+        "evaluation_keys": evaluation,
+        "n_evaluation_keys": len(evaluation),
+        "target_median_err_px": float(np.median(err_all)),
+        "target_p95_err_px": float(np.percentile(err_all, 95)),
+        "target_max_err_px": float(err_all.max()),
+        "plane_A": plane_a,
+        "plane_B": plane_b,
+        "seam": seam_report,
+        "coverage_fraction": float(len(evaluation) / max(1, len(expected))),
+    }
+
+
+def two_plane_acceptance(unc: dict, cor: dict, seam_geom: Optional[dict] = None) -> dict:
+    """Absolute acceptance for physical two-plane result."""
+    reasons = []
+    if not unc.get("valid") or not cor.get("valid"):
+        return {"acceptance_pass": False, "absolute_gate_pass": False, "failure_reason": "invalid_metrics"}
+
+    def _plane_ok(tag: str) -> bool:
+        p = cor.get(tag) or {}
+        if not p.get("valid"):
+            reasons.append(f"{tag}_invalid")
+            return False
+        ok = (p.get("target_median_err_px") or 1e9) <= 5.0 and (p.get("target_p95_err_px") or 1e9) <= 12.0
+        if not ok:
+            reasons.append(f"{tag}_accuracy")
+        return ok
+
+    planes_ok = _plane_ok("plane_A") and _plane_ok("plane_B")
+    global_ok = (cor.get("target_median_err_px") or 1e9) <= 5.0 and (cor.get("target_p95_err_px") or 1e9) <= 12.0
+    if not global_ok:
+        reasons.append("global_accuracy")
+    improved = (cor.get("target_median_err_px") or 1e9) < (unc.get("target_median_err_px") or 0) and (
+        cor.get("target_p95_err_px") or 1e9
+    ) < (unc.get("target_p95_err_px") or 0)
+    if not improved:
+        reasons.append("no_improvement")
+    cov_ok = (cor.get("coverage_fraction") or 0) >= 0.80
+    if not cov_ok:
+        reasons.append("coverage")
+    seam_ok = True
+    if seam_geom:
+        seam_ok = (
+            (seam_geom.get("median_seam_mismatch_px") or 1e9) <= SEAM_MEDIAN_TARGET
+            and (seam_geom.get("p95_seam_mismatch_px") or 1e9) <= SEAM_P95_TARGET
+        )
+        if not seam_ok:
+            reasons.append("seam")
+    abs_pass = bool(planes_ok and global_ok and improved and cov_ok and seam_ok)
+    return {
+        "acceptance_pass": abs_pass,
+        "absolute_gate_pass": abs_pass,
+        "planes_ok": planes_ok,
+        "global_ok": global_ok,
+        "improved": improved,
+        "coverage_ok": cov_ok,
+        "seam_ok": seam_ok,
+        "failure_reason": None if abs_pass else ";".join(reasons) or "failed",
+    }
