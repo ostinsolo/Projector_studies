@@ -839,40 +839,75 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
             # Store full classification labels (incl. ceiling) for exclusion stage
             self.state["data"]["ceiling_labels"] = labels_full.tolist()
         else:
-            fit = fit_two_homographies(pts_p, pts_c, ids=keys)
-            # Seam exclusion band: refit with band excluded if two-plane
+            # Physical two-wall intent: force spatial two-plane even when one-H fits well
+            # (oblique folds can be nearly one-H for sparse ChArUco yet still need piecewise warp).
+            labels_cls = np.array(cls.get("labels") or [], dtype=np.int32)
+            if len(labels_cls) == len(keys) and (labels_cls == 2).any():
+                wall = labels_cls != 2
+                pts_p_f, pts_c_f = pts_p[wall], pts_c[wall]
+                keys_f = [keys[i] for i in np.where(wall)[0]]
+                self.state["data"]["ceiling_labels"] = labels_cls.tolist()
+            else:
+                pts_p_f, pts_c_f, keys_f = pts_p, pts_c, keys
+                self.state["data"]["ceiling_labels"] = (
+                    labels_cls.tolist() if len(labels_cls) == len(keys) else None
+                )
+            seam_hint = float(np.percentile(pts_p_f[:, 0], 65))
+            sc_path = self.run_dir / "architecture" / "seam_candidates.json"
+            if sc_path.exists():
+                try:
+                    cands = json.loads(sc_path.read_text())
+                    scored = [
+                        c
+                        for c in cands
+                        if c.get("status") == "candidate" and c.get("x_proj") is not None
+                    ]
+                    if scored:
+                        seam_hint = float(sorted(scored, key=lambda c: -c.get("score", 0))[0]["x_proj"])
+                except Exception:
+                    pass
+            fit = fit_two_homographies(
+                pts_p_f,
+                pts_c_f,
+                ids=keys_f,
+                prefer_two_plane=True,
+                seam_x_hint=seam_hint,
+            )
+            # Expand labels onto full observation set (ceiling stays 2)
             if fit.get("model") == "two_plane" and fit.get("valid"):
-                labels = np.array(fit["labels"], dtype=np.int32)
+                labels_f = np.array(fit["labels"], dtype=np.int32)
+                key_to_lab = {keys_f[i]: int(labels_f[i]) for i in range(len(keys_f))}
+                ceil_src = self.state["data"].get("ceiling_labels")
+                labels_full = np.array(
+                    [
+                        2
+                        if ceil_src is not None and int(ceil_src[i]) == 2
+                        else key_to_lab.get(keys[i], -1)
+                        for i in range(len(keys))
+                    ],
+                    dtype=np.int32,
+                )
+                fit["labels"] = labels_full.tolist()
+                fit["assignment"] = {
+                    keys[i]: ("A" if labels_full[i] == 0 else "B")
+                    for i in range(len(keys))
+                    if labels_full[i] in (0, 1)
+                }
                 Ha, Hb = fit["H_cam_from_proj_plane_A"], fit["H_cam_from_proj_plane_B"]
-                seam_tmp = estimate_straight_seam(pts_p, labels, self.cfg.proj_w, self.cfg.proj_h, Ha, Hb)
-                excl = seam_exclusion_mask(seam_tmp, keys, pts_p)
-                keep = np.array(excl["keep_mask"], dtype=bool)
-                if keep.sum() >= 2 * MIN_POINTS_PER_PLANE:
-                    fit2 = fit_two_homographies(
-                        pts_p[keep], pts_c[keep], ids=[keys[i] for i in np.where(keep)[0]]
-                    )
-                    if fit2.get("valid") and fit2.get("model") == "two_plane":
-                        Ha, Hb = fit2["H_cam_from_proj_plane_A"], fit2["H_cam_from_proj_plane_B"]
-                        err_a = np.linalg.norm(apply_H(Ha, pts_p) - pts_c, axis=1)
-                        err_b = np.linalg.norm(apply_H(Hb, pts_p) - pts_c, axis=1)
-                        labels = (err_b < err_a).astype(np.int32)
-                        from .two_plane_observations import canonicalize_plane_labels
-
-                        labels = canonicalize_plane_labels(pts_p, labels)
-                        if (labels == 0).sum() >= MIN_POINTS_PER_PLANE and (
-                            labels == 1
-                        ).sum() >= MIN_POINTS_PER_PLANE:
-                            fit = fit2
-                            fit["labels"] = labels.tolist()
-                            fit["assignment"] = {
-                                keys[i]: ("A" if labels[i] == 0 else "B") for i in range(len(keys))
-                            }
-                            Ha, _, _ = fit_single_homography(pts_p[labels == 0], pts_c[labels == 0])
-                            Hb, _, _ = fit_single_homography(pts_p[labels == 1], pts_c[labels == 1])
-                            fit["H_cam_from_proj_plane_A"] = Ha
-                            fit["H_cam_from_proj_plane_B"] = Hb
+                wall = (labels_full == 0) | (labels_full == 1)
+                seam_tmp = estimate_straight_seam(
+                    pts_p[wall], labels_full[wall], self.cfg.proj_w, self.cfg.proj_h, Ha, Hb
+                )
+                excl = seam_exclusion_mask(
+                    seam_tmp, [keys[i] for i in np.where(wall)[0]], pts_p[wall]
+                )
                 (single_path / "seam_exclusion_band.json").write_text(json.dumps(excl, indent=2))
-            self.state["data"]["ceiling_labels"] = None
+                fit["comparison"] = {
+                    **(fit.get("comparison") or {}),
+                    "seam_x_hint_used": seam_hint,
+                    "prefer_two_plane": True,
+                }
+                self.state["data"]["ceiling_labels"] = labels_full.tolist()
 
         # Persist
         (single_path / "single_vs_two_model_comparison.json").write_text(

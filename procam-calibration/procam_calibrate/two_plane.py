@@ -103,8 +103,15 @@ def fit_two_homographies(
     pts_cam: np.ndarray,
     ids: Optional[list[int]] = None,
     ransac_threshold: float = 3.0,
+    prefer_two_plane: bool = False,
+    seam_x_hint: Optional[float] = None,
 ) -> dict:
-    """Deterministic one-H vs two-H model selection and plane assignment."""
+    """Deterministic one-H vs two-H model selection and plane assignment.
+
+    prefer_two_plane: for intentional two-wall physical setups, do not short-circuit
+    to one_plane when a single H happens to fit well; still attempt a spatial split.
+    seam_x_hint: optional projector-x fold prior (from architecture / brightness).
+    """
     pts_proj = np.asarray(pts_proj, dtype=np.float64)
     pts_cam = np.asarray(pts_cam, dtype=np.float64)
     n = len(pts_proj)
@@ -122,8 +129,10 @@ def fit_two_homographies(
         "one_H_robust_error": _robust_error(err1),
         "one_H_accepts_flat_wall": one_ok,
         "one_H_stats": stats1,
+        "prefer_two_plane": prefer_two_plane,
+        "seam_x_hint": seam_x_hint,
     }
-    if one_ok:
+    if one_ok and not prefer_two_plane:
         return {
             "model": "one_plane",
             "two_plane_hypothesis": False,
@@ -135,20 +144,58 @@ def fit_two_homographies(
             "reason": "one_homography_explains_data",
         }
 
-    H_a, H_b, labels = _sequential_two_ransac(pts_proj, pts_cam, ransac_threshold)
-    for _ in range(ASSIGN_REFIT_ITERS):
-        err_a = np.linalg.norm(apply_H(H_a, pts_proj) - pts_cam, axis=1)
-        err_b = np.linalg.norm(apply_H(H_b, pts_proj) - pts_cam, axis=1)
-        new_labels = (err_b < err_a).astype(np.int32)
-        # Ensure minimum population
-        if (new_labels == 0).sum() < MIN_POINTS_PER_PLANE or (new_labels == 1).sum() < MIN_POINTS_PER_PLANE:
-            break
-        if np.array_equal(new_labels, labels):
+    spatial_locked = False
+    seed_x = seam_x_hint
+    if seed_x is None and prefer_two_plane:
+        # Default fold prior: median projector x among observations
+        seed_x = float(np.median(pts_proj[:, 0]))
+    if seed_x is not None and prefer_two_plane:
+        labels = (pts_proj[:, 0] >= float(seed_x)).astype(np.int32)
+        if (labels == 0).sum() >= MIN_POINTS_PER_PLANE and (labels == 1).sum() >= MIN_POINTS_PER_PLANE:
+            H_a, _, _ = fit_single_homography(
+                pts_proj[labels == 0], pts_cam[labels == 0], ransac_threshold
+            )
+            H_b, _, _ = fit_single_homography(
+                pts_proj[labels == 1], pts_cam[labels == 1], ransac_threshold
+            )
+            # Residual reassignment collapses when both Hs fit almost equally.
+            spatial_locked = True
+        else:
+            H_a, H_b, labels = _sequential_two_ransac(pts_proj, pts_cam, ransac_threshold)
+    elif seam_x_hint is not None:
+        labels = (pts_proj[:, 0] >= float(seam_x_hint)).astype(np.int32)
+        if (labels == 0).sum() >= MIN_POINTS_PER_PLANE and (labels == 1).sum() >= MIN_POINTS_PER_PLANE:
+            H_a, _, _ = fit_single_homography(
+                pts_proj[labels == 0], pts_cam[labels == 0], ransac_threshold
+            )
+            H_b, _, _ = fit_single_homography(
+                pts_proj[labels == 1], pts_cam[labels == 1], ransac_threshold
+            )
+        else:
+            H_a, H_b, labels = _sequential_two_ransac(pts_proj, pts_cam, ransac_threshold)
+    else:
+        H_a, H_b, labels = _sequential_two_ransac(pts_proj, pts_cam, ransac_threshold)
+    if not spatial_locked:
+        for _ in range(ASSIGN_REFIT_ITERS):
+            err_a = np.linalg.norm(apply_H(H_a, pts_proj) - pts_cam, axis=1)
+            err_b = np.linalg.norm(apply_H(H_b, pts_proj) - pts_cam, axis=1)
+            new_labels = (err_b < err_a).astype(np.int32)
+            # Ensure minimum population
+            if (new_labels == 0).sum() < MIN_POINTS_PER_PLANE or (
+                new_labels == 1
+            ).sum() < MIN_POINTS_PER_PLANE:
+                break
+            if np.array_equal(new_labels, labels):
+                labels = new_labels
+                break
             labels = new_labels
-            break
-        labels = new_labels
-        H_a, _, _ = fit_single_homography(pts_proj[labels == 0], pts_cam[labels == 0], ransac_threshold)
-        H_b, _, _ = fit_single_homography(pts_proj[labels == 1], pts_cam[labels == 1], ransac_threshold)
+            H_a, _, _ = fit_single_homography(
+                pts_proj[labels == 0], pts_cam[labels == 0], ransac_threshold
+            )
+            H_b, _, _ = fit_single_homography(
+                pts_proj[labels == 1], pts_cam[labels == 1], ransac_threshold
+            )
+    comparison["spatial_labels_locked"] = spatial_locked
 
     # Canonicalize: plane A = left/top projector centroid
     from .two_plane_observations import canonicalize_plane_labels
@@ -180,16 +227,22 @@ def fit_two_homographies(
     flips = int(np.sum(np.diff(labels[order]) != 0))
     interleaved = flips > max(4, n // 6)
 
-    valid = (
+    spatial_ok = (
         n_a >= MIN_POINTS_PER_PLANE
         and n_b >= MIN_POINTS_PER_PLANE
         and area_a > 1.0
         and area_b > 1.0
-        and contig_a
-        and contig_b
-        and not interleaved
-        and margin_ok
+        and (contig_a if not spatial_locked else True)
+        and (contig_b if not spatial_locked else True)
+        and (not interleaved if not spatial_locked else True)
     )
+    # Forced two-wall: accept spatial model if two-H is not worse than one-H
+    forced_ok = bool(
+        prefer_two_plane and spatial_ok and two_robust <= one_robust * 1.05
+    )
+    valid = (spatial_ok and margin_ok) or forced_ok
+    comparison["forced_two_plane_ok"] = forced_ok
+    comparison["spatial_ok"] = spatial_ok
     assignment = {
         str(ids[k]): ("A" if labels[k] == 0 else "B") for k in range(n)
     }
@@ -212,10 +265,36 @@ def fit_two_homographies(
             "plane_B_median_reproj_px": float(np.median(err_b[labels == 1])),
         }
     )
+    if valid:
+        return {
+            "model": "two_plane",
+            "two_plane_hypothesis": True,
+            "valid": True,
+            "H_cam_from_proj_plane_A": H_a,
+            "H_cam_from_proj_plane_B": H_b,
+            "H_cam_from_proj_single": H1,
+            "labels": labels.tolist(),
+            "assignment": assignment,
+            "per_point_err_A": err_a.tolist(),
+            "per_point_err_B": err_b.tolist(),
+            "comparison": comparison,
+            "reason": "ok_prefer_two_plane" if forced_ok and not margin_ok else "ok",
+        }
+    if one_ok:
+        return {
+            "model": "one_plane",
+            "two_plane_hypothesis": prefer_two_plane,
+            "H_cam_from_proj_single": H1,
+            "assignment": {str(i): "single" for i in ids},
+            "labels": [-1] * n,
+            "comparison": comparison,
+            "valid": True,
+            "reason": "one_homography_explains_data",
+        }
     return {
-        "model": "two_plane" if valid else "two_plane_rejected",
+        "model": "two_plane_rejected",
         "two_plane_hypothesis": True,
-        "valid": valid,
+        "valid": False,
         "H_cam_from_proj_plane_A": H_a,
         "H_cam_from_proj_plane_B": H_b,
         "H_cam_from_proj_single": H1,
@@ -224,7 +303,7 @@ def fit_two_homographies(
         "per_point_err_A": err_a.tolist(),
         "per_point_err_B": err_b.tolist(),
         "comparison": comparison,
-        "reason": "ok" if valid else "failed_two_plane_gates",
+        "reason": "failed_two_plane_gates",
     }
 
 
