@@ -500,19 +500,33 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
             self.projector.show_black()
             time.sleep(self.cfg.settle_s)
         frames = []
+        capture_errors: list[str] = []
         for i in range(3):
             path = empty_dir / f"empty_burst_{i:02d}.png"
-            meta = self.camera.capture_frame(path, settle_s=0.35, flush_n=24)
+            try:
+                # Dark empty scene: do not require high Laplacian texture
+                meta = self.camera.capture_frame(
+                    path, settle_s=0.35, flush_n=24, expect_texture=False
+                )
+            except RuntimeError as e:
+                capture_errors.append(str(e))
+                self._log(f"empty_scene capture retry failed: {e}")
+                continue
             img = cv2.imread(str(path))
+            if img is None:
+                capture_errors.append(f"unreadable:{path}")
+                continue
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             blur = blur_score(gray)
+            # Accept usable architecture frames even when the room is dark
+            accepted = blur >= 8.0 or float(gray.std()) >= 8.0
             rec = {
                 "path": str(path),
                 "timestamp": datetime.now().isoformat(),
                 "capture_meta": meta,
                 "resolution": [int(img.shape[1]), int(img.shape[0])],
                 "blur": blur,
-                "accepted": blur >= 15.0,
+                "accepted": accepted,
             }
             (empty_dir / f"empty_burst_{i:02d}.json").write_text(json.dumps(rec, indent=2, default=str))
             if rec["accepted"]:
@@ -521,8 +535,15 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
                 rej = self.run_dir / "camera_captures_rejected" / path.name
                 cv2.imwrite(str(rej), img)
         if not frames:
+            self.state["data"]["blocker"] = {
+                "stage": "CAPTURE_EMPTY_SCENE",
+                "errors": capture_errors,
+            }
             self.write_physical_setup_request()
-            self._transition("USER_ACTION_REQUIRED", "empty scene frames unusable")
+            self._transition(
+                "USER_ACTION_REQUIRED",
+                "empty scene frames unusable — steady Continuity Camera / slight ambient OK",
+            )
             return
         # Stability: max pairwise mean abs diff among accepted
         imgs = [cv2.imread(f["path"]) for f in frames]
@@ -1508,12 +1529,13 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
 
     def run(self) -> dict:
         self.run_dir.mkdir(parents=True, exist_ok=True)
-        # Resume after user confirms physical setup
-        if (
-            self.state.get("state") == "USER_ACTION_REQUIRED"
-            and (self.cfg.setup_confirmed or self.cfg.offline)
-        ):
-            self._transition("DISCOVER_PROJECTOR", "setup confirmed — resume physical pipeline")
+        # Resume after user confirms physical setup (or recoverable software retry)
+        if self.cfg.setup_confirmed or self.cfg.offline:
+            if self.state.get("state") in ("USER_ACTION_REQUIRED", "ACCEPTANCE_FAILED"):
+                self._transition(
+                    "DISCOVER_PROJECTOR",
+                    "setup confirmed — resume / retry physical pipeline",
+                )
         terminal = {
             "DONE",
             "USER_ACTION_REQUIRED",
