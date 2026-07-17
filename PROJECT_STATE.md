@@ -28,16 +28,15 @@ ChArUco + planar homography + optional planar residual refinement
 
 See `ACCURACY_STATE.md` for full before/after and residual diagnosis.
 
-## Two-plane piecewise homography
+## Two-plane piecewise homography + oblique video
 
-**SOFTWARE_READY_FOR_PHYSICAL_VALIDATION** · architecture **CONTINUE_CURRENT_ARCHITECTURE**
+**SOFTWARE_READY_FOR_OBLIQUE_VIDEO_VALIDATION** · architecture **CONTINUE_CURRENT_ARCHITECTURE**
 
 - Flat-wall status above is unchanged and must not be replaced by two-plane state
-- Reuse audit: `docs/2025_2026_REUSE_AUDIT.md` (complete — no external drop-in)
-- Architectural priors + extended synthetic suite integrated
+- Ceiling exclusion + max straight video region + `play-video` integrated
 - State: `TWO_PLANE_STATE.md`
-- Synthetic: core 14/14 + extended 25/25; package tests 71 passed
-- Physical: awaiting hardware — `docs/TWO_PLANE_PHYSICAL_RUNBOOK.md`
+- Synthetic: core 14/14 + extended 25/25 + oblique video suite; package tests 78+
+- Physical oblique validation: awaiting hardware — `docs/TWO_PLANE_PHYSICAL_RUNBOOK.md`
 
 ## Experimental
 

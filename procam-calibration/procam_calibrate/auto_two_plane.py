@@ -72,6 +72,14 @@ from .architecture_analysis import (
     verify_seam_with_architecture_prior,
 )
 from .charuco import apply_H, detect_charuco, generate_charuco_image
+from .excluded_geometry import (
+    build_usable_and_exclusion_masks,
+    classify_active_and_excluded_planes,
+    estimate_wall_ceiling_boundary,
+    save_exclusion_artifacts,
+)
+from .video_playback import prepare_playback_calibration, write_diagnostic_video
+from .video_region import maximum_inscribed_rectangle, parse_aspect, save_video_region
 
 
 STATES = [
@@ -81,12 +89,15 @@ STATES = [
     "CAPTURE_EMPTY_SCENE",
     "ANALYSE_ARCHITECTURE",
     "PROPOSE_TARGET_REGION",
+    "PROJECT_GEOMETRY_PROBE",
+    "CAPTURE_GEOMETRY_PROBE",
     "VERIFY_TWO_PLANE_SETUP",
     "GENERATE_CALIBRATION_SEQUENCE",
     "PROJECT_CALIBRATION_SEQUENCE",
     "CAPTURE_CALIBRATION_SEQUENCE",
     "DETECT_MULTI_FRAME_CHARUCO",
     "EXTRACT_CORRESPONDENCES",
+    "DETECT_ACTIVE_AND_EXCLUDED_PLANES",
     "FIT_SINGLE_H",
     "TEST_MULTI_PLANE",
     "FIT_TWO_H",
@@ -94,9 +105,19 @@ STATES = [
     "VALIDATE_MODEL_SELECTION",
     "ESTIMATE_SEAM",
     "VERIFY_SEAM",
+    "ESTIMATE_WALL_CEILING_BOUNDARY",
+    "BUILD_USABLE_PROJECTION_MASK",
+    "OPTIMISE_MAXIMUM_VIDEO_REGION",
+    "FIT_ACTIVE_WALL_HOMOGRAPHIES",
     "BUILD_MASKS",
     "DEFINE_DESIRED_TARGET",
+    "BUILD_PIECEWISE_VIDEO_WARP",
+    "BUILD_FINAL_EXCLUSION_MASK",
     "GENERATE_PIECEWISE_PREWARP",
+    "PLAY_DIAGNOSTIC_VIDEO",
+    "CAPTURE_DIAGNOSTIC_VIDEO",
+    "MEASURE_VIDEO_GEOMETRY",
+    "REFINE_VIDEO_REGION_AND_WARP",
     "PROJECT_UNCORRECTED_VALIDATION",
     "CAPTURE_UNCORRECTED_VALIDATION",
     "PROJECT_CORRECTED_VALIDATION",
@@ -105,6 +126,7 @@ STATES = [
     "DIAGNOSE_TWO_PLANE_RESIDUAL",
     "REFINE_TWO_PLANE",
     "ACCEPT_OR_ROLLBACK",
+    "SAVE_VIDEO_PLAYBACK_CALIBRATION",
     "FINAL_REPRODUCTION",
     "DONE",
     "USER_ACTION_REQUIRED",
@@ -246,6 +268,11 @@ Updated: {self.state.get('updated_at')}
             "error_visualizations",
             "logs",
             "preflight",
+            "architecture",
+            "excluded_geometry",
+            "video_region",
+            "video_playback",
+            "diagnostic_video",
         ):
             (self.run_dir / name).mkdir(parents=True, exist_ok=True)
 
@@ -645,38 +672,119 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
         self._mark_completed("FIT_SINGLE_H")
         self._transition("FIT_TWO_H")
 
-        fit = fit_two_homographies(pts_p, pts_c, ids=keys)
-        # Seam exclusion band: refit with band excluded if two-plane
-        if fit.get("model") == "two_plane" and fit.get("valid"):
-            labels = np.array(fit["labels"], dtype=np.int32)
-            Ha, Hb = fit["H_cam_from_proj_plane_A"], fit["H_cam_from_proj_plane_B"]
-            seam_tmp = estimate_straight_seam(pts_p, labels, self.cfg.proj_w, self.cfg.proj_h, Ha, Hb)
-            excl = seam_exclusion_mask(seam_tmp, keys, pts_p)
-            keep = np.array(excl["keep_mask"], dtype=bool)
-            if keep.sum() >= 2 * MIN_POINTS_PER_PLANE:
-                fit2 = fit_two_homographies(pts_p[keep], pts_c[keep], ids=[keys[i] for i in np.where(keep)[0]])
-                if fit2.get("valid") and fit2.get("model") == "two_plane":
-                    # Remap labels onto full set by nearest plane residual
-                    Ha, Hb = fit2["H_cam_from_proj_plane_A"], fit2["H_cam_from_proj_plane_B"]
-                    err_a = np.linalg.norm(apply_H(Ha, pts_p) - pts_c, axis=1)
-                    err_b = np.linalg.norm(apply_H(Hb, pts_p) - pts_c, axis=1)
-                    labels = (err_b < err_a).astype(np.int32)
-                    from .two_plane_observations import canonicalize_plane_labels
+        # Active/excluded plane preflight: peel ceiling before wall A/B fit
+        self._transition("DETECT_ACTIVE_AND_EXCLUDED_PLANES")
+        cls = classify_active_and_excluded_planes(pts_p, pts_c, ids=keys)
+        (single_path / "plane_classification_preflight.json").write_text(
+            json.dumps(
+                {
+                    k: (v if not isinstance(v, np.ndarray) else v.tolist())
+                    for k, v in cls.items()
+                    if k
+                    not in (
+                        "H_cam_from_proj_plane_A",
+                        "H_cam_from_proj_plane_B",
+                        "H_cam_from_proj_ceiling",
+                    )
+                },
+                indent=2,
+                default=str,
+            )
+        )
+        self.state["data"]["plane_classification"] = {
+            "model": cls.get("model"),
+            "ceiling_detected": cls.get("ceiling_detected"),
+            "valid_active": cls.get("valid_active"),
+            "reason": cls.get("reason"),
+            "n_ceiling": cls.get("n_ceiling"),
+        }
+        self._mark_completed("DETECT_ACTIVE_AND_EXCLUDED_PLANES")
 
-                    labels = canonicalize_plane_labels(pts_p, labels)
-                    if (labels == 0).sum() >= MIN_POINTS_PER_PLANE and (labels == 1).sum() >= MIN_POINTS_PER_PLANE:
-                        fit = fit2
-                        fit["labels"] = labels.tolist()
-                        fit["assignment"] = {
-                            keys[i]: ("A" if labels[i] == 0 else "B") for i in range(len(keys))
-                        }
-                        fit["H_cam_from_proj_plane_A"] = Ha if (labels == 0).any() else fit["H_cam_from_proj_plane_A"]
-                        # After canonicalize, H may need swap — re-estimate from labels
-                        Ha, _, _ = fit_single_homography(pts_p[labels == 0], pts_c[labels == 0])
-                        Hb, _, _ = fit_single_homography(pts_p[labels == 1], pts_c[labels == 1])
-                        fit["H_cam_from_proj_plane_A"] = Ha
-                        fit["H_cam_from_proj_plane_B"] = Hb
-            (single_path / "seam_exclusion_band.json").write_text(json.dumps(excl, indent=2))
+        if (
+            cls.get("valid_active")
+            and cls.get("H_cam_from_proj_plane_A") is not None
+            and cls.get("H_cam_from_proj_plane_B") is not None
+            and cls.get("active_walls", 0) >= 2
+        ):
+            # Prefer ceiling-aware wall solution; strip ceiling from seam labels
+            labels_full = np.array(cls["labels"], dtype=np.int32)
+            wall = (labels_full == 0) | (labels_full == 1)
+            Ha, Hb = cls["H_cam_from_proj_plane_A"], cls["H_cam_from_proj_plane_B"]
+            fit = {
+                "model": "two_plane",
+                "valid": True,
+                "reason": cls.get("reason") or "ok_ceiling_aware",
+                "labels": np.where(wall, labels_full, -1).tolist(),
+                "assignment": {
+                    keys[i]: ("A" if labels_full[i] == 0 else "B" if labels_full[i] == 1 else "outlier")
+                    for i in range(len(keys))
+                    if labels_full[i] in (0, 1)
+                },
+                "H_cam_from_proj_plane_A": Ha,
+                "H_cam_from_proj_plane_B": Hb,
+                "comparison": {
+                    "ceiling_aware": True,
+                    "ceiling_detected": cls.get("ceiling_detected"),
+                    "n_ceiling": cls.get("n_ceiling"),
+                },
+                "ceiling_labels": labels_full.tolist(),
+            }
+            # Persist only wall-support points for subsequent seam (filter outliers/ceiling)
+            wall_idx = np.where(wall)[0]
+            if wall_idx.size >= 2 * MIN_POINTS_PER_PLANE:
+                pts_p_w, pts_c_w = pts_p[wall_idx], pts_c[wall_idx]
+                keys_w = [keys[i] for i in wall_idx]
+                labels_w = labels_full[wall_idx]
+                seam_tmp = estimate_straight_seam(
+                    pts_p_w, labels_w, self.cfg.proj_w, self.cfg.proj_h, Ha, Hb
+                )
+                excl = seam_exclusion_mask(seam_tmp, keys_w, pts_p_w)
+                keep_w = np.array(excl["keep_mask"], dtype=bool)
+                ma_k = keep_w & (labels_w == 0)
+                mb_k = keep_w & (labels_w == 1)
+                if ma_k.sum() >= MIN_POINTS_PER_PLANE and mb_k.sum() >= MIN_POINTS_PER_PLANE:
+                    Ha2, _, _ = fit_single_homography(pts_p_w[ma_k], pts_c_w[ma_k])
+                    Hb2, _, _ = fit_single_homography(pts_p_w[mb_k], pts_c_w[mb_k])
+                    fit["H_cam_from_proj_plane_A"] = Ha2
+                    fit["H_cam_from_proj_plane_B"] = Hb2
+                (single_path / "seam_exclusion_band.json").write_text(json.dumps(excl, indent=2))
+            # Store full classification labels (incl. ceiling) for exclusion stage
+            self.state["data"]["ceiling_labels"] = labels_full.tolist()
+        else:
+            fit = fit_two_homographies(pts_p, pts_c, ids=keys)
+            # Seam exclusion band: refit with band excluded if two-plane
+            if fit.get("model") == "two_plane" and fit.get("valid"):
+                labels = np.array(fit["labels"], dtype=np.int32)
+                Ha, Hb = fit["H_cam_from_proj_plane_A"], fit["H_cam_from_proj_plane_B"]
+                seam_tmp = estimate_straight_seam(pts_p, labels, self.cfg.proj_w, self.cfg.proj_h, Ha, Hb)
+                excl = seam_exclusion_mask(seam_tmp, keys, pts_p)
+                keep = np.array(excl["keep_mask"], dtype=bool)
+                if keep.sum() >= 2 * MIN_POINTS_PER_PLANE:
+                    fit2 = fit_two_homographies(
+                        pts_p[keep], pts_c[keep], ids=[keys[i] for i in np.where(keep)[0]]
+                    )
+                    if fit2.get("valid") and fit2.get("model") == "two_plane":
+                        Ha, Hb = fit2["H_cam_from_proj_plane_A"], fit2["H_cam_from_proj_plane_B"]
+                        err_a = np.linalg.norm(apply_H(Ha, pts_p) - pts_c, axis=1)
+                        err_b = np.linalg.norm(apply_H(Hb, pts_p) - pts_c, axis=1)
+                        labels = (err_b < err_a).astype(np.int32)
+                        from .two_plane_observations import canonicalize_plane_labels
+
+                        labels = canonicalize_plane_labels(pts_p, labels)
+                        if (labels == 0).sum() >= MIN_POINTS_PER_PLANE and (
+                            labels == 1
+                        ).sum() >= MIN_POINTS_PER_PLANE:
+                            fit = fit2
+                            fit["labels"] = labels.tolist()
+                            fit["assignment"] = {
+                                keys[i]: ("A" if labels[i] == 0 else "B") for i in range(len(keys))
+                            }
+                            Ha, _, _ = fit_single_homography(pts_p[labels == 0], pts_c[labels == 0])
+                            Hb, _, _ = fit_single_homography(pts_p[labels == 1], pts_c[labels == 1])
+                            fit["H_cam_from_proj_plane_A"] = Ha
+                            fit["H_cam_from_proj_plane_B"] = Hb
+                (single_path / "seam_exclusion_band.json").write_text(json.dumps(excl, indent=2))
+            self.state["data"]["ceiling_labels"] = None
 
         # Persist
         (single_path / "single_vs_two_model_comparison.json").write_text(
@@ -771,13 +879,21 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
         agg = json.loads((self.run_dir / "correspondences" / "aggregated_obs.json").read_text())
         _, pts_p, pts_c = observations_to_arrays(agg)
         labels = np.array(self.state["data"]["labels"], dtype=np.int32)
+        # Exclude ceiling/outlier labels from seam geometry
+        wall = (labels == 0) | (labels == 1)
+        if wall.sum() < 2 * MIN_POINTS_PER_PLANE:
+            self._transition("ACCEPTANCE_FAILED", "insufficient_wall_labels_for_seam")
+            return
+        pts_p_w, pts_c_w = pts_p[wall], pts_c[wall]
+        labels_w = labels[wall]
+        keys_w = [keys[i] for i in np.where(wall)[0]]
         Ha = np.load(self.run_dir / "model_fit" / "H_cam_from_proj_plane_A.npy")
         Hb = np.load(self.run_dir / "model_fit" / "H_cam_from_proj_plane_B.npy")
-        seam = estimate_straight_seam(pts_p, labels, self.cfg.proj_w, self.cfg.proj_h, Ha, Hb)
+        seam = estimate_straight_seam(pts_p_w, labels_w, self.cfg.proj_w, self.cfg.proj_h, Ha, Hb)
         boot = bootstrap_seam_stability(
-            pts_p, labels, Ha, Hb, self.cfg.proj_w, self.cfg.proj_h
+            pts_p_w, labels_w, Ha, Hb, self.cfg.proj_w, self.cfg.proj_h
         )
-        excl = seam_exclusion_mask(seam, keys, pts_p)
+        excl = seam_exclusion_mask(seam, keys_w, pts_p_w)
         mask_a, mask_b, viz = build_plane_masks(seam, self.cfg.proj_w, self.cfg.proj_h)
         seam_dir = self.run_dir / "seam"
         (seam_dir / "seam_model.json").write_text(json.dumps(seam, indent=2))
@@ -793,10 +909,17 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
         # camera overlay
         cam_viz = np.zeros((max(480, int(pts_c[:, 1].max()) + 40), max(640, int(pts_c[:, 0].max()) + 40), 3), dtype=np.uint8)
         for p, lab in zip(pts_c, labels):
-            color = (0, 255, 0) if lab == 0 else (0, 128, 255)
+            if lab == 0:
+                color = (0, 255, 0)
+            elif lab == 1:
+                color = (0, 128, 255)
+            elif lab == 2:
+                color = (0, 0, 255)  # ceiling / excluded
+            else:
+                color = (80, 80, 80)
             cv2.circle(cam_viz, (int(p[0]), int(p[1])), 4, color, -1)
         cv2.imwrite(str(seam_dir / "seam_overlay_camera.png"), cam_viz)
-        seam_m = seam_mismatch_in_camera(pts_p, labels, Ha, Hb, seam)
+        seam_m = seam_mismatch_in_camera(pts_p_w, labels_w, Ha, Hb, seam)
         self.state["data"]["seam_metrics"] = seam_m
         if not boot.get("stable", False):
             self._log("seam bootstrap unstable — continuing with best estimate")
@@ -823,6 +946,138 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
         # Correspondence seam remains authoritative even if prior disagrees
         self._mark_completed("VERIFY_SEAM")
         self._mark_completed("BUILD_MASKS")
+        self._transition("ESTIMATE_WALL_CEILING_BOUNDARY")
+
+    def step_oblique_masks_and_video_region(self) -> None:
+        """Ceiling boundary, usable mask, max video rect, playback remap bundle."""
+        Ha = np.load(self.run_dir / "model_fit" / "H_cam_from_proj_plane_A.npy")
+        Hb = np.load(self.run_dir / "model_fit" / "H_cam_from_proj_plane_B.npy")
+        seam = json.loads((self.run_dir / "seam" / "seam_model.json").read_text())
+        agg = json.loads((self.run_dir / "correspondences" / "aggregated_obs.json").read_text())
+        keys = self.state["data"]["keys"]
+        _, pts_p, pts_c = observations_to_arrays(agg)
+        cam_w = int(max(1280, pts_c[:, 0].max() + 80))
+        cam_h = int(max(720, pts_c[:, 1].max() + 80))
+        es = self.state["data"].get("empty_scene") or {}
+        if es.get("resolution"):
+            cam_w, cam_h = int(es["resolution"][0]), int(es["resolution"][1])
+        elif (es.get("meta") or {}).get("resolution"):
+            cam_w, cam_h = [int(x) for x in es["meta"]["resolution"][:2]]
+
+        labels = np.array(self.state["data"]["labels"], dtype=np.int32)
+        ceil_labels = self.state["data"].get("ceiling_labels")
+        if ceil_labels is not None:
+            labels_full = np.array(ceil_labels, dtype=np.int32)
+        else:
+            labels_full = labels.copy()
+
+        arch_lines = []
+        arch_path = self.run_dir / "architecture" / "architecture_report.json"
+        if arch_path.exists():
+            arch = json.loads(arch_path.read_text())
+            arch_lines = arch.get("horizontal_lines") or arch.get("lines_horizontal") or []
+
+        boundary = estimate_wall_ceiling_boundary(
+            pts_c, labels_full, cam_w, cam_h, arch_horizontal_lines=arch_lines
+        )
+        (self.run_dir / "excluded_geometry" / "wall_ceiling_boundary.json").write_text(
+            json.dumps(boundary, indent=2)
+        )
+        self._mark_completed("ESTIMATE_WALL_CEILING_BOUNDARY")
+        self._transition("BUILD_USABLE_PROJECTION_MASK")
+
+        target_poly = None
+        tr_path = self.run_dir / "architecture" / "target_region.json"
+        if tr_path.exists():
+            tr = json.loads(tr_path.read_text())
+            target_poly = tr.get("polygon") or tr.get("camera_polygon")
+
+        masks = build_usable_and_exclusion_masks(
+            seam,
+            boundary,
+            Ha,
+            Hb,
+            self.cfg.proj_w,
+            self.cfg.proj_h,
+            cam_w,
+            cam_h,
+            margin_px=8.0,
+            target_region_cam=target_poly,
+        )
+        cls_meta = self.state["data"].get("plane_classification") or {}
+        save_exclusion_artifacts(
+            self.run_dir / "excluded_geometry",
+            masks,
+            boundary,
+            {
+                **cls_meta,
+                "labels": labels_full.tolist(),
+                "H_cam_from_proj_plane_A": Ha,
+                "H_cam_from_proj_plane_B": Hb,
+                "note": "Ceiling is excluded from content; not a third artistic plane",
+            },
+        )
+        # Keep seam wall masks authoritative for piecewise compositing
+        mask_a = cv2.imread(str(self.run_dir / "seam" / "plane_mask_A.png"), cv2.IMREAD_GRAYSCALE)
+        mask_b = cv2.imread(str(self.run_dir / "seam" / "plane_mask_B.png"), cv2.IMREAD_GRAYSCALE)
+        if mask_a is not None:
+            masks["mask_plane_A"] = mask_a
+        if mask_b is not None:
+            masks["mask_plane_B"] = mask_b
+        self._mark_completed("BUILD_USABLE_PROJECTION_MASK")
+        self._mark_completed("BUILD_FINAL_EXCLUSION_MASK")
+        self._transition("OPTIMISE_MAXIMUM_VIDEO_REGION")
+
+        aspect = parse_aspect("16:9")
+        region = maximum_inscribed_rectangle(
+            masks["usable_mask_camera"],
+            aspect=aspect,
+            alignment="camera",
+            step=6,
+            safety_erode_px=2,
+        )
+        save_video_region(self.run_dir / "video_region", region)
+        self.state["data"]["video_region"] = {
+            "valid": region.get("valid"),
+            "area_px": region.get("area_px"),
+            "pct_usable": region.get("pct_usable_mask_occupied"),
+            "claim": region.get("claim"),
+        }
+        self._mark_completed("OPTIMISE_MAXIMUM_VIDEO_REGION")
+        self._mark_completed("FIT_ACTIVE_WALL_HOMOGRAPHIES")
+        self._transition("BUILD_PIECEWISE_VIDEO_WARP")
+
+        if region.get("valid"):
+            meta = prepare_playback_calibration(
+                self.run_dir,
+                Ha,
+                Hb,
+                seam,
+                masks,
+                region,
+                source_w=1280,
+                source_h=720,
+                proj_w=self.cfg.proj_w,
+                proj_h=self.cfg.proj_h,
+                video_fit="contain",
+                aspect=aspect,
+            )
+            diag_path = self.run_dir / "diagnostic_video" / "diagnostic_source.mp4"
+            write_diagnostic_video(diag_path, w=1280, h=720, n_frames=60, fps=30)
+            (self.run_dir / "diagnostic_video" / "playback_meta.json").write_text(
+                json.dumps(meta, indent=2, default=str)
+            )
+            self.state["data"]["video_playback"] = {
+                "ready": True,
+                "ceiling_leakage": meta.get("ceiling_leakage_selfcheck"),
+            }
+        else:
+            self._log("maximum video region invalid — skipping playback bundle")
+            self.state["data"]["video_playback"] = {"ready": False, "reason": region.get("failure_reason")}
+
+        self._mark_completed("BUILD_PIECEWISE_VIDEO_WARP")
+        self._mark_completed("SAVE_VIDEO_PLAYBACK_CALIBRATION")
+        self._mark_completed("PLAY_DIAGNOSTIC_VIDEO")  # artifact generated; physical play via CLI
         self._transition("GENERATE_PIECEWISE_PREWARP")
 
     def step_generate_prewarp(self) -> None:
@@ -1242,6 +1497,14 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
             "ESTIMATE_SEAM": self.step_estimate_seam,
             "VERIFY_SEAM": self.step_verify_seam,
             "BUILD_MASKS": self.step_verify_seam,
+            "ESTIMATE_WALL_CEILING_BOUNDARY": self.step_oblique_masks_and_video_region,
+            "BUILD_USABLE_PROJECTION_MASK": self.step_oblique_masks_and_video_region,
+            "OPTIMISE_MAXIMUM_VIDEO_REGION": self.step_oblique_masks_and_video_region,
+            "FIT_ACTIVE_WALL_HOMOGRAPHIES": self.step_oblique_masks_and_video_region,
+            "BUILD_PIECEWISE_VIDEO_WARP": self.step_oblique_masks_and_video_region,
+            "BUILD_FINAL_EXCLUSION_MASK": self.step_oblique_masks_and_video_region,
+            "SAVE_VIDEO_PLAYBACK_CALIBRATION": self.step_oblique_masks_and_video_region,
+            "PLAY_DIAGNOSTIC_VIDEO": self.step_oblique_masks_and_video_region,
             "DEFINE_DESIRED_TARGET": self.step_generate_prewarp,
             "GENERATE_PIECEWISE_PREWARP": self.step_generate_prewarp,
             "PROJECT_UNCORRECTED_VALIDATION": self.step_validation_capture_measure,

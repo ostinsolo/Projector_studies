@@ -455,6 +455,33 @@ def build_parser() -> argparse.ArgumentParser:
     )
     s.set_defaults(func=cmd_auto_two_plane)
 
+    s = sub.add_parser(
+        "play-video",
+        help=(
+            "Play diagnostic or user video using saved piecewise calibration. "
+            "Uses projector display; does not modify calibration artifacts."
+        ),
+    )
+    s.add_argument("--calibration-run", required=True, help="Physical/offline run with video_playback/")
+    s.add_argument("--input", default=None, help="Video file path (omit with --diagnostic)")
+    s.add_argument("--diagnostic", action="store_true", help="Play generated diagnostic animation")
+    s.add_argument("--loop", action="store_true", help="Loop playback")
+    s.add_argument(
+        "--video-fit",
+        choices=("contain", "cover", "stretch"),
+        default="contain",
+        help="How source video fits the desired camera rectangle (default: contain)",
+    )
+    s.add_argument(
+        "--alignment",
+        choices=("camera", "architecture", "custom-angle"),
+        default="camera",
+        help="Straightness reference (default: camera / audience viewpoint)",
+    )
+    s.add_argument("--screen-id", type=int, default=None)
+    s.add_argument("--max-frames", type=int, default=None, help="Optional frame cap (tests)")
+    s.set_defaults(func=cmd_play_video)
+
     return p
 
 
@@ -555,11 +582,16 @@ def cmd_auto_two_plane(args: argparse.Namespace) -> int:
 
     if mode == "synthetic":
         from .synthetic_two_plane import run_extended_synthetic_suite
+        from .synthetic_oblique_video import run_oblique_video_suite
 
         summary = run_synthetic_mode(run_dir, args.proj_w, args.proj_h)
         ext = run_extended_synthetic_suite(run_dir / "extended_suite")
+        obl = run_oblique_video_suite(run_dir / "oblique_video_suite")
         (run_dir / "TWO_PLANE_EXTENDED_SYNTHETIC_SUMMARY.json").write_text(
             json.dumps(ext, indent=2, default=str)
+        )
+        (run_dir / "OBLIQUE_VIDEO_SYNTHETIC_SUMMARY.json").write_text(
+            json.dumps(obl, indent=2, default=str)
         )
         print(
             json.dumps(
@@ -577,11 +609,16 @@ def cmd_auto_two_plane(args: argparse.Namespace) -> int:
                         "n_cases": ext["n_cases"],
                         "core_14_all_pass": ext.get("core_14_all_pass"),
                     },
+                    "oblique_video": {
+                        "all_pass": obl["all_pass"],
+                        "n_pass": obl["n_pass"],
+                        "n_cases": obl["n_cases"],
+                    },
                 },
                 indent=2,
             )
         )
-        return 0 if summary.get("all_pass") and ext.get("all_pass") else 1
+        return 0 if summary.get("all_pass") and ext.get("all_pass") and obl.get("all_pass") else 1
 
     cfg = AutoTwoPlaneConfig(
         run_dir=run_dir,
@@ -604,6 +641,41 @@ def cmd_auto_two_plane(args: argparse.Namespace) -> int:
     if st == "USER_ACTION_REQUIRED":
         return 3
     return 1
+
+
+def cmd_play_video(args: argparse.Namespace) -> int:
+    from .video_playback import play_video_on_projector
+
+    calib = Path(args.calibration_run)
+    if not (calib / "video_playback" / "piecewise_remap.npz").exists():
+        # Allow rebuild note
+        print(
+            json.dumps(
+                {
+                    "error": "missing_video_playback_bundle",
+                    "need": str(calib / "video_playback" / "piecewise_remap.npz"),
+                    "hint": "Run oblique/two-plane calibration that writes video_playback/",
+                },
+                indent=2,
+            )
+        )
+        return 2
+    if not args.diagnostic and not args.input:
+        print(json.dumps({"error": "provide --input or --diagnostic"}, indent=2))
+        return 2
+    result = play_video_on_projector(
+        calib,
+        input_path=Path(args.input) if args.input else None,
+        diagnostic=bool(args.diagnostic),
+        loop=bool(args.loop),
+        screen_id=args.screen_id,
+        max_frames=args.max_frames if args.max_frames is not None else (120 if args.diagnostic else None),
+    )
+    # alignment / video-fit are recorded at calibration time; report requested flags
+    result["requested_video_fit"] = args.video_fit
+    result["requested_alignment"] = args.alignment
+    print(json.dumps(result, indent=2, default=str))
+    return 0 if result.get("ok") else 1
 
 
 def main(argv: list[str] | None = None) -> int:
