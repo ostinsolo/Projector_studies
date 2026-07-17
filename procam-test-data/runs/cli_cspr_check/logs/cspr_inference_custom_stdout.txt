@@ -1,0 +1,23 @@
+
+[Init] Preprocessing images (cropping)...
+Saved cropped camera mask: ./real_data/mask_red.jpeg
+[Load] Loading weights from: ./neural_results_exp
+Models loaded successfully.
+
+[HD Inference] Camera: 3072x1728, Projector: 1920x1080
+Mask bounding rect: x=215, y=128, w=2311, h=1576
+
+[Timing] Network inference: 2.3016s
+[Timing] Grid sample: 0.0486s
+[Timing] Total inference (net + grid): 2.3501s
+
+All HD results and models saved.
+Camera recon SSIM: 0.3799
+Camera recon (masked) -- SSIM: 0.3534, PSNR: 7.3457, RMSE: 109.4595
+Projector recon SSIM: 0.7280
+Projector recon -- SSIM: 0.7422, PSNR: 16.5611, RMSE: 37.8864
+
+[Visualization] Generating projector-space mask (mask_on_proj)...
+Projector white mask transformed to camera plane: ./neural_results_exp/mask_cam_fake.png
+Projector mask saved to: ./neural_results_exp/Final_Mask_on_Projector_Space.png
+Inference done. Elapsed: 8.37s

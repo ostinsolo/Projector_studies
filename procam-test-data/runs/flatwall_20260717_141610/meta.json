@@ -1,0 +1,29 @@
+{
+  "session_id": "flatwall_20260717_141610",
+  "projector_resolution": [
+    1920,
+    1080
+  ],
+  "camera_resolution": null,
+  "device_orientation": null,
+  "iphone_model": null,
+  "lens": null,
+  "zoom_factor": 1.0,
+  "target_observer_viewpoint": {
+    "description": null,
+    "approximate_camera_wall_distance_m": null,
+    "approximate_projector_wall_distance_m": null,
+    "approximate_viewing_angle_deg": null,
+    "approximate_camera_projector_separation_m": null,
+    "notes": "CSPR-Net pre-warp is optimized for this fixed camera pose only; not viewpoint-independent."
+  },
+  "full_projected_area_visible": true,
+  "projected_area_substantial_in_frame": true,
+  "moderate_viewing_angle": true,
+  "camera_near_projector_optional": true,
+  "focus_locked": true,
+  "exposure_locked": true,
+  "white_balance_locked": true,
+  "lens_and_zoom_fixed": true,
+  "orientation_fixed": true
+}

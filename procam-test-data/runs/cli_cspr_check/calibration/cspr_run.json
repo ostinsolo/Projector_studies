@@ -1,0 +1,17 @@
+{
+  "exit_code": 0,
+  "elapsed_s": 9.566796064376831,
+  "weights_loaded": true,
+  "copied_outputs": [
+    "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/cli_cspr_check/prewarps/cspr_pre_warped.png",
+    "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/cli_cspr_check/prewarps/cspr_pre_warped_test.png",
+    "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/cli_cspr_check/prewarps/cspr_fake_cam.png"
+  ],
+  "command": [
+    "/Users/ostino/Documents/Code/Projector_studies/CSPR-Net/.venv/bin/python",
+    "/Users/ostino/Documents/Code/Projector_studies/CSPR-Net/deep_learning_exp_for_gradient.py",
+    "inference_custom",
+    "/Users/ostino/Documents/Code/Projector_studies/CSPR-Net/real_data/test.jpg"
+  ],
+  "pass": true
+}

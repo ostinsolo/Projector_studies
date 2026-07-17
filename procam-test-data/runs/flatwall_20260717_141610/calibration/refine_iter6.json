@@ -1,0 +1,8 @@
+{
+  "iteration": 6,
+  "median_residual_px": 1.5690787292512928e-14,
+  "p95_residual_px": 3.1381574585025857e-14,
+  "best_median_before": 0.0,
+  "accepted": false,
+  "reason": "rejected_worsening_or_equal"
+}

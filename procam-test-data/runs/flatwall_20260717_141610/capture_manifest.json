@@ -1,0 +1,168 @@
+{
+  "run_id": "flatwall_20260717_141610",
+  "status": "AWAITING_CAPTURE",
+  "destination_directory": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw",
+  "projector_resolution": [
+    1920,
+    1080
+  ],
+  "coordinate_spaces": {
+    "patterns": "ProjFB",
+    "captures": "CamImg"
+  },
+  "required_captures": [
+    {
+      "stem": "00_black",
+      "pattern_file": "00_black.png",
+      "accepted_extensions": [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".JPG",
+        ".JPEG",
+        ".PNG"
+      ],
+      "notes": "One still matching the fullscreen projected pattern; no crop/mirror/resize"
+    },
+    {
+      "stem": "01_white",
+      "pattern_file": "01_white.png",
+      "accepted_extensions": [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".JPG",
+        ".JPEG",
+        ".PNG"
+      ],
+      "notes": "One still matching the fullscreen projected pattern; no crop/mirror/resize"
+    },
+    {
+      "stem": "02_border",
+      "pattern_file": "02_border.png",
+      "accepted_extensions": [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".JPG",
+        ".JPEG",
+        ".PNG"
+      ],
+      "notes": "One still matching the fullscreen projected pattern; no crop/mirror/resize"
+    },
+    {
+      "stem": "03_corners",
+      "pattern_file": "03_corners.png",
+      "accepted_extensions": [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".JPG",
+        ".JPEG",
+        ".PNG"
+      ],
+      "notes": "One still matching the fullscreen projected pattern; no crop/mirror/resize"
+    },
+    {
+      "stem": "04_dense_grid",
+      "pattern_file": "04_dense_grid.png",
+      "accepted_extensions": [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".JPG",
+        ".JPEG",
+        ".PNG"
+      ],
+      "notes": "One still matching the fullscreen projected pattern; no crop/mirror/resize"
+    },
+    {
+      "stem": "05_cspr_grid_1",
+      "pattern_file": "05_cspr_grid_1.png",
+      "accepted_extensions": [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".JPG",
+        ".JPEG",
+        ".PNG"
+      ],
+      "notes": "One still matching the fullscreen projected pattern; no crop/mirror/resize"
+    },
+    {
+      "stem": "06_cspr_grid_2",
+      "pattern_file": "06_cspr_grid_2.png",
+      "accepted_extensions": [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".JPG",
+        ".JPEG",
+        ".PNG"
+      ],
+      "notes": "One still matching the fullscreen projected pattern; no crop/mirror/resize"
+    },
+    {
+      "stem": "07_cspr_grid_3",
+      "pattern_file": "07_cspr_grid_3.png",
+      "accepted_extensions": [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".JPG",
+        ".JPEG",
+        ".PNG"
+      ],
+      "notes": "One still matching the fullscreen projected pattern; no crop/mirror/resize"
+    },
+    {
+      "stem": "08_cspr_red",
+      "pattern_file": "08_cspr_red.png",
+      "accepted_extensions": [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".JPG",
+        ".JPEG",
+        ".PNG"
+      ],
+      "notes": "One still matching the fullscreen projected pattern; no crop/mirror/resize"
+    },
+    {
+      "stem": "09_validation_uncorrected",
+      "pattern_file": "09_validation_uncorrected.png",
+      "accepted_extensions": [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".JPG",
+        ".JPEG",
+        ".PNG"
+      ],
+      "notes": "One still matching the fullscreen projected pattern; no crop/mirror/resize"
+    }
+  ],
+  "iphone_protocol": {
+    "fixed_mount": true,
+    "camera_independent_of_projector": true,
+    "must_see_full_projected_area": true,
+    "projected_area_substantial_in_frame": true,
+    "near_projector_axis_optional_not_required": true,
+    "single_viewpoint_optimization": true,
+    "viewpoint_independent_correction_not_claimed": true,
+    "moderate_viewing_angle_recommended": true,
+    "lock_focus": true,
+    "lock_exposure": true,
+    "lock_white_balance": true,
+    "fixed_lens_and_zoom": true,
+    "disable_stabilization": true,
+    "no_portrait_mode": true,
+    "no_mirroring": true,
+    "no_auto_crop": true,
+    "preserve_native_resolution": true,
+    "unchanged_orientation": true
+  },
+  "validate_command": "procam-calibrate validate-capture --run-dir /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610",
+  "protocol_note": "CSPR-Net: camera and projector may be placed independently; camera FOV must fully cover the projected area. Pre-warp is optimized for this fixed observer viewpoint only.",
+  "patterns_regenerated": false
+}

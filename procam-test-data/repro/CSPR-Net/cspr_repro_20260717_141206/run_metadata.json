@@ -1,0 +1,27 @@
+{
+  "run_id": "cspr_repro_20260717_141206",
+  "stage": "M1_CSPR_reproduce",
+  "status": "PASS",
+  "cspr_commit": "a2a0a28ac2022c876f1ac1e52620b44bfe96672a",
+  "device": "cpu",
+  "torch_cuda_available": false,
+  "commands": [
+    "python deep_learning_simulation_for_gradient.py inference",
+    "python deep_learning_exp_for_gradient.py inference",
+    "python deep_learning_exp_for_gradient.py inference_custom ./real_data/test.jpg"
+  ],
+  "outputs": {
+    "sim_pre_warped": "prewarps/sim_pre_warped.png",
+    "exp_pre_warped": "prewarps/exp_pre_warped.png",
+    "exp_pre_warped_test": "prewarps/exp_pre_warped_test.png"
+  },
+  "metrics_from_logs": {
+    "sim_prewarped_ssim": 0.9243,
+    "sim_prewarped_psnr": 22.7366,
+    "sim_elapsed_s": 19.4,
+    "exp_elapsed_s": 8.06,
+    "custom_elapsed_s": 8.08
+  },
+  "weights_loaded": true,
+  "evidence": "stdout contains 'Models loaded successfully' and HD results saved"
+}

@@ -1,0 +1,34 @@
+STATE PREFLIGHT
+STATE DISCOVER_CAMERA
+ERROR in DISCOVER_CAMERA: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/.burst_discover_iphone_001.jpg', 'blur': 0.0, 'clip': 1.0, 'contrast': 0.0, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 290, in stage_discover_camera
+    meta = self.camera.capture_frame(probe, settle_s=0.5)
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/camera_control.py", line 155, in capture_frame
+    raise RuntimeError(f"Capture too blurry: {best_meta}")
+RuntimeError: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/.burst_discover_iphone_001.jpg', 'blur': 0.0, 'clip': 1.0, 'contrast': 0.0, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+
+STATE DISCOVER_CAMERA
+ERROR in DISCOVER_CAMERA: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/.burst_discover_iphone_001.jpg', 'blur': 0.0, 'clip': 1.0, 'contrast': 0.0, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 290, in stage_discover_camera
+    meta = self.camera.capture_frame(probe, settle_s=0.5)
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/camera_control.py", line 155, in capture_frame
+    raise RuntimeError(f"Capture too blurry: {best_meta}")
+RuntimeError: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/.burst_discover_iphone_001.jpg', 'blur': 0.0, 'clip': 1.0, 'contrast': 0.0, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+
+STATE DISCOVER_CAMERA
+ERROR in DISCOVER_CAMERA: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/.burst_discover_iphone_001.jpg', 'blur': 0.0, 'clip': 1.0, 'contrast': 0.0, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 290, in stage_discover_camera
+    meta = self.camera.capture_frame(probe, settle_s=0.5)
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/camera_control.py", line 155, in capture_frame
+    raise RuntimeError(f"Capture too blurry: {best_meta}")
+RuntimeError: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/.burst_discover_iphone_001.jpg', 'blur': 0.0, 'clip': 1.0, 'contrast': 0.0, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+

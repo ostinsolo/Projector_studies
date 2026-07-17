@@ -1,0 +1,2 @@
+torch 2.13.0 cuda False
+cv2 5.0.0

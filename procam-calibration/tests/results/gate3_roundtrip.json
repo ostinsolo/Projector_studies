@@ -1,0 +1,7 @@
+{
+  "median_roundtrip_px": 1.6077746776921858e-13,
+  "p95_roundtrip_px": 3.225302144197576e-13,
+  "max_roundtrip_px": 3.4135644425146874e-13,
+  "condition_number": 19520.636898913068,
+  "det": 0.6420096396767032
+}

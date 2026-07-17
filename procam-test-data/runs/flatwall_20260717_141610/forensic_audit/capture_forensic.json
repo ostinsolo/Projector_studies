@@ -1,0 +1,213 @@
+{
+  "uncorrected": {
+    "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_validated/09_validation_uncorrected.png",
+    "shape": [
+      1440,
+      1920,
+      3
+    ],
+    "dtype": "uint8",
+    "mean": 8.750594618055555,
+    "std": 15.800116667683238,
+    "mtime": "2026-07-17T14:50:21.240482",
+    "sha256_16": "23f8a65e61a63594",
+    "min": 0,
+    "max": 192
+  },
+  "corrected": {
+    "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/captured_validation/validation_corrected.png",
+    "shape": [
+      1440,
+      1920,
+      3
+    ],
+    "dtype": "uint8",
+    "mean": 77.01243887442129,
+    "std": 50.48330258030895,
+    "mtime": "2026-07-17T15:13:36.298471",
+    "sha256_16": "ee435734d2dc9134",
+    "min": 0,
+    "max": 255
+  },
+  "content": {
+    "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/projected_validation/content_validation.png",
+    "shape": [
+      1080,
+      1920,
+      3
+    ],
+    "dtype": "uint8",
+    "mean": 7.182529417438271,
+    "std": 39.53665086497619,
+    "mtime": "2026-07-17T15:12:43.676331",
+    "sha256_16": "a3a5f7d5763eb78f",
+    "min": 0,
+    "max": 255
+  },
+  "prewarp_best": {
+    "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/prewarps/prewarp_best.png",
+    "shape": [
+      1080,
+      1920,
+      3
+    ],
+    "dtype": "uint8",
+    "mean": 6.350732542438272,
+    "std": 29.082131914549333,
+    "mtime": "2026-07-17T15:12:46.163868",
+    "sha256_16": "ebb0ad9c8c49921e",
+    "min": 0,
+    "max": 254
+  },
+  "prewarp_to_project": {
+    "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/projected_validation/prewarp_to_project.png",
+    "shape": [
+      1080,
+      1920,
+      3
+    ],
+    "dtype": "uint8",
+    "mean": 6.350732542438272,
+    "std": 29.082131914549333,
+    "mtime": "2026-07-17T15:12:46.163868",
+    "sha256_16": "ebb0ad9c8c49921e",
+    "min": 0,
+    "max": 254
+  },
+  "cspr_pre_warped": {
+    "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/pre_warped.png",
+    "shape": [
+      1080,
+      1920,
+      3
+    ],
+    "dtype": "uint8",
+    "mean": 6.350732542438272,
+    "std": 29.082131914549333,
+    "mtime": "2026-07-17T15:12:46.163868",
+    "sha256_16": "ebb0ad9c8c49921e",
+    "min": 0,
+    "max": 254
+  },
+  "capture_compare": {
+    "same_shape": true,
+    "mean_abs_diff": 67.13085238233025,
+    "max_abs_diff": 255,
+    "ssim": 0.07835092029502086,
+    "identical": false,
+    "sha_equal": false,
+    "dt_mtime_s": 1395.057989358902
+  },
+  "prewarp_vs_content": {
+    "same_shape": true,
+    "mean_abs_diff": 12.740553465792182,
+    "max_abs_diff": 255,
+    "sha_equal": false,
+    "prewarp_eq_to_project": true
+  },
+  "prewarp_displacement": {
+    "mean_px": 29.64299586299262,
+    "median_px": 23.63655948638916,
+    "max_px": 547.9653930664062,
+    "pct_gt_2px": 84.89583333333334,
+    "pct_gt_5px": 81.49151234567901,
+    "note": "Farneback content\u2192prewarp at 480x270 scaled; approximate projector-space displacement"
+  },
+  "detect_uncorrected": {
+    "outer_corners": [
+      [
+        1686.0,
+        677.0
+      ],
+      [
+        1919.0,
+        677.0
+      ],
+      [
+        1919.0,
+        1207.0
+      ],
+      [
+        1686.0,
+        1207.0
+      ]
+    ],
+    "outer_area": 123490.0,
+    "tautological_metrics": {
+      "n_corners": 4,
+      "corner_errors_px": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_residual_px": 0.0,
+      "median_residual_px": 0.0,
+      "p95_residual_px": 0.0,
+      "max_residual_px": 0.0,
+      "horizontal_straightness_px": 4.9344478611601517e-05,
+      "vertical_straightness_px": 2.000694439630024e-05,
+      "aspect_ratio_measured": 0.439622641509434,
+      "image_size": [
+        1920,
+        1440
+      ]
+    },
+    "chessboard_9x6": false,
+    "chessboard_8x5": false,
+    "n_cb_corners": 0
+  },
+  "detect_corrected": {
+    "outer_corners": [
+      [
+        159.0,
+        0.0
+      ],
+      [
+        1918.999755859375,
+        0.0
+      ],
+      [
+        1918.999755859375,
+        1020.9998779296875
+      ],
+      [
+        159.0,
+        1020.9998779296875
+      ]
+    ],
+    "outer_area": 1796959.5358887017,
+    "tautological_metrics": {
+      "n_corners": 4,
+      "corner_errors_px": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_residual_px": 0.0,
+      "median_residual_px": 0.0,
+      "p95_residual_px": 0.0,
+      "max_residual_px": 0.0,
+      "horizontal_straightness_px": 9.911817869578954e-06,
+      "vertical_straightness_px": 3.8541675166925415e-05,
+      "aspect_ratio_measured": 1.7238001628640545,
+      "image_size": [
+        1920,
+        1440
+      ]
+    },
+    "chessboard_9x6": false,
+    "chessboard_8x5": false,
+    "n_cb_corners": 0
+  },
+  "projected_region": {
+    "pixels": 19697,
+    "bbox": [
+      77,
+      71,
+      1919,
+      1295
+    ]
+  }
+}

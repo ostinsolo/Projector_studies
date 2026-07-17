@@ -1,0 +1,1 @@
+/Users/ostino/Documents/Code/Projector_studies/CSPR-Net/.venv/bin/python /Users/ostino/Documents/Code/Projector_studies/CSPR-Net/deep_learning_exp_for_gradient.py inference_custom /Users/ostino/Documents/Code/Projector_studies/CSPR-Net/real_data/test.jpg

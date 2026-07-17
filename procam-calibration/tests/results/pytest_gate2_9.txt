@@ -1,0 +1,23 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.11, pytest-9.1.1, pluggy-1.6.0 -- /Users/ostino/Documents/Code/Projector_studies/CSPR-Net/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/ostino/Documents/Code/Projector_studies/procam-calibration
+configfile: pyproject.toml
+collecting ... collected 14 items
+
+tests/test_validation_suite.py::test_gate2_canonical_board_constants PASSED [  7%]
+tests/test_validation_suite.py::test_gate2_generate_and_self_detect_identical_ids PASSED [ 14%]
+tests/test_validation_suite.py::test_gate2_no_hidden_chessboard_fallback_in_charuco_module PASSED [ 21%]
+tests/test_validation_suite.py::test_gate3_roundtrip_homography PASSED   [ 28%]
+tests/test_validation_suite.py::test_gate3_detect_xy_swap_fails PASSED   [ 35%]
+tests/test_validation_suite.py::test_gate3_stale_resolution_mismatch PASSED [ 42%]
+tests/test_validation_suite.py::test_gate3_prewarp_inverse_convention PASSED [ 50%]
+tests/test_validation_suite.py::test_gate4_empty_detection_never_zero_error PASSED [ 57%]
+tests/test_validation_suite.py::test_gate4_desired_target_independent_of_corrected_contour PASSED [ 64%]
+tests/test_validation_suite.py::test_gate6_synthetic_matrix PASSED       [ 71%]
+tests/test_validation_suite.py::test_gate7_canonical_replay_immutable_inputs PASSED [ 78%]
+tests/test_validation_suite.py::test_gate9_run_lock_second_process PASSED [ 85%]
+tests/test_validation_suite.py::test_gate9_production_handlers_exclude_cspr_when_homography PASSED [ 92%]
+tests/test_validation_suite.py::test_gate9_atomic_state_write PASSED     [100%]
+
+============================== 14 passed in 0.75s ==============================

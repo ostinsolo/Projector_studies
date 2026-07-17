@@ -1,0 +1,7 @@
+STATE PREFLIGHT
+STATE DISCOVER_CAMERA
+STATE DISCOVER_PROJECTOR
+AirPlay/Apple TV display detected — using settle_s=1.2s
+STATE GENERATE_PATTERNS
+Generated patterns at 1280x720 (resolution change 1920x1080 -> 1280x720)
+STATE VERIFY_CAPTURE

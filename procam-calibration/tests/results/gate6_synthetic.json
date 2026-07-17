@@ -1,0 +1,67 @@
+[
+  {
+    "name": "identity",
+    "status": "PASS",
+    "acceptance_pass": true,
+    "expect_pass": true,
+    "target_before": 0.7553605500123985,
+    "target_after": 0.09843976172135774,
+    "n_unc": 54,
+    "n_cor": 54
+  },
+  {
+    "name": "horizontal_keystone",
+    "status": "PASS",
+    "acceptance_pass": true,
+    "expect_pass": true,
+    "target_before": 19.038748333005326,
+    "target_after": 0.09727265464157273,
+    "n_unc": 54,
+    "n_cor": 49
+  },
+  {
+    "name": "vertical_keystone",
+    "status": "PASS",
+    "acceptance_pass": true,
+    "expect_pass": true,
+    "target_before": 14.456196333833908,
+    "target_after": 0.10437498803703865,
+    "n_unc": 54,
+    "n_cor": 54
+  },
+  {
+    "name": "combined_projective",
+    "status": "PASS",
+    "acceptance_pass": true,
+    "expect_pass": true,
+    "target_before": 21.092798889362403,
+    "target_after": 0.1553059506889246,
+    "n_unc": 54,
+    "n_cor": 49
+  },
+  {
+    "name": "camera_rotation",
+    "status": "PASS",
+    "acceptance_pass": true,
+    "expect_pass": true,
+    "target_before": 33.678009295833604,
+    "target_after": 0.04536999810224227,
+    "n_unc": 53,
+    "n_cor": 35
+  },
+  {
+    "name": "mirror",
+    "status": "SKIP",
+    "reason": "only_0_matches"
+  },
+  {
+    "name": "mild_blur",
+    "status": "PASS",
+    "acceptance_pass": true,
+    "expect_pass": true,
+    "target_before": 19.038748333005326,
+    "target_after": 0.09727265464157273,
+    "n_unc": 54,
+    "n_cor": 49
+  }
+]

@@ -1,0 +1,14 @@
+[Load] Loading weights from: ./neural_results_simulation
+Models loaded successfully.
+
+[HD Inference] Camera: 3072x1728, Projector: 1920x1080
+Mask bounding rect: x=440, y=388, w=2192, h=1220
+All HD results and models saved.
+[Debug] Saved metric mask: metric_mask.png
+Pre-warped  -- SSIM: 0.9243, PSNR: 22.7366, RMSE: 18.6085
+Camera recon  -- SSIM: 0.9598, PSNR: 23.4610, RMSE: 17.1195
+Projector recon -- SSIM: 0.9241, PSNR: 21.2210, RMSE: 22.1560
+
+[Visualization] Generating projector-space mask (mask_on_proj)...
+Projector mask saved to: ./neural_results_simulation/Final_Mask_on_Projector_Space.png
+Inference done. Elapsed: 19.40s

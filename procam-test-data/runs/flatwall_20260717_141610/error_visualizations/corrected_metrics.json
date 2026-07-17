@@ -1,0 +1,62 @@
+{
+  "valid": false,
+  "pass": false,
+  "tag": "corrected",
+  "failure_reason": "no_valid_fiducial_or_grid_detections",
+  "n_corners": 0,
+  "n_valid_measurements": 0,
+  "rejection_count": null,
+  "corner_errors_px": null,
+  "mean_residual_px": null,
+  "median_residual_px": null,
+  "p95_residual_px": null,
+  "max_residual_px": null,
+  "horizontal_straightness_px": null,
+  "vertical_straightness_px": null,
+  "aspect_ratio_measured": null,
+  "detection": {
+    "detection": {
+      "method": "none",
+      "accepted": false
+    },
+    "attempts": [
+      {
+        "method": "charuco",
+        "n_markers": 0,
+        "n_charuco_corners": 0,
+        "accepted": false
+      },
+      {
+        "method": "chessboard",
+        "accepted": false
+      },
+      {
+        "method": "asymmetric_circles",
+        "accepted": false
+      }
+    ],
+    "diagnostic_outer_corners": [
+      [
+        159.0,
+        0.0
+      ],
+      [
+        1918.999755859375,
+        0.0
+      ],
+      [
+        1918.999755859375,
+        1020.9998779296875
+      ],
+      [
+        159.0,
+        1020.9998779296875
+      ]
+    ],
+    "note": "No automatic fiducial/grid detection; outer-contour residuals are disabled (tautological for AA boxes)."
+  },
+  "image_size": [
+    1920,
+    1440
+  ]
+}

@@ -1,0 +1,35 @@
+# Python / tooling
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg
+
+# Virtual environments (never commit)
+.venv/
+.venv*/
+**/.venv/
+**/.venv_clean_validation/
+**/venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Runtime locks / local only
+**/auto_wall.lock
+*.lock
+
+# Large local caches (keep source + run artifacts)
+**/.cache/
+**/wandb/
+**/lightning_logs/

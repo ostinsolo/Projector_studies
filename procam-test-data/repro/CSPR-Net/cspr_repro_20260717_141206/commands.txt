@@ -1,0 +1,5 @@
+cd /Users/ostino/Documents/Code/Projector_studies/CSPR-Net
+source .venv/bin/activate
+python deep_learning_simulation_for_gradient.py inference
+python deep_learning_exp_for_gradient.py inference
+python deep_learning_exp_for_gradient.py inference_custom ./real_data/test.jpg

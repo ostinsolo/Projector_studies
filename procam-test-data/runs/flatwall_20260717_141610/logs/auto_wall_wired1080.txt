@@ -1,0 +1,71 @@
+STATE PREFLIGHT
+STATE DISCOVER_CAMERA
+STATE DISCOVER_PROJECTOR
+STATE GENERATE_PATTERNS
+Generated patterns at 1920x1080 (resolution change 1280x720 -> 1920x1080)
+STATE VERIFY_CAPTURE
+STATE CAPTURE_CALIBRATION
+recapture 00_black attempt 0: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_00_black_001.jpg', 'blur': 7.115299840853204, 'clip': 0.3072945601851852, 'contrast': 18.251089676401527, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+recapture 00_black attempt 1: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_00_black_001.jpg', 'blur': 7.011952401586889, 'clip': 0.32213324652777775, 'contrast': 15.587241823165968, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+recapture 00_black attempt 2: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_00_black_001.jpg', 'blur': 7.828444371996462, 'clip': 0.3198752170138889, 'contrast': 15.594533428818128, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+recapture 00_black attempt 3: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_00_black_001.jpg', 'blur': 7.93421983490919, 'clip': 0.3180052806712963, 'contrast': 15.595558034877444, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+ERROR in CAPTURE_CALIBRATION: Failed to capture 00_black: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_00_black_001.jpg', 'blur': 7.93421983490919, 'clip': 0.3180052806712963, 'contrast': 15.595558034877444, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 465, in stage_capture_calibration
+    raise RuntimeError(f"Failed to capture {stem}: {last_err}")
+RuntimeError: Failed to capture 00_black: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_00_black_001.jpg', 'blur': 7.93421983490919, 'clip': 0.3180052806712963, 'contrast': 15.595558034877444, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+
+STATE CAPTURE_CALIBRATION
+recapture 08_cspr_red attempt 0: blur
+recapture 08_cspr_red attempt 1: blur
+recapture 08_cspr_red attempt 2: blur
+recapture 08_cspr_red attempt 3: blur
+ERROR in CAPTURE_CALIBRATION: Failed to capture 08_cspr_red: blur
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 465, in stage_capture_calibration
+    raise RuntimeError(f"Failed to capture {stem}: {last_err}")
+RuntimeError: Failed to capture 08_cspr_red: blur
+
+STATE CAPTURE_CALIBRATION
+skip existing 00_black
+skip existing 01_white
+skip existing 02_border
+skip existing 03_corners
+skip existing 04_dense_grid
+skip existing 05_cspr_grid_1
+skip existing 06_cspr_grid_2
+skip existing 07_cspr_grid_3
+STATE VALIDATE_CALIBRATION_CAPTURES
+STATE FIT_CSPR_SCENE
+STATE CAPTURE_CALIBRATION
+ERROR in CAPTURE_CALIBRATION: 
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 427, in stage_capture_calibration
+    assert self.projector and self.camera
+AssertionError
+
+STATE CAPTURE_CALIBRATION
+ERROR in CAPTURE_CALIBRATION: 
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 427, in stage_capture_calibration
+    assert self.projector and self.camera
+AssertionError
+
+STATE CAPTURE_CALIBRATION
+ERROR in CAPTURE_CALIBRATION: 
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 427, in stage_capture_calibration
+    assert self.projector and self.camera
+AssertionError
+
+STATE FIT_CSPR_SCENE

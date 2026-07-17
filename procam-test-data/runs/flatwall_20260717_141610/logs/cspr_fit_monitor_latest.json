@@ -1,0 +1,210 @@
+{
+  "timestamp": "2026-07-17T15:12:41",
+  "wall_clock_unix": 1784297561.659072,
+  "parent_pid": 84446,
+  "trainer_pid": 84448,
+  "parent_child_ok": true,
+  "trainer_elapsed": "19:09",
+  "trainer_elapsed_s": 1149.0,
+  "trainer_cputime": "66:47.12",
+  "trainer_cputime_s": 4007.12,
+  "cputime_delta_s": 30.05,
+  "cpu_pct": 100.2,
+  "rss_kb": 3124080,
+  "rss_gb": 2.979,
+  "process_state": "R",
+  "parent_state": "S",
+  "auto_wall_state": "FIT_CSPR_SCENE",
+  "newest_checkpoint": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_c2p.iter2000.pth",
+  "checkpoint_mtime": "2026-07-17T15:08:49",
+  "checkpoint_iteration": 2000,
+  "output_files": [
+    {
+      "name": "gradient_cam_ref.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/gradient_cam_ref.png",
+      "bytes": 35175,
+      "mtime": "2026-07-17T14:53:33"
+    },
+    {
+      "name": "gradient_proj_ref.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/gradient_proj_ref.png",
+      "bytes": 25452,
+      "mtime": "2026-07-17T14:53:33"
+    },
+    {
+      "name": "net_c2p.iter1000.pth",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_c2p.iter1000.pth",
+      "bytes": 275757,
+      "mtime": "2026-07-17T15:01:04"
+    },
+    {
+      "name": "net_p2c.iter1000.pth",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.iter1000.pth",
+      "bytes": 275757,
+      "mtime": "2026-07-17T15:01:04"
+    },
+    {
+      "name": "fake_proj.iter1000.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/fake_proj.iter1000.png",
+      "bytes": 1481356,
+      "mtime": "2026-07-17T15:01:06"
+    },
+    {
+      "name": "pre_warped.iter1000.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/pre_warped.iter1000.png",
+      "bytes": 7923,
+      "mtime": "2026-07-17T15:01:06"
+    },
+    {
+      "name": "fake_cam.iter1000.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/fake_cam.iter1000.png",
+      "bytes": 348222,
+      "mtime": "2026-07-17T15:01:06"
+    },
+    {
+      "name": "fake_proj_gradient.iter1000.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/fake_proj_gradient.iter1000.png",
+      "bytes": 542237,
+      "mtime": "2026-07-17T15:01:06"
+    },
+    {
+      "name": "net_c2p.iter2000.pth",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_c2p.iter2000.pth",
+      "bytes": 275757,
+      "mtime": "2026-07-17T15:08:49"
+    },
+    {
+      "name": "net_p2c.iter2000.pth",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.iter2000.pth",
+      "bytes": 275757,
+      "mtime": "2026-07-17T15:08:49"
+    },
+    {
+      "name": "fake_proj.iter2000.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/fake_proj.iter2000.png",
+      "bytes": 1557140,
+      "mtime": "2026-07-17T15:08:51"
+    },
+    {
+      "name": "pre_warped.iter2000.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/pre_warped.iter2000.png",
+      "bytes": 7923,
+      "mtime": "2026-07-17T15:08:51"
+    },
+    {
+      "name": "fake_cam.iter2000.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/fake_cam.iter2000.png",
+      "bytes": 434700,
+      "mtime": "2026-07-17T15:08:51"
+    },
+    {
+      "name": "fake_proj_gradient.iter2000.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/fake_proj_gradient.iter2000.png",
+      "bytes": 586414,
+      "mtime": "2026-07-17T15:08:51"
+    },
+    {
+      "name": "debug_gradient_pred.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/debug_gradient_pred.png",
+      "bytes": 71014,
+      "mtime": "2026-07-17T15:09:37"
+    },
+    {
+      "name": "net_c2p.pth",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_c2p.pth",
+      "bytes": 275001,
+      "mtime": "2026-07-17T15:12:37"
+    },
+    {
+      "name": "net_p2c.pth",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.pth",
+      "bytes": 275001,
+      "mtime": "2026-07-17T15:12:37"
+    },
+    {
+      "name": "new_img_without_distortion.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/new_img_without_distortion.png",
+      "bytes": 438122,
+      "mtime": "2026-07-17T15:12:39"
+    },
+    {
+      "name": "fake_proj.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/fake_proj.png",
+      "bytes": 1560270,
+      "mtime": "2026-07-17T15:12:39"
+    },
+    {
+      "name": "pre_warped.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/pre_warped.png",
+      "bytes": 1652657,
+      "mtime": "2026-07-17T15:12:39"
+    },
+    {
+      "name": "fake_cam.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/fake_cam.png",
+      "bytes": 455242,
+      "mtime": "2026-07-17T15:12:39"
+    },
+    {
+      "name": "fake_proj_gradient.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/fake_proj_gradient.png",
+      "bytes": 601194,
+      "mtime": "2026-07-17T15:12:39"
+    },
+    {
+      "name": "camera_mask.png",
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/camera_mask.png",
+      "bytes": 14774,
+      "mtime": "2026-07-17T15:12:41"
+    }
+  ],
+  "total_iters": 2500,
+  "progress": {
+    "current_iteration": 2500,
+    "pct_complete": 100.0,
+    "seconds_per_iteration": 0.458352,
+    "recent_seconds_per_iteration": null,
+    "remaining_seconds": 0.0,
+    "remaining_human": "0m00s",
+    "eta_clock": "2026-07-17 15:12:41",
+    "eta_confidence": "HIGH",
+    "progress_source": "final_outputs",
+    "training_complete": true,
+    "latest_loss": null,
+    "t_ckpt_1000": "2026-07-17T15:01:04",
+    "t_ckpt_2000": "2026-07-17T15:08:49",
+    "total_duration_s": 1145.9
+  },
+  "monitor_confidence": "HIGH",
+  "health": {
+    "healthy": true,
+    "exactly_one_auto_wall_parent": true,
+    "exactly_one_run_train_child": true,
+    "auto_wall_pids": [
+      84446
+    ],
+    "run_train_pids": [
+      84448
+    ],
+    "parent_child_ok": true,
+    "trainer_state_valid": true,
+    "memory_trend": "stable (delta -375280 KB / 171s)",
+    "memory_pressure": false,
+    "cpu_time_increasing": true,
+    "seconds_since_cpu_increase": 0.0,
+    "train_error_output_detected": false,
+    "trainer_gone": false,
+    "parent_gone": false,
+    "suspected_stall": false,
+    "stall_reasons": [],
+    "stall_action": "report_only_do_not_kill",
+    "before_checkpoint_1000": false
+  },
+  "device": {
+    "active_run": "cpu",
+    "note": "Do not switch this run; Config is cuda-if-available else cpu"
+  },
+  "events_this_sample": [
+    "training_complete"
+  ]
+}

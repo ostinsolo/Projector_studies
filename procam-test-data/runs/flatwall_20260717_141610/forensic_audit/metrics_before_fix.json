@@ -1,0 +1,52 @@
+{
+  "uncorrected": {
+    "pass": true,
+    "tag": "uncorrected",
+    "n_corners": 4,
+    "corner_errors_px": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "mean_residual_px": 0.0,
+    "median_residual_px": 0.0,
+    "p95_residual_px": 0.0,
+    "max_residual_px": 0.0,
+    "horizontal_straightness_px": 4.9344478611601517e-05,
+    "vertical_straightness_px": 2.000694439630024e-05,
+    "aspect_ratio_measured": 0.439622641509434,
+    "image_size": [
+      1920,
+      1440
+    ]
+  },
+  "corrected": {
+    "pass": true,
+    "tag": "corrected",
+    "n_corners": 4,
+    "corner_errors_px": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "mean_residual_px": 0.0,
+    "median_residual_px": 0.0,
+    "p95_residual_px": 0.0,
+    "max_residual_px": 0.0,
+    "horizontal_straightness_px": 9.911817869578954e-06,
+    "vertical_straightness_px": 3.8541675166925415e-05,
+    "aspect_ratio_measured": 1.7238001628640545,
+    "image_size": [
+      1920,
+      1440
+    ]
+  },
+  "comparison": {
+    "improvement": {},
+    "absolute_gate_pass": false,
+    "relative_gate_pass": false,
+    "acceptance_pass": false
+  }
+}

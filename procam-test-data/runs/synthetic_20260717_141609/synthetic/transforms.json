@@ -1,0 +1,68 @@
+{
+  "H_projector_to_camera": {
+    "matrix": [
+      [
+        0.7889187249321855,
+        -0.0038794333438562163,
+        260.3999938964844
+      ],
+      [
+        0.01998316563247345,
+        0.8076487315757641,
+        118.0
+      ],
+      [
+        2.939204980323559e-05,
+        2.1519198777689233e-05,
+        1.0
+      ]
+    ],
+    "source_space": "ProjFB",
+    "destination_space": "CamImg",
+    "source_size": [
+      1920,
+      1080
+    ],
+    "destination_size": [
+      1920,
+      1080
+    ],
+    "coordinates": "pixel_homogeneous",
+    "pixel_centre": "OpenCV",
+    "axis_order": "u_right_v_down",
+    "distortion_state": "none"
+  },
+  "H_camera_to_projector": {
+    "matrix": [
+      [
+        1.2796567535908576,
+        0.015072517699498555,
+        -335.0011679131951
+      ],
+      [
+        -0.02624911147513949,
+        1.2417579483183343,
+        -139.69216943364898
+      ],
+      [
+        -3.7046875185018e-05,
+        -2.7164648314521597e-05,
+        1.012852434573176
+      ]
+    ],
+    "source_space": "CamImg",
+    "destination_space": "ProjFB",
+    "source_size": [
+      1920,
+      1080
+    ],
+    "destination_size": [
+      1920,
+      1080
+    ],
+    "coordinates": "pixel_homogeneous",
+    "pixel_centre": "OpenCV",
+    "axis_order": "u_right_v_down",
+    "distortion_state": "none"
+  }
+}

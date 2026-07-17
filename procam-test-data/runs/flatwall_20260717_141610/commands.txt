@@ -1,0 +1,6 @@
+
+/Users/ostino/Documents/Code/Projector_studies/CSPR-Net/.venv/bin/python /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/run_train.py
+
+/Users/ostino/Documents/Code/Projector_studies/CSPR-Net/.venv/bin/python /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/run_train.py
+
+/Users/ostino/Documents/Code/Projector_studies/CSPR-Net/.venv/bin/python /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/run_train.py

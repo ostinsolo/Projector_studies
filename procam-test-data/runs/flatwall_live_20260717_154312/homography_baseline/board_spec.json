@@ -1,0 +1,14 @@
+{
+  "squares": [
+    10,
+    7
+  ],
+  "dictionary_id": 0,
+  "dictionary_name": "DICT_4X4_50",
+  "square_length": 1.0,
+  "marker_length": 0.7,
+  "generate_margin": 20,
+  "generate_border_bits": 1,
+  "expected_charuco_corners": 54,
+  "ransac_reproj_threshold": 3.0
+}

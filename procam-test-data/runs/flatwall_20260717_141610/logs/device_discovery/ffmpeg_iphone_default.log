@@ -1,0 +1,39 @@
+ffmpeg version 8.1.2 Copyright (c) 2000-2026 the FFmpeg developers
+  built with Apple clang version 17.0.0 (clang-1700.6.4.2)
+  configuration: --prefix=/opt/homebrew/Cellar/ffmpeg/8.1.2_1 --enable-shared --enable-pthreads --enable-version3 --cc=clang --host-cflags= --host-ldflags= --enable-ffplay --enable-gpl --enable-libsvtav1 --enable-libopus --enable-libx264 --enable-libmp3lame --enable-libdav1d --enable-libvmaf --enable-libvpx --enable-libx265 --enable-openssl --enable-videotoolbox --enable-audiotoolbox --enable-neon
+  libavutil      60. 26.102 / 60. 26.102
+  libavcodec     62. 28.102 / 62. 28.102
+  libavformat    62. 12.102 / 62. 12.102
+  libavdevice    62.  3.102 / 62.  3.102
+  libavfilter    11. 14.102 / 11. 14.102
+  libswscale      9.  5.102 /  9.  5.102
+  libswresample   6.  3.102 /  6.  3.102
+2026-07-17 14:30:30.051 ffmpeg[83106:4763683] WARNING: Add NSCameraUseContinuityCameraDeviceType to your Info.plist to use AVCaptureDeviceTypeContinuityCamera.
+2026-07-17 14:30:30.155 ffmpeg[83106:4763683] WARNING: AVCaptureDeviceTypeExternal is deprecated for Continuity Cameras. Please use AVCaptureDeviceTypeContinuityCamera and add NSCameraUseContinuityCameraDeviceType to your Info.plist.
+[in#0 @ 0x11cf08830] Selected pixel format (yuv420p) is not supported by the input device.
+[in#0 @ 0x11cf08830] Supported pixel formats:
+[in#0 @ 0x11cf08830]   uyvy422
+[in#0 @ 0x11cf08830]   yuyv422
+[in#0 @ 0x11cf08830]   nv12
+[in#0 @ 0x11cf08830]   0rgb
+[in#0 @ 0x11cf08830]   bgr0
+[in#0 @ 0x11cf08830] Overriding selected pixel format to use uyvy422 instead.
+[in#0/avfoundation @ 0x11cf08830] Stream #0: not enough frames to estimate rate; consider increasing probesize
+Input #0, avfoundation, from '1:none':
+  Duration: N/A, start: 137972.407360, bitrate: N/A
+  Stream #0:0: Video: rawvideo (UYVY / 0x59565955), uyvy422, 1920x1440, 1000k tbr, 1000k tbn, start 137972.407360
+Stream mapping:
+  Stream #0:0 -> #0:0 (rawvideo (native) -> mjpeg (native))
+Press [q] to stop, [?] for help
+Output #0, image2, to '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/ffmpeg_iphone_default.jpg':
+  Metadata:
+    encoder         : Lavf62.12.102
+  Stream #0:0: Video: mjpeg, yuv422p(pc, progressive), 1920x1440, q=2-31, 200 kb/s, 1000k fps, 1000k tbn
+    Metadata:
+      encoder         : Lavc62.28.102 mjpeg
+    Side data:
+      CPB properties: bitrate max/min/avg: 0/0/200000 buffer size: 0 vbv_delay: N/A
+[image2 @ 0x11e01a160] The specified filename '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/ffmpeg_iphone_default.jpg' does not contain an image sequence pattern or a pattern is invalid.
+[image2 @ 0x11e01a160] Use a pattern such as %03d for an image sequence or use the -update option (with -frames:v 1 if needed) to write a single image.
+[out#0/image2 @ 0x11e0336a0] video:56KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=    1 fps=0.0 q=4.6 Lsize=N/A time=00:00:00.00 bitrate=N/A speed=1.97e-05x elapsed=0:00:00.05    

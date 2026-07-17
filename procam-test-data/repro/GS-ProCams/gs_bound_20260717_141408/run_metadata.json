@@ -1,0 +1,23 @@
+{
+  "stage": "M2_GS_bound",
+  "status": "BLOCKED_EXTERNAL",
+  "gs_commit": "dfb7f449710ce41a63369a447ca728e0cb220d97",
+  "attempts": [
+    {
+      "name": "dataset_presence",
+      "result": "FAIL",
+      "evidence": "no data/ or output/ directories"
+    },
+    {
+      "name": "cuda_hardware",
+      "result": "FAIL",
+      "evidence": "Apple Silicon host; nvidia-smi unavailable; requirements pin torch+cu118"
+    },
+    {
+      "name": "dependency_pin",
+      "result": "FAIL_FOR_HOST",
+      "evidence": "requirements.txt requires cu118 wheels incompatible with this Mac"
+    }
+  ],
+  "decision": "Continue flat-wall MVP on CSPR-Net path; GS not a prerequisite"
+}

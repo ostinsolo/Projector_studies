@@ -1,0 +1,218 @@
+2026-07-17T14:33:41.710228 STATE PREFLIGHT
+2026-07-17T14:33:41.710980 STATE DISCOVER_PROJECTOR
+2026-07-17T14:33:43.595064 Projector display not found (attempt 1/6); retrying…
+2026-07-17T14:33:46.597533 Projector display not found (attempt 2/6); retrying…
+2026-07-17T14:33:49.599371 Projector display not found (attempt 3/6); retrying…
+2026-07-17T14:33:52.601684 Projector display not found (attempt 4/6); retrying…
+2026-07-17T14:33:55.603391 Projector display not found (attempt 5/6); retrying…
+2026-07-17T14:33:58.605328 Projector display not found (attempt 6/6); retrying…
+2026-07-17T14:34:14.742675 STATE PREFLIGHT
+2026-07-17T14:34:14.743298 STATE DISCOVER_CAMERA
+2026-07-17T14:34:17.777138 STATE DISCOVER_PROJECTOR
+2026-07-17T14:34:17.900974 Projector display not found (attempt 1/6); retrying…
+2026-07-17T14:34:20.903281 Projector display not found (attempt 2/6); retrying…
+2026-07-17T14:34:23.905065 Projector display not found (attempt 3/6); retrying…
+2026-07-17T14:34:26.907533 Projector display not found (attempt 4/6); retrying…
+2026-07-17T14:34:29.910933 Projector display not found (attempt 5/6); retrying…
+2026-07-17T14:34:32.912808 Projector display not found (attempt 6/6); retrying…
+2026-07-17T14:37:17.585225 STATE PREFLIGHT
+2026-07-17T14:37:17.585907 STATE DISCOVER_CAMERA
+2026-07-17T14:37:19.923485 STATE DISCOVER_PROJECTOR
+2026-07-17T14:37:20.085269 AirPlay/Apple TV display detected — using settle_s=1.2s
+2026-07-17T14:37:20.229062 ERROR in DISCOVER_PROJECTOR: Projector helper failed to start: 2026-07-17 14:37:20.228 Python[83420:4786283] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/org.python.python.savedState
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 266, in stage_discover_projector
+    self.projector.start()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/display_control.py", line 166, in start
+    raise RuntimeError(f"Projector helper failed to start: {line}")
+RuntimeError: Projector helper failed to start: 2026-07-17 14:37:20.228 Python[83420:4786283] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/org.python.python.savedState
+
+2026-07-17T14:37:21.231035 STATE DISCOVER_PROJECTOR
+2026-07-17T14:37:21.232611 AirPlay/Apple TV display detected — using settle_s=1.2s
+2026-07-17T14:37:21.395566 ERROR in DISCOVER_PROJECTOR: Projector helper failed to start: 2026-07-17 14:37:21.395 Python[83423:4786396] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/org.python.python.savedState
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 266, in stage_discover_projector
+    self.projector.start()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/display_control.py", line 166, in start
+    raise RuntimeError(f"Projector helper failed to start: {line}")
+RuntimeError: Projector helper failed to start: 2026-07-17 14:37:21.395 Python[83423:4786396] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/org.python.python.savedState
+
+2026-07-17T14:37:22.397637 STATE DISCOVER_PROJECTOR
+2026-07-17T14:37:22.399312 AirPlay/Apple TV display detected — using settle_s=1.2s
+2026-07-17T14:37:22.559473 ERROR in DISCOVER_PROJECTOR: Projector helper failed to start: 2026-07-17 14:37:22.559 Python[83428:4786488] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/org.python.python.savedState
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 266, in stage_discover_projector
+    self.projector.start()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/display_control.py", line 166, in start
+    raise RuntimeError(f"Projector helper failed to start: {line}")
+RuntimeError: Projector helper failed to start: 2026-07-17 14:37:22.559 Python[83428:4786488] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/org.python.python.savedState
+
+2026-07-17T14:37:47.657912 STATE PREFLIGHT
+2026-07-17T14:37:47.658547 STATE DISCOVER_CAMERA
+2026-07-17T14:37:53.186722 ERROR in DISCOVER_CAMERA: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/.burst_discover_iphone_001.jpg', 'blur': 0.0, 'clip': 1.0, 'contrast': 0.0, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 290, in stage_discover_camera
+    meta = self.camera.capture_frame(probe, settle_s=0.5)
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/camera_control.py", line 155, in capture_frame
+    raise RuntimeError(f"Capture too blurry: {best_meta}")
+RuntimeError: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/.burst_discover_iphone_001.jpg', 'blur': 0.0, 'clip': 1.0, 'contrast': 0.0, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+
+2026-07-17T14:37:54.194584 STATE DISCOVER_CAMERA
+2026-07-17T14:37:55.433435 ERROR in DISCOVER_CAMERA: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/.burst_discover_iphone_001.jpg', 'blur': 0.0, 'clip': 1.0, 'contrast': 0.0, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 290, in stage_discover_camera
+    meta = self.camera.capture_frame(probe, settle_s=0.5)
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/camera_control.py", line 155, in capture_frame
+    raise RuntimeError(f"Capture too blurry: {best_meta}")
+RuntimeError: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/.burst_discover_iphone_001.jpg', 'blur': 0.0, 'clip': 1.0, 'contrast': 0.0, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+
+2026-07-17T14:37:56.443169 STATE DISCOVER_CAMERA
+2026-07-17T14:37:57.683987 ERROR in DISCOVER_CAMERA: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/.burst_discover_iphone_001.jpg', 'blur': 0.0, 'clip': 1.0, 'contrast': 0.0, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 290, in stage_discover_camera
+    meta = self.camera.capture_frame(probe, settle_s=0.5)
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/camera_control.py", line 155, in capture_frame
+    raise RuntimeError(f"Capture too blurry: {best_meta}")
+RuntimeError: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/_probe/.burst_discover_iphone_001.jpg', 'blur': 0.0, 'clip': 1.0, 'contrast': 0.0, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+
+2026-07-17T14:38:17.606958 STATE PREFLIGHT
+2026-07-17T14:38:17.607447 STATE DISCOVER_CAMERA
+2026-07-17T14:38:20.695869 STATE DISCOVER_PROJECTOR
+2026-07-17T14:38:20.819085 AirPlay/Apple TV display detected — using settle_s=1.2s
+2026-07-17T14:38:21.127502 STATE GENERATE_PATTERNS
+2026-07-17T14:38:21.249559 Generated patterns at 1280x720 (resolution change 1920x1080 -> 1280x720)
+2026-07-17T14:38:21.250737 STATE VERIFY_CAPTURE
+2026-07-17T14:39:49.274228 STATE PREFLIGHT
+2026-07-17T14:39:49.274681 STATE DISCOVER_CAMERA
+2026-07-17T14:39:52.498374 STATE DISCOVER_PROJECTOR
+2026-07-17T14:39:52.601370 AirPlay/Apple TV display detected — using settle_s=2.0s
+2026-07-17T14:39:52.909673 STATE GENERATE_PATTERNS
+2026-07-17T14:39:52.914214 Preserving existing pattern package
+2026-07-17T14:39:52.915311 STATE VERIFY_CAPTURE
+2026-07-17T14:49:17.204845 STATE PREFLIGHT
+2026-07-17T14:49:17.205572 STATE DISCOVER_CAMERA
+2026-07-17T14:49:20.158973 STATE DISCOVER_PROJECTOR
+2026-07-17T14:49:20.631323 STATE GENERATE_PATTERNS
+2026-07-17T14:49:20.760725 Generated patterns at 1920x1080 (resolution change 1280x720 -> 1920x1080)
+2026-07-17T14:49:20.761464 STATE VERIFY_CAPTURE
+2026-07-17T14:49:33.205687 STATE CAPTURE_CALIBRATION
+2026-07-17T14:49:35.418384 recapture 00_black attempt 0: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_00_black_001.jpg', 'blur': 7.115299840853204, 'clip': 0.3072945601851852, 'contrast': 18.251089676401527, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+2026-07-17T14:49:37.710964 recapture 00_black attempt 1: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_00_black_001.jpg', 'blur': 7.011952401586889, 'clip': 0.32213324652777775, 'contrast': 15.587241823165968, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+2026-07-17T14:49:40.027885 recapture 00_black attempt 2: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_00_black_001.jpg', 'blur': 7.828444371996462, 'clip': 0.3198752170138889, 'contrast': 15.594533428818128, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+2026-07-17T14:49:42.342535 recapture 00_black attempt 3: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_00_black_001.jpg', 'blur': 7.93421983490919, 'clip': 0.3180052806712963, 'contrast': 15.595558034877444, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+2026-07-17T14:49:42.347968 ERROR in CAPTURE_CALIBRATION: Failed to capture 00_black: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_00_black_001.jpg', 'blur': 7.93421983490919, 'clip': 0.3180052806712963, 'contrast': 15.595558034877444, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 465, in stage_capture_calibration
+    raise RuntimeError(f"Failed to capture {stem}: {last_err}")
+RuntimeError: Failed to capture 00_black: Capture too blurry: {'path': '/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_00_black_001.jpg', 'blur': 7.93421983490919, 'clip': 0.3180052806712963, 'contrast': 15.595558034877444, 'motion': 0.0, 'shape': [1440, 1920, 3]}
+
+2026-07-17T14:49:43.349048 STATE CAPTURE_CALIBRATION
+2026-07-17T14:50:06.621170 recapture 08_cspr_red attempt 0: blur
+2026-07-17T14:50:08.923730 recapture 08_cspr_red attempt 1: blur
+2026-07-17T14:50:11.237711 recapture 08_cspr_red attempt 2: blur
+2026-07-17T14:50:13.547342 recapture 08_cspr_red attempt 3: blur
+2026-07-17T14:50:13.547764 ERROR in CAPTURE_CALIBRATION: Failed to capture 08_cspr_red: blur
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 465, in stage_capture_calibration
+    raise RuntimeError(f"Failed to capture {stem}: {last_err}")
+RuntimeError: Failed to capture 08_cspr_red: blur
+
+2026-07-17T14:50:14.551373 STATE CAPTURE_CALIBRATION
+2026-07-17T14:50:14.551730 skip existing 00_black
+2026-07-17T14:50:14.552393 skip existing 01_white
+2026-07-17T14:50:14.552637 skip existing 02_border
+2026-07-17T14:50:14.552772 skip existing 03_corners
+2026-07-17T14:50:14.552875 skip existing 04_dense_grid
+2026-07-17T14:50:14.552973 skip existing 05_cspr_grid_1
+2026-07-17T14:50:14.553065 skip existing 06_cspr_grid_2
+2026-07-17T14:50:14.553153 skip existing 07_cspr_grid_3
+2026-07-17T14:50:21.028580 STATE VALIDATE_CALIBRATION_CAPTURES
+2026-07-17T14:50:21.242180 STATE FIT_CSPR_SCENE
+2026-07-17T14:50:54.869306 STATE CAPTURE_CALIBRATION
+2026-07-17T14:50:54.869873 ERROR in CAPTURE_CALIBRATION: 
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 427, in stage_capture_calibration
+    assert self.projector and self.camera
+AssertionError
+
+2026-07-17T14:50:55.875576 STATE CAPTURE_CALIBRATION
+2026-07-17T14:50:55.875850 ERROR in CAPTURE_CALIBRATION: 
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 427, in stage_capture_calibration
+    assert self.projector and self.camera
+AssertionError
+
+2026-07-17T14:50:56.879384 STATE CAPTURE_CALIBRATION
+2026-07-17T14:50:56.879714 ERROR in CAPTURE_CALIBRATION: 
+Traceback (most recent call last):
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
+    handlers[st]()
+  File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 427, in stage_capture_calibration
+    assert self.projector and self.camera
+AssertionError
+
+2026-07-17T14:51:30.513391 STATE FIT_CSPR_SCENE
+2026-07-17T14:53:32.225759 STATE FIT_CSPR_SCENE
+2026-07-17T15:12:43.669928 STATE GENERATE_PREWARP
+2026-07-17T15:12:49.692794 STATE PROJECT_VALIDATION
+2026-07-17T15:12:50.143050 Rebound projector on resume: USB Display: MStar Demo 1920x1080
+2026-07-17T15:12:51.273581 STATE CAPTURE_VALIDATION
+2026-07-17T15:12:51.573068 Rebound camera on resume: iPhone Camera
+2026-07-17T15:12:54.696483 STATE MEASURE_RESIDUAL
+2026-07-17T15:12:54.779508 STATE REFINE_PREWARP
+2026-07-17T15:12:54.814655 STATE PROJECT_VALIDATION
+2026-07-17T15:12:55.922722 STATE CAPTURE_VALIDATION
+2026-07-17T15:12:59.903422 STATE MEASURE_RESIDUAL
+2026-07-17T15:12:59.976428 STATE REFINE_PREWARP
+2026-07-17T15:13:00.012584 STATE PROJECT_VALIDATION
+2026-07-17T15:13:01.150760 STATE CAPTURE_VALIDATION
+2026-07-17T15:13:05.080728 STATE MEASURE_RESIDUAL
+2026-07-17T15:13:05.156743 STATE REFINE_PREWARP
+2026-07-17T15:13:05.191177 STATE PROJECT_VALIDATION
+2026-07-17T15:13:06.308165 STATE CAPTURE_VALIDATION
+2026-07-17T15:13:10.297333 STATE MEASURE_RESIDUAL
+2026-07-17T15:13:10.372793 STATE REFINE_PREWARP
+2026-07-17T15:13:10.408416 STATE PROJECT_VALIDATION
+2026-07-17T15:13:11.526574 STATE CAPTURE_VALIDATION
+2026-07-17T15:13:15.501367 STATE MEASURE_RESIDUAL
+2026-07-17T15:13:15.575095 STATE REFINE_PREWARP
+2026-07-17T15:13:15.610876 STATE PROJECT_VALIDATION
+2026-07-17T15:13:16.756312 STATE CAPTURE_VALIDATION
+2026-07-17T15:13:20.884308 STATE MEASURE_RESIDUAL
+2026-07-17T15:13:20.958868 STATE REFINE_PREWARP
+2026-07-17T15:13:20.993585 STATE PROJECT_VALIDATION
+2026-07-17T15:13:22.114599 STATE CAPTURE_VALIDATION
+2026-07-17T15:13:26.011595 STATE MEASURE_RESIDUAL
+2026-07-17T15:13:26.083777 STATE REFINE_PREWARP
+2026-07-17T15:13:26.119162 STATE PROJECT_VALIDATION
+2026-07-17T15:13:27.238094 STATE CAPTURE_VALIDATION
+2026-07-17T15:13:31.094591 STATE MEASURE_RESIDUAL
+2026-07-17T15:13:31.170995 STATE REFINE_PREWARP
+2026-07-17T15:13:31.207264 STATE PROJECT_VALIDATION
+2026-07-17T15:13:32.315758 STATE CAPTURE_VALIDATION
+2026-07-17T15:13:36.303244 STATE MEASURE_RESIDUAL
+2026-07-17T15:13:36.377566 STATE REFINE_PREWARP
+2026-07-17T15:13:36.378126 STATE FINAL_REPRODUCTION
+2026-07-17T15:29:38.798120 ACCEPTANCE_FAILED → MEASURE_RESIDUAL (homography remeasure / finalize)
+2026-07-17T15:29:38.798828 STATE MEASURE_RESIDUAL
+2026-07-17T15:29:38.897015 STATE FINAL_REPRODUCTION

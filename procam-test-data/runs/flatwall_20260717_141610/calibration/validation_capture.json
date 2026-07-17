@@ -1,0 +1,35 @@
+{
+  "file": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/captured_validation/validation_corrected.png",
+  "device": {
+    "avf_index": 1,
+    "name": "iPhone Camera",
+    "backend": "avfoundation"
+  },
+  "width": 1920,
+  "height": 1440,
+  "metrics": {
+    "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/captured_validation/.burst_validation_corrected_008.jpg",
+    "blur": 40.86649956402513,
+    "clip": 0.037764033564814815,
+    "contrast": 50.48330258030895,
+    "motion": 0.5209552228009259,
+    "mean": 77.01243887442129,
+    "shape": [
+      1440,
+      1920,
+      3
+    ]
+  },
+  "selection_score": 44.02662814381529,
+  "lock_status": {
+    "api_supports_lock": false,
+    "lens_locked": false,
+    "zoom_locked": false,
+    "focus_locked": false,
+    "exposure_locked": false,
+    "white_balance_locked": false,
+    "note": "Continuity/AVFoundation capture via ffmpeg does not expose confirmed lock APIs; consistency enforced by frame checks."
+  },
+  "ffmpeg_returncode": 0,
+  "timestamp": 1784297616.299144
+}

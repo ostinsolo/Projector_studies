@@ -1,0 +1,4 @@
+-rw-r--r--@ 1 ostino  staff  275129 Jul 16 20:56 neural_results_exp/net_c2p.pth
+-rw-r--r--@ 1 ostino  staff  275129 Jul 16 20:56 neural_results_exp/net_p2c.pth
+-rw-r--r--@ 1 ostino  staff  275129 Jul 16 20:56 neural_results_simulation/net_c2p.pth
+-rw-r--r--@ 1 ostino  staff  275129 Jul 16 20:56 neural_results_simulation/net_p2c.pth

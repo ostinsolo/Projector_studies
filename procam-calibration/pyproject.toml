@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "procam-calibrate"
+version = "0.1.0"
+description = "Automatic projector-camera calibration (production: ChArUco + planar homography)"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "opencv-python",
+  "scikit-image",
+  "Pillow",
+  "matplotlib",
+  "pyobjc-framework-Cocoa; platform_system=='Darwin'",
+]
+
+[project.optional-dependencies]
+# Research / experimental CSPR path only — not required for flat-wall production
+cspr = ["torch"]
+dev = ["pytest"]
+
+[project.scripts]
+procam-calibrate = "procam_calibrate.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["procam_calibrate*"]

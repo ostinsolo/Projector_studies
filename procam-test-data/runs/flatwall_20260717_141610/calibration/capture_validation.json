@@ -1,0 +1,74 @@
+{
+  "pass": true,
+  "n_required": 10,
+  "n_found": 10,
+  "missing": [],
+  "issues": [],
+  "captures": [
+    {
+      "stem": "00_black",
+      "file": "00_black.png",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "stem": "01_white",
+      "file": "01_white.png",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "stem": "02_border",
+      "file": "02_border.png",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "stem": "03_corners",
+      "file": "03_corners.png",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "stem": "04_dense_grid",
+      "file": "04_dense_grid.png",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "stem": "05_cspr_grid_1",
+      "file": "05_cspr_grid_1.png",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "stem": "06_cspr_grid_2",
+      "file": "06_cspr_grid_2.png",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "stem": "07_cspr_grid_3",
+      "file": "07_cspr_grid_3.png",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "stem": "08_cspr_red",
+      "file": "08_cspr_red.png",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "stem": "09_validation_uncorrected",
+      "file": "09_validation_uncorrected.png",
+      "width": 1920,
+      "height": 1440
+    }
+  ],
+  "consistent_resolution": true,
+  "camera_resolution": [
+    1920,
+    1440
+  ]
+}

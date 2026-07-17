@@ -1,0 +1,119 @@
+{
+  "projector_resolution": [
+    1920,
+    1080
+  ],
+  "coordinate_space": "ProjFB",
+  "patterns": [
+    {
+      "id": "00_black",
+      "file": "00_black.png",
+      "role": "mask_black",
+      "space": "ProjFB",
+      "width": 1920,
+      "height": 1080,
+      "dtype": "uint8",
+      "channels": 3,
+      "color_order": "BGR"
+    },
+    {
+      "id": "01_white",
+      "file": "01_white.png",
+      "role": "mask_white",
+      "space": "ProjFB",
+      "width": 1920,
+      "height": 1080,
+      "dtype": "uint8",
+      "channels": 3,
+      "color_order": "BGR"
+    },
+    {
+      "id": "02_border",
+      "file": "02_border.png",
+      "role": "geometry_border",
+      "space": "ProjFB",
+      "width": 1920,
+      "height": 1080,
+      "dtype": "uint8",
+      "channels": 3,
+      "color_order": "BGR"
+    },
+    {
+      "id": "03_corners",
+      "file": "03_corners.png",
+      "role": "geometry_corners",
+      "space": "ProjFB",
+      "width": 1920,
+      "height": 1080,
+      "dtype": "uint8",
+      "channels": 3,
+      "color_order": "BGR"
+    },
+    {
+      "id": "04_dense_grid",
+      "file": "04_dense_grid.png",
+      "role": "geometry_grid",
+      "space": "ProjFB",
+      "width": 1920,
+      "height": 1080,
+      "dtype": "uint8",
+      "channels": 3,
+      "color_order": "BGR"
+    },
+    {
+      "id": "05_cspr_grid_1",
+      "file": "05_cspr_grid_1.png",
+      "role": "cspr_train_1",
+      "space": "ProjFB",
+      "width": 1920,
+      "height": 1080,
+      "dtype": "uint8",
+      "channels": 3,
+      "color_order": "BGR"
+    },
+    {
+      "id": "06_cspr_grid_2",
+      "file": "06_cspr_grid_2.png",
+      "role": "cspr_train_2",
+      "space": "ProjFB",
+      "width": 1920,
+      "height": 1080,
+      "dtype": "uint8",
+      "channels": 3,
+      "color_order": "BGR"
+    },
+    {
+      "id": "07_cspr_grid_3",
+      "file": "07_cspr_grid_3.png",
+      "role": "cspr_train_3",
+      "space": "ProjFB",
+      "width": 1920,
+      "height": 1080,
+      "dtype": "uint8",
+      "channels": 3,
+      "color_order": "BGR"
+    },
+    {
+      "id": "08_cspr_red",
+      "file": "08_cspr_red.png",
+      "role": "cspr_mask_red",
+      "space": "ProjFB",
+      "width": 1920,
+      "height": 1080,
+      "dtype": "uint8",
+      "channels": 3,
+      "color_order": "BGR"
+    },
+    {
+      "id": "09_validation_uncorrected",
+      "file": "09_validation_uncorrected.png",
+      "role": "validation_uncorrected",
+      "space": "ProjFB",
+      "width": 1920,
+      "height": 1080,
+      "dtype": "uint8",
+      "channels": 3,
+      "color_order": "BGR"
+    }
+  ]
+}

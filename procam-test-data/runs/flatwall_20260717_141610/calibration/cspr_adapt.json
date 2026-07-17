@@ -1,0 +1,52 @@
+{
+  "procedure": "full_scene_specific_training",
+  "not_mere_finetune": true,
+  "repository_entry": "deep_learning_exp_for_gradient.py train",
+  "adapted_camera_resolution": [
+    1920,
+    1440
+  ],
+  "projector_resolution": [
+    1920,
+    1080
+  ],
+  "iters": 2500,
+  "seed": 0,
+  "elapsed_s": 1151.336037158966,
+  "exit_code": 0,
+  "checkpoints": {
+    "net_c2p": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_c2p.pth",
+    "net_p2c": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.pth"
+  },
+  "staged_pairs": [
+    {
+      "stem": "05_cspr_grid_1",
+      "pattern": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/projector_patterns/05_cspr_grid_1.png",
+      "capture": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_validated/05_cspr_grid_1.png",
+      "size": [
+        1920,
+        1440
+      ]
+    },
+    {
+      "stem": "06_cspr_grid_2",
+      "pattern": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/projector_patterns/06_cspr_grid_2.png",
+      "capture": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_validated/06_cspr_grid_2.png",
+      "size": [
+        1920,
+        1440
+      ]
+    },
+    {
+      "stem": "07_cspr_grid_3",
+      "pattern": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/projector_patterns/07_cspr_grid_3.png",
+      "capture": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_validated/07_cspr_grid_3.png",
+      "size": [
+        1920,
+        1440
+      ]
+    }
+  ],
+  "work_dir": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work",
+  "pass": true
+}

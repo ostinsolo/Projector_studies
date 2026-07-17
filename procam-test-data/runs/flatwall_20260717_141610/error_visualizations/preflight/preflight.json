@@ -1,0 +1,63 @@
+{
+  "diagnostics": {
+    "00_black": {
+      "mean": 80.25471969039351,
+      "std": 51.139198748347255,
+      "blur": 27.167668907912628,
+      "clip": 0.037718098958333335,
+      "shape": [
+        1440,
+        1920,
+        3
+      ]
+    },
+    "01_white": {
+      "mean": 93.86780490451389,
+      "std": 55.339430141945954,
+      "blur": 27.65739221502023,
+      "clip": 0.005062572337962963,
+      "shape": [
+        1440,
+        1920,
+        3
+      ]
+    },
+    "02_border": {
+      "mean": 75.30841869212964,
+      "std": 46.34829895932617,
+      "blur": 25.64655924442419,
+      "clip": 0.01358470775462963,
+      "shape": [
+        1440,
+        1920,
+        3
+      ]
+    },
+    "03_corners": {
+      "mean": 8.036831597222223,
+      "std": 15.486814267226372,
+      "blur": 9.543378544522378,
+      "clip": 0.32500578703703703,
+      "shape": [
+        1440,
+        1920,
+        3
+      ]
+    }
+  },
+  "black_white_contrast_global": 13.504890441894531,
+  "black_white_contrast_local": 13.758140563964844,
+  "black_white_contrast": 13.758140563964844,
+  "edge_fraction_border": 0.012359302662037037,
+  "diff_mask_pixels": 305293,
+  "projected_bbox_cam": [
+    28,
+    0,
+    1919,
+    1415
+  ],
+  "all_boundaries_inside_frame": false,
+  "substantial_coverage": true,
+  "display_name": "USB Display: MStar Demo",
+  "pass": true
+}

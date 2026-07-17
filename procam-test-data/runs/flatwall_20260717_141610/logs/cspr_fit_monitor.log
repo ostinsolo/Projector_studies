@@ -1,0 +1,628 @@
+========================================================================
+CSPR fit monitor  2026-07-17T14:58:54
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 05:22 (322s)
+iteration      : unknown / 2500  (unknown)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : n/a   it/s: n/a
+ETA remaining  : n/a   complete ~ n/a (awaiting first Iter log or iter1000 checkpoint)
+ETA confidence : low
+RSS / CPU      : 2.73 GiB   354.4%
+checkpoint     : None  mtime=None
+artifact age   : 62.5s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: no readable mid-run Iter lines yet — stdout is pipe-captured by subprocess.run(capture_output=True) until train exits; loss_metrics.csv written only at end; checkpoints every 1000 iters | coarse: trainer elapsed 5m22s; first checkpoint expected at iter 1000
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=insufficient_samples
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T14:59:10
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 05:38 (338s)
+iteration      : unknown / 2500  (unknown)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : n/a   it/s: n/a
+ETA remaining  : n/a   complete ~ n/a (awaiting first Iter log or iter1000 checkpoint)
+ETA confidence : low
+RSS / CPU      : 2.729 GiB   339.4%
+checkpoint     : None  mtime=None
+artifact age   : 78.2s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: no readable mid-run Iter lines yet — stdout is pipe-captured by subprocess.run(capture_output=True) until train exits; loss_metrics.csv written only at end; checkpoints every 1000 iters | coarse: trainer elapsed 5m38s; first checkpoint expected at iter 1000
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=insufficient_samples
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T14:59:20
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 05:48 (348s)
+iteration      : unknown / 2500  (unknown)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : n/a   it/s: n/a
+ETA remaining  : n/a   complete ~ n/a (awaiting first Iter log or iter1000 checkpoint)
+ETA confidence : low
+RSS / CPU      : 2.73 GiB   330.4%
+checkpoint     : None  mtime=None
+artifact age   : 88.3s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: no readable mid-run Iter lines yet — stdout is pipe-captured by subprocess.run(capture_output=True) until train exits; loss_metrics.csv written only at end; checkpoints every 1000 iters | coarse: trainer elapsed 5m48s; first checkpoint expected at iter 1000
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=insufficient_samples
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T14:59:30
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 05:58 (358s)
+iteration      : unknown / 2500  (unknown)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : n/a   it/s: n/a
+ETA remaining  : n/a   complete ~ n/a (awaiting first Iter log or iter1000 checkpoint)
+ETA confidence : low
+RSS / CPU      : 2.73 GiB   336.7%
+checkpoint     : None  mtime=None
+artifact age   : 4.2s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: no readable mid-run Iter lines yet — stdout is pipe-captured by subprocess.run(capture_output=True) until train exits; loss_metrics.csv written only at end; checkpoints every 1000 iters | coarse: trainer elapsed 5m58s; first checkpoint expected at iter 1000
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=insufficient_samples
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T14:59:40
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 06:08 (368s)
+iteration      : unknown / 2500  (unknown)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : n/a   it/s: n/a
+ETA remaining  : n/a   complete ~ n/a (awaiting first Iter log or iter1000 checkpoint)
+ETA confidence : low
+RSS / CPU      : 2.731 GiB   349.8%
+checkpoint     : None  mtime=None
+artifact age   : 14.3s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: no readable mid-run Iter lines yet — stdout is pipe-captured by subprocess.run(capture_output=True) until train exits; loss_metrics.csv written only at end; checkpoints every 1000 iters | coarse: trainer elapsed 6m08s; first checkpoint expected at iter 1000
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=insufficient_samples
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T14:59:50
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 06:18 (378s)
+iteration      : unknown / 2500  (unknown)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : n/a   it/s: n/a
+ETA remaining  : n/a   complete ~ n/a (awaiting first Iter log or iter1000 checkpoint)
+ETA confidence : low
+RSS / CPU      : 2.731 GiB   353.3%
+checkpoint     : None  mtime=None
+artifact age   : 24.5s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: no readable mid-run Iter lines yet — stdout is pipe-captured by subprocess.run(capture_output=True) until train exits; loss_metrics.csv written only at end; checkpoints every 1000 iters | coarse: trainer elapsed 6m18s; first checkpoint expected at iter 1000
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=insufficient_samples
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:00:00
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 06:28 (388s)
+iteration      : unknown / 2500  (unknown)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : n/a   it/s: n/a
+ETA remaining  : n/a   complete ~ n/a (awaiting first Iter log or iter1000 checkpoint)
+ETA confidence : low
+RSS / CPU      : 2.728 GiB   339.7%
+checkpoint     : None  mtime=None
+artifact age   : 34.6s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: no readable mid-run Iter lines yet — stdout is pipe-captured by subprocess.run(capture_output=True) until train exits; loss_metrics.csv written only at end; checkpoints every 1000 iters | coarse: trainer elapsed 6m28s; first checkpoint expected at iter 1000
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=stable (delta -288 KB over 51s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:00:11
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 06:38 (398s)
+iteration      : unknown / 2500  (unknown)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : n/a   it/s: n/a
+ETA remaining  : n/a   complete ~ n/a (awaiting first Iter log or iter1000 checkpoint)
+ETA confidence : low
+RSS / CPU      : 2.732 GiB   338.6%
+checkpoint     : None  mtime=None
+artifact age   : 44.7s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: no readable mid-run Iter lines yet — stdout is pipe-captured by subprocess.run(capture_output=True) until train exits; loss_metrics.csv written only at end; checkpoints every 1000 iters | coarse: trainer elapsed 6m38s; first checkpoint expected at iter 1000
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=stable (delta 3264 KB over 61s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:00:21
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 06:49 (409s)
+iteration      : unknown / 2500  (unknown)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : n/a   it/s: n/a
+ETA remaining  : n/a   complete ~ n/a (awaiting first Iter log or iter1000 checkpoint)
+ETA confidence : low
+RSS / CPU      : 2.732 GiB   362.4%
+checkpoint     : None  mtime=None
+artifact age   : 54.8s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: no readable mid-run Iter lines yet — stdout is pipe-captured by subprocess.run(capture_output=True) until train exits; loss_metrics.csv written only at end; checkpoints every 1000 iters | coarse: trainer elapsed 6m49s; first checkpoint expected at iter 1000
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=stable (delta 3632 KB over 71s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:00:31
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 06:59 (419s)
+iteration      : unknown / 2500  (unknown)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : n/a   it/s: n/a
+ETA remaining  : n/a   complete ~ n/a (awaiting first Iter log or iter1000 checkpoint)
+ETA confidence : low
+RSS / CPU      : 2.748 GiB   374.0%
+checkpoint     : None  mtime=None
+artifact age   : 64.9s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: no readable mid-run Iter lines yet — stdout is pipe-captured by subprocess.run(capture_output=True) until train exits; loss_metrics.csv written only at end; checkpoints every 1000 iters | coarse: trainer elapsed 6m59s; first checkpoint expected at iter 1000
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=stable (delta 20544 KB over 81s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:00:41
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 07:09 (429s)
+iteration      : unknown / 2500  (unknown)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : n/a   it/s: n/a
+ETA remaining  : n/a   complete ~ n/a (awaiting first Iter log or iter1000 checkpoint)
+ETA confidence : low
+RSS / CPU      : 2.726 GiB   345.8%
+checkpoint     : None  mtime=None
+artifact age   : 75.0s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: no readable mid-run Iter lines yet — stdout is pipe-captured by subprocess.run(capture_output=True) until train exits; loss_metrics.csv written only at end; checkpoints every 1000 iters | coarse: trainer elapsed 7m09s; first checkpoint expected at iter 1000
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=stable (delta -2720 KB over 91s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:00:51
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 07:19 (439s)
+iteration      : unknown / 2500  (unknown)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : n/a   it/s: n/a
+ETA remaining  : n/a   complete ~ n/a (awaiting first Iter log or iter1000 checkpoint)
+ETA confidence : low
+RSS / CPU      : 2.722 GiB   355.2%
+checkpoint     : None  mtime=None
+artifact age   : 85.1s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: no readable mid-run Iter lines yet — stdout is pipe-captured by subprocess.run(capture_output=True) until train exits; loss_metrics.csv written only at end; checkpoints every 1000 iters | coarse: trainer elapsed 7m19s; first checkpoint expected at iter 1000
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=stable (delta -7056 KB over 101s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:01:01
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 07:29 (449s)
+iteration      : unknown / 2500  (unknown)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : n/a   it/s: n/a
+ETA remaining  : n/a   complete ~ n/a (awaiting first Iter log or iter1000 checkpoint)
+ETA confidence : low
+RSS / CPU      : 2.729 GiB   359.6%
+checkpoint     : None  mtime=None
+artifact age   : 95.2s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: no readable mid-run Iter lines yet — stdout is pipe-captured by subprocess.run(capture_output=True) until train exits; loss_metrics.csv written only at end; checkpoints every 1000 iters | coarse: trainer elapsed 7m29s; first checkpoint expected at iter 1000
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=stable (delta 80 KB over 111s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:01:11
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 07:39 (459s)
+iteration      : 1000 / 2500  (40.00%)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : 0.459   it/s: 2.1786
+ETA remaining  : 11m28s   complete ~ 2026-07-17 15:12:40
+ETA confidence : low
+RSS / CPU      : 3.453 GiB   366.1%
+checkpoint     : /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.iter1000.pth  mtime=2026-07-17T15:01:04
+artifact age   : 2.4s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: checkpoint (checkpoint:net_c2p.iter1000.pth) | rate from elapsed/iter (coarse)
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=increasing (+758736 KB over 111s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:01:21
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 07:49 (469s)
+iteration      : 1000 / 2500  (40.00%)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : 0.469   it/s: 2.1322
+ETA remaining  : 11m43s   complete ~ 2026-07-17 15:13:05
+ETA confidence : low
+RSS / CPU      : 3.453 GiB   348.0%
+checkpoint     : /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.iter1000.pth  mtime=2026-07-17T15:01:04
+artifact age   : 12.5s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: checkpoint (checkpoint:net_c2p.iter1000.pth) | rate from elapsed/iter (coarse)
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=increasing (+758640 KB over 111s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:01:31
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 07:59 (479s)
+iteration      : 1000 / 2500  (40.00%)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : 0.479   it/s: 2.0877
+ETA remaining  : 11m58s   complete ~ 2026-07-17 15:13:30
+ETA confidence : low
+RSS / CPU      : 3.454 GiB   377.6%
+checkpoint     : /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.iter1000.pth  mtime=2026-07-17T15:01:04
+artifact age   : 22.6s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: checkpoint (checkpoint:net_c2p.iter1000.pth) | rate from elapsed/iter (coarse)
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=increasing (+757472 KB over 111s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:01:42
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 08:09 (489s)
+iteration      : 1000 / 2500  (40.00%)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : 0.489   it/s: 2.0450
+ETA remaining  : 12m13s   complete ~ 2026-07-17 15:13:55
+ETA confidence : low
+RSS / CPU      : 3.454 GiB   342.2%
+checkpoint     : /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.iter1000.pth  mtime=2026-07-17T15:01:04
+artifact age   : 32.7s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: checkpoint (checkpoint:net_c2p.iter1000.pth) | rate from elapsed/iter (coarse)
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=increasing (+757408 KB over 111s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:01:52
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 08:20 (500s)
+iteration      : 1000 / 2500  (40.00%)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : 0.500   it/s: 2.0000
+ETA remaining  : 12m30s   complete ~ 2026-07-17 15:14:22
+ETA confidence : low
+RSS / CPU      : 3.454 GiB   371.1%
+checkpoint     : /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.iter1000.pth  mtime=2026-07-17T15:01:04
+artifact age   : 42.8s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: checkpoint (checkpoint:net_c2p.iter1000.pth) | rate from elapsed/iter (coarse)
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=increasing (+760352 KB over 111s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:02:02
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 08:30 (510s)
+iteration      : 1000 / 2500  (40.00%)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : 0.510   it/s: 1.9608
+ETA remaining  : 12m45s   complete ~ 2026-07-17 15:14:47
+ETA confidence : low
+RSS / CPU      : 3.446 GiB   342.5%
+checkpoint     : /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.iter1000.pth  mtime=2026-07-17T15:01:04
+artifact age   : 52.9s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: checkpoint (checkpoint:net_c2p.iter1000.pth) | rate from elapsed/iter (coarse)
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=increasing (+748704 KB over 111s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:02:12
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 08:40 (520s)
+iteration      : 1000 / 2500  (40.00%)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : 0.520   it/s: 1.9231
+ETA remaining  : 13m00s   complete ~ 2026-07-17 15:15:12
+ETA confidence : low
+RSS / CPU      : 3.448 GiB   337.6%
+checkpoint     : /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.iter1000.pth  mtime=2026-07-17T15:01:04
+artifact age   : 63.0s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: checkpoint (checkpoint:net_c2p.iter1000.pth) | rate from elapsed/iter (coarse)
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=increasing (+750544 KB over 111s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:02:22
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 08:50 (530s)
+iteration      : 1000 / 2500  (40.00%)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : 0.530   it/s: 1.8868
+ETA remaining  : 13m15s   complete ~ 2026-07-17 15:15:37
+ETA confidence : low
+RSS / CPU      : 3.44 GiB   376.5%
+checkpoint     : /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.iter1000.pth  mtime=2026-07-17T15:01:04
+artifact age   : 73.1s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: checkpoint (checkpoint:net_c2p.iter1000.pth) | rate from elapsed/iter (coarse)
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=increasing (+724880 KB over 111s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:02:32
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 09:00 (540s)
+iteration      : 1000 / 2500  (40.00%)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : 0.540   it/s: 1.8519
+ETA remaining  : 13m30s   complete ~ 2026-07-17 15:16:02
+ETA confidence : low
+RSS / CPU      : 3.447 GiB   350.4%
+checkpoint     : /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.iter1000.pth  mtime=2026-07-17T15:01:04
+artifact age   : 83.2s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: checkpoint (checkpoint:net_c2p.iter1000.pth) | rate from elapsed/iter (coarse)
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=increasing (+755456 KB over 111s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:02:42
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 09:10 (550s)
+iteration      : 1000 / 2500  (40.00%)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : 0.550   it/s: 1.8182
+ETA remaining  : 13m45s   complete ~ 2026-07-17 15:16:27
+ETA confidence : low
+RSS / CPU      : 3.172 GiB   358.7%
+checkpoint     : /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.iter1000.pth  mtime=2026-07-17T15:01:04
+artifact age   : 1.1s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: checkpoint (checkpoint:net_c2p.iter1000.pth) | rate from elapsed/iter (coarse)
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=increasing (+471472 KB over 111s)
+========================================================================
+========================================================================
+CSPR fit monitor  2026-07-17T15:02:52
+------------------------------------------------------------------------
+parent PID     : 84446  state=S
+trainer PID    : 84448  state=R
+relationship   : ppid_match=True
+elapsed        : 09:20 (560s)
+iteration      : 1000 / 2500  (40.00%)
+latest loss    : n/a (not yet on disk)
+s/iter (med)   : 0.560   it/s: 1.7857
+ETA remaining  : 14m00s   complete ~ 2026-07-17 15:16:52
+ETA confidence : low
+RSS / CPU      : 3.167 GiB   330.2%
+checkpoint     : /Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/calibration/cspr_work/neural_results_exp/net_p2c.iter1000.pth  mtime=2026-07-17T15:01:04
+artifact age   : 11.2s since last change
+auto-wall state: FIT_CSPR_SCENE
+log interval   : every 50 iters (code)
+ckpt interval  : every 1000 iters (code)
+progress source: checkpoint (checkpoint:net_c2p.iter1000.pth) | rate from elapsed/iter (coarse)
+device         : executing=cpu  cuda=False  mps_avail=True  mlx=False
+trainer libs   : cpu=True metal_seen=True cuda=False
+health         : parents=[84446] trainers=[84448]
+               : one_parent=True one_trainer=True alive=True mem=increasing (+459056 KB over 111s)
+========================================================================
+[2026-07-17T15:04:49] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:16:07 cpuΔ=Nones cpu%=323.3 rss=2.696GiB ckpt=1000 healthy=True stall=False
+[monitor] PROJECT_STATE.md updated for event: checkpoint_1000
+[2026-07-17T15:04:59] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:16:17 cpuΔ=34.35s cpu%=330.4 rss=2.699GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:05:09] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:16:27 cpuΔ=34.35s cpu%=342.8 rss=2.702GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:05:19] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:16:37 cpuΔ=34.78s cpu%=344.2 rss=2.703GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:05:29] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:16:47 cpuΔ=34.62s cpu%=364.7 rss=2.656GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:05:39] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:16:57 cpuΔ=34.79s cpu%=338.7 rss=2.656GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:05:49] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:17:07 cpuΔ=36.33s cpu%=384.1 rss=2.642GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:05:59] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:17:17 cpuΔ=35.6s cpu%=342.9 rss=2.598GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:06:09] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:17:28 cpuΔ=35.36s cpu%=371.4 rss=2.645GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:06:19] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:17:38 cpuΔ=35.5s cpu%=330.9 rss=2.648GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:06:29] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:17:48 cpuΔ=35.3s cpu%=337.7 rss=2.651GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:06:39] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:17:58 cpuΔ=35.21s cpu%=353.6 rss=2.653GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:06:49] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:18:08 cpuΔ=34.38s cpu%=338.9 rss=2.653GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:06:59] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:18:18 cpuΔ=33.85s cpu%=336.8 rss=2.654GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:07:09] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:18:28 cpuΔ=34.34s cpu%=332.7 rss=2.655GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:07:19] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:18:38 cpuΔ=34.58s cpu%=333.1 rss=2.655GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:07:29] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:18:48 cpuΔ=34.4s cpu%=314.3 rss=2.655GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:07:40] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:18:58 cpuΔ=34.35s cpu%=354.6 rss=2.654GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:07:50] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:19:08 cpuΔ=34.21s cpu%=354.6 rss=2.654GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:08:00] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:19:18 cpuΔ=34.28s cpu%=340.4 rss=2.61GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:08:10] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:19:28 cpuΔ=34.61s cpu%=340.1 rss=2.645GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:08:20] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:19:38 cpuΔ=33.73s cpu%=343.8 rss=2.647GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:08:30] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:19:48 cpuΔ=34.31s cpu%=358.1 rss=2.651GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:08:40] state=FIT_CSPR_SCENE iter=1000/2500 conf=MEDIUM ETA=11m19s~2026-07-17 15:19:58 cpuΔ=35.06s cpu%=349.8 rss=2.652GiB ckpt=1000 healthy=True stall=False
+[2026-07-17T15:08:50] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:12:42 cpuΔ=34.94s cpu%=368.1 rss=3.021GiB ckpt=2000 healthy=True stall=False
+[monitor] PROJECT_STATE.md updated for event: checkpoint_2000
+[2026-07-17T15:09:00] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:12:52 cpuΔ=35.56s cpu%=345.4 rss=3.323GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:09:10] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:13:02 cpuΔ=35.01s cpu%=360.3 rss=3.33GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:09:20] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:13:13 cpuΔ=35.12s cpu%=336.9 rss=3.336GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:09:30] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:13:23 cpuΔ=35.2s cpu%=351.3 rss=3.336GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:09:40] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:13:33 cpuΔ=35.03s cpu%=355.8 rss=3.337GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:09:50] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:13:43 cpuΔ=34.84s cpu%=355.0 rss=3.337GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:10:00] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:13:53 cpuΔ=34.99s cpu%=316.2 rss=3.34GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:10:10] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:14:03 cpuΔ=35.16s cpu%=354.4 rss=3.341GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:10:20] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:14:13 cpuΔ=34.62s cpu%=348.6 rss=3.342GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:10:30] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:14:23 cpuΔ=35.09s cpu%=327.4 rss=3.342GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:10:41] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:14:33 cpuΔ=34.95s cpu%=349.8 rss=3.342GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:10:51] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:14:43 cpuΔ=34.91s cpu%=370.3 rss=3.313GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:11:01] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:14:53 cpuΔ=34.57s cpu%=322.8 rss=3.275GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:11:11] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:15:03 cpuΔ=34.84s cpu%=328.7 rss=3.234GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:11:21] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:15:13 cpuΔ=35.04s cpu%=321.4 rss=3.126GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:11:31] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:15:23 cpuΔ=34.93s cpu%=351.2 rss=3.126GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:11:41] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:15:33 cpuΔ=35.02s cpu%=340.4 rss=3.129GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:11:51] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:15:43 cpuΔ=35.17s cpu%=350.4 rss=2.739GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:12:01] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:15:53 cpuΔ=35.09s cpu%=349.7 rss=2.744GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:12:11] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:16:04 cpuΔ=34.72s cpu%=360.8 rss=2.744GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:12:21] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:16:14 cpuΔ=34.71s cpu%=334.8 rss=2.652GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:12:31] state=FIT_CSPR_SCENE iter=2000/2500 conf=HIGH ETA=3m53s~2026-07-17 15:16:24 cpuΔ=34.8s cpu%=339.3 rss=2.641GiB ckpt=2000 healthy=True stall=False
+[2026-07-17T15:12:41] state=FIT_CSPR_SCENE iter=2500/2500 conf=HIGH ETA=0m00s~2026-07-17 15:12:41 cpuΔ=30.05s cpu%=100.2 rss=2.979GiB ckpt=2000 healthy=True stall=False
+[monitor] PROJECT_STATE.md updated for event: training_complete
+[monitor] Training complete observed; exiting monitor.

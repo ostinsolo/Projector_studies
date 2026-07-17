@@ -1,0 +1,185 @@
+{
+  "valid": true,
+  "pass": true,
+  "case": "A",
+  "display": {
+    "index": 1,
+    "screen_id": 7,
+    "width": 1920,
+    "height": 1080,
+    "pixel_width": 1920,
+    "pixel_height": 1080,
+    "origin_x": -1920.0,
+    "origin_y": 249.0,
+    "scale": 1.0,
+    "is_main": false,
+    "name": "USB Display: MStar Demo"
+  },
+  "camera": {
+    "avf_index": 1,
+    "name": "iPhone Camera",
+    "backend": "avfoundation"
+  },
+  "n_proj_self_detect": 54,
+  "before_detection": {
+    "n_markers": 32,
+    "n_charuco_corners": 49,
+    "n_matched": 49,
+    "n_expected_proj": 54,
+    "capture_meta": {
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/homography_baseline/captures/.burst_charuco_uncorrected_008.jpg",
+      "blur": 59.87812896019141,
+      "clip": 0.002033781828703704,
+      "contrast": 59.420133685901305,
+      "motion": 0.5300969328703704,
+      "mean": 81.85170211226851,
+      "shape": [
+        1440,
+        1920,
+        3
+      ]
+    }
+  },
+  "homography_fit": {
+    "n_expected_matched": 49,
+    "n_inliers": 49,
+    "homography_condition_number": 672836.9075551097,
+    "mean_reproj_px": 0.5823032730015945,
+    "median_reproj_px": 0.5429237316629689,
+    "p95_reproj_px": 1.0603296901249402,
+    "max_reproj_px": 1.4925180761735322,
+    "all_point_mean_reproj_px": 0.5823032730015945
+  },
+  "geometry_before": {
+    "valid": true,
+    "aspect_ratio": 1.8186454919403714,
+    "width_px": 704.3226928710938,
+    "height_px": 387.2787170410156,
+    "corner_angles_deg": [
+      89.99999237060547,
+      90.0,
+      89.99999237060547,
+      90.0
+    ],
+    "angle_error_from_90_deg": [
+      7.62939453125e-06,
+      0.0,
+      7.62939453125e-06,
+      0.0
+    ],
+    "mean_angle_error_deg": 3.814697265625e-06,
+    "aa_corner_mean_err_px": 79.17235454140109,
+    "aa_corner_median_err_px": 79.17235405497962,
+    "aa_corner_max_err_px": 79.17239042223588,
+    "ordered_corners": [
+      [
+        731.7984619140625,
+        194.97991943359375
+      ],
+      [
+        1422.4539794921875,
+        56.902320861816406
+      ],
+      [
+        1498.3773193359375,
+        436.6659851074219
+      ],
+      [
+        807.7218017578125,
+        574.7435913085938
+      ]
+    ]
+  },
+  "prewarp_displacement": {
+    "mean_px": 58.14104080200195,
+    "median_px": 54.18479919433594,
+    "max_px": 1193.9661865234375,
+    "pct_gt_2px": 86.17206790123457
+  },
+  "after_detection": {
+    "n_markers": 20,
+    "n_charuco_corners": 27,
+    "n_matched": 27,
+    "capture_meta": {
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/homography_baseline/captures/.burst_charuco_corrected_008.jpg",
+      "blur": 51.821340780918945,
+      "clip": 0.006929253472222222,
+      "contrast": 56.25560334206286,
+      "motion": 0.450146484375,
+      "mean": 77.21672815393518,
+      "shape": [
+        1440,
+        1920,
+        3
+      ]
+    }
+  },
+  "geometry_after": {
+    "valid": true,
+    "aspect_ratio": 2.22833557827685,
+    "width_px": 727.3568725585938,
+    "height_px": 326.4126281738281,
+    "corner_angles_deg": [
+      90.0,
+      90.0,
+      90.0,
+      90.0
+    ],
+    "angle_error_from_90_deg": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "mean_angle_error_deg": 0.0,
+    "aa_corner_mean_err_px": 0.14162509875446927,
+    "aa_corner_median_err_px": 0.1416250932807649,
+    "aa_corner_max_err_px": 0.1416500929178754,
+    "ordered_corners": [
+      [
+        779.2247924804688,
+        144.7286834716797
+      ],
+      [
+        1506.5816650390625,
+        144.9871063232422
+      ],
+      [
+        1506.4656982421875,
+        471.39971923828125
+      ],
+      [
+        779.1088256835938,
+        471.14129638671875
+      ]
+    ]
+  },
+  "metrics": {
+    "valid": true,
+    "n_points_before": 49,
+    "n_points_after": 27,
+    "ransac_inliers_before": 49,
+    "homography_condition_before": 672836.9075551097,
+    "reproj_before": {
+      "mean_reproj_px": 0.5823032730015945,
+      "median_reproj_px": 0.5429237316629689,
+      "p95_reproj_px": 1.0603296901249402,
+      "max_reproj_px": 1.4925180761735322
+    },
+    "reproj_after_refit": {
+      "mean_reproj_px": 0.29515020820452575,
+      "median_reproj_px": 0.28888209463699716,
+      "p95_reproj_px": 0.4964905858679951,
+      "max_reproj_px": 0.6814668432909146
+    },
+    "before_aa_median_err_px": 79.17235405497962,
+    "after_aa_median_err_px": 0.1416250932807649,
+    "before_mean_angle_error_deg": 3.814697265625e-06,
+    "after_mean_angle_error_deg": 0.0,
+    "aspect_before": 1.8186454919403714,
+    "aspect_after": 2.22833557827685,
+    "target_aspect": 1.7777777777777777,
+    "improved_geometry": true,
+    "absolute_ok": false
+  }
+}

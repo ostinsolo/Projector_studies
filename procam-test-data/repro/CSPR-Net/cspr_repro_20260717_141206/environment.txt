@@ -1,0 +1,8 @@
+date: 2026-07-17T14:12:06+01:00
+uname: Darwin Agostinos-MacBook-Pro.local 24.6.0 Darwin Kernel Version 24.6.0: Wed Oct 15 21:12:15 PDT 2025; root:xnu-11417.140.69.703.14~1/RELEASE_ARM64_T6041 arm64
+ProductName:		macOS
+ProductVersion:		15.7.2
+BuildVersion:		24G325
+CSPR_NET_ROOT=/Users/ostino/Documents/Code/Projector_studies/CSPR-Net
+commit: a2a0a28ac2022c876f1ac1e52620b44bfe96672a
+git_status:

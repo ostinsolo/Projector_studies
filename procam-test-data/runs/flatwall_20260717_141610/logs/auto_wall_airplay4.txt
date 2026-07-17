@@ -1,0 +1,7 @@
+STATE PREFLIGHT
+STATE DISCOVER_CAMERA
+STATE DISCOVER_PROJECTOR
+AirPlay/Apple TV display detected — using settle_s=2.0s
+STATE GENERATE_PATTERNS
+Preserving existing pattern package
+STATE VERIFY_CAPTURE

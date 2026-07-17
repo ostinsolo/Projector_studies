@@ -1,0 +1,97 @@
+
+[Init] Preprocessing images (cropping)...
+[adapt] uncropped ./real_data/1_image_distorted.jpeg 1920x1440
+[adapt] uncropped ./real_data/2_image_distorted.jpeg 1920x1440
+[adapt] uncropped ./real_data/3_image_distorted.jpeg 1920x1440
+Saved cropped camera mask: ./real_data/mask_red.jpeg
+
+[Training — real capture mode] Target resolution: 480x270
+[Data] 3 image pairs loaded for training
+  -> Loading pair 1: Cam=1_image_distorted.jpeg, Proj=1_pro.png
+  -> Loading pair 2: Cam=2_image_distorted.jpeg, Proj=2_pro.png
+  -> Loading pair 3: Cam=3_image_distorted.jpeg, Proj=3_pro.png
+Iter 0 [Img 0] | Loss: 11.8528 | Fwd: 0.0913 | Mask: 1.4920 | Bwd: 0.3480 | Cycle: 0.0000 | Smooth: 0.0001
+Iter 50 [Img 0] | Loss: 5.1749 | Fwd: 0.0966 | Mask: 0.1122 | Bwd: 0.3158 | Cycle: 0.0490 | Smooth: 0.0001
+Iter 100 [Img 2] | Loss: 4.7145 | Fwd: 0.0811 | Mask: 0.0967 | Bwd: 0.2932 | Cycle: 0.0488 | Smooth: 0.0001
+[Debug] Saved gradient visualization: debug_gradient_pred.png
+Iter 150 [Img 2] | Loss: 4.6927 | Fwd: 0.0882 | Mask: 0.0785 | Bwd: 0.2928 | Cycle: 0.0491 | Smooth: 0.0001
+Iter 200 [Img 0] | Loss: 4.5714 | Fwd: 0.0889 | Mask: 0.0698 | Bwd: 0.3091 | Cycle: 0.0242 | Smooth: 0.0001
+Iter 250 [Img 1] | Loss: 4.8855 | Fwd: 0.0934 | Mask: 0.0956 | Bwd: 0.3068 | Cycle: 0.0406 | Smooth: 0.0001
+Iter 300 [Img 1] | Loss: 4.6844 | Fwd: 0.0885 | Mask: 0.0722 | Bwd: 0.3065 | Cycle: 0.0373 | Smooth: 0.0001
+Iter 350 [Img 0] | Loss: 4.5734 | Fwd: 0.0900 | Mask: 0.0627 | Bwd: 0.3085 | Cycle: 0.0275 | Smooth: 0.0001
+Iter 400 [Img 1] | Loss: 5.0859 | Fwd: 0.0913 | Mask: 0.1198 | Bwd: 0.3108 | Cycle: 0.0465 | Smooth: 0.0001
+Iter 450 [Img 1] | Loss: 4.7759 | Fwd: 0.0904 | Mask: 0.0611 | Bwd: 0.3065 | Cycle: 0.0501 | Smooth: 0.0001
+Iter 500 [Img 2] | Loss: 4.5877 | Fwd: 0.0876 | Mask: 0.0566 | Bwd: 0.2918 | Cycle: 0.0511 | Smooth: 0.0001
+Iter 550 [Img 1] | Loss: 5.2585 | Fwd: 0.0934 | Mask: 0.1239 | Bwd: 0.3069 | Cycle: 0.0636 | Smooth: 0.0001
+[Debug] Saved gradient visualization: debug_gradient_pred.png
+Iter 600 [Img 2] | Loss: 4.6907 | Fwd: 0.0867 | Mask: 0.0935 | Bwd: 0.2902 | Cycle: 0.0455 | Smooth: 0.0001
+Iter 650 [Img 1] | Loss: 4.8992 | Fwd: 0.0901 | Mask: 0.0920 | Bwd: 0.3038 | Cycle: 0.0500 | Smooth: 0.0001
+Iter 700 [Img 1] | Loss: 4.8278 | Fwd: 0.0845 | Mask: 0.0873 | Bwd: 0.3045 | Cycle: 0.0502 | Smooth: 0.0002
+Iter 750 [Img 0] | Loss: 4.5928 | Fwd: 0.0910 | Mask: 0.0594 | Bwd: 0.3078 | Cycle: 0.0309 | Smooth: 0.0001
+[Debug] Saved gradient visualization: debug_gradient_pred.png
+Iter 800 [Img 2] | Loss: 4.6902 | Fwd: 0.0808 | Mask: 0.0989 | Bwd: 0.2921 | Cycle: 0.0466 | Smooth: 0.0002
+Iter 850 [Img 0] | Loss: 4.7044 | Fwd: 0.0828 | Mask: 0.0875 | Bwd: 0.3067 | Cycle: 0.0372 | Smooth: 0.0001
+Iter 900 [Img 0] | Loss: 4.4163 | Fwd: 0.0911 | Mask: 0.0583 | Bwd: 0.3054 | Cycle: 0.0159 | Smooth: 0.0001
+Iter 950 [Img 0] | Loss: 4.8109 | Fwd: 0.0780 | Mask: 0.1152 | Bwd: 0.3154 | Cycle: 0.0302 | Smooth: 0.0001
+
+[HD Inference] Camera: 1920x1440, Projector: 1920x1080
+Mask bounding rect: x=144, y=0, w=336, h=222
+All HD results and models saved.
+Iter 1000 [Img 1] | Loss: 4.6211 | Fwd: 0.0800 | Mask: 0.1005 | Bwd: 0.3074 | Cycle: 0.0244 | Smooth: 0.0001
+[Debug] Saved gradient visualization: debug_gradient_pred.png
+Iter 1050 [Img 2] | Loss: 4.4970 | Fwd: 0.0874 | Mask: 0.0690 | Bwd: 0.2921 | Cycle: 0.0357 | Smooth: 0.0001
+Iter 1100 [Img 0] | Loss: 4.7078 | Fwd: 0.0933 | Mask: 0.0846 | Bwd: 0.3081 | Cycle: 0.0271 | Smooth: 0.0001
+Iter 1150 [Img 1] | Loss: 4.4976 | Fwd: 0.0833 | Mask: 0.0827 | Bwd: 0.3053 | Cycle: 0.0199 | Smooth: 0.0001
+Iter 1200 [Img 1] | Loss: 4.5023 | Fwd: 0.0760 | Mask: 0.1083 | Bwd: 0.3032 | Cycle: 0.0170 | Smooth: 0.0001
+[Debug] Saved gradient visualization: debug_gradient_pred.png
+Iter 1250 [Img 2] | Loss: 4.3019 | Fwd: 0.0902 | Mask: 0.0635 | Bwd: 0.2960 | Cycle: 0.0122 | Smooth: 0.0001
+Iter 1300 [Img 1] | Loss: 4.4845 | Fwd: 0.0892 | Mask: 0.0588 | Bwd: 0.3061 | Cycle: 0.0238 | Smooth: 0.0001
+Iter 1350 [Img 2] | Loss: 4.3304 | Fwd: 0.0825 | Mask: 0.0812 | Bwd: 0.2904 | Cycle: 0.0196 | Smooth: 0.0001
+Iter 1400 [Img 1] | Loss: 4.3226 | Fwd: 0.0899 | Mask: 0.0619 | Bwd: 0.3037 | Cycle: 0.0077 | Smooth: 0.0001
+Iter 1450 [Img 1] | Loss: 4.3621 | Fwd: 0.0860 | Mask: 0.0659 | Bwd: 0.3022 | Cycle: 0.0151 | Smooth: 0.0001
+Iter 1500 [Img 1] | Loss: 4.3077 | Fwd: 0.0894 | Mask: 0.0569 | Bwd: 0.3027 | Cycle: 0.0102 | Smooth: 0.0001
+Iter 1550 [Img 1] | Loss: 4.3563 | Fwd: 0.0889 | Mask: 0.0587 | Bwd: 0.3015 | Cycle: 0.0159 | Smooth: 0.0001
+Iter 1600 [Img 0] | Loss: 4.4313 | Fwd: 0.0901 | Mask: 0.0602 | Bwd: 0.3080 | Cycle: 0.0149 | Smooth: 0.0001
+Iter 1650 [Img 1] | Loss: 4.2582 | Fwd: 0.0890 | Mask: 0.0535 | Bwd: 0.3023 | Cycle: 0.0078 | Smooth: 0.0001
+Iter 1700 [Img 1] | Loss: 4.2827 | Fwd: 0.0876 | Mask: 0.0568 | Bwd: 0.3012 | Cycle: 0.0111 | Smooth: 0.0001
+Iter 1750 [Img 1] | Loss: 4.2532 | Fwd: 0.0875 | Mask: 0.0613 | Bwd: 0.3015 | Cycle: 0.0057 | Smooth: 0.0001
+Iter 1800 [Img 2] | Loss: 4.0881 | Fwd: 0.0857 | Mask: 0.0603 | Bwd: 0.2868 | Cycle: 0.0061 | Smooth: 0.0001
+[Debug] Saved gradient visualization: debug_gradient_pred.png
+Iter 1850 [Img 0] | Loss: 4.3479 | Fwd: 0.0892 | Mask: 0.0622 | Bwd: 0.3055 | Cycle: 0.0090 | Smooth: 0.0001
+Iter 1900 [Img 2] | Loss: 4.0507 | Fwd: 0.0858 | Mask: 0.0612 | Bwd: 0.2848 | Cycle: 0.0039 | Smooth: 0.0001
+Iter 1950 [Img 2] | Loss: 4.0300 | Fwd: 0.0860 | Mask: 0.0585 | Bwd: 0.2838 | Cycle: 0.0039 | Smooth: 0.0001
+
+[HD Inference] Camera: 1920x1440, Projector: 1920x1080
+Mask bounding rect: x=144, y=0, w=336, h=222
+All HD results and models saved.
+Iter 2000 [Img 1] | Loss: 4.2091 | Fwd: 0.0862 | Mask: 0.0596 | Bwd: 0.3005 | Cycle: 0.0045 | Smooth: 0.0001
+Iter 2050 [Img 1] | Loss: 4.2106 | Fwd: 0.0862 | Mask: 0.0611 | Bwd: 0.3006 | Cycle: 0.0037 | Smooth: 0.0001
+Iter 2100 [Img 0] | Loss: 4.2474 | Fwd: 0.0891 | Mask: 0.0564 | Bwd: 0.3041 | Cycle: 0.0034 | Smooth: 0.0001
+[Debug] Saved gradient visualization: debug_gradient_pred.png
+Iter 2150 [Img 2] | Loss: 4.0081 | Fwd: 0.0863 | Mask: 0.0557 | Bwd: 0.2835 | Cycle: 0.0032 | Smooth: 0.0001
+Iter 2200 [Img 0] | Loss: 4.2613 | Fwd: 0.0882 | Mask: 0.0576 | Bwd: 0.3036 | Cycle: 0.0055 | Smooth: 0.0001
+Iter 2250 [Img 1] | Loss: 4.1923 | Fwd: 0.0865 | Mask: 0.0557 | Bwd: 0.3000 | Cycle: 0.0049 | Smooth: 0.0001
+Iter 2300 [Img 0] | Loss: 4.2237 | Fwd: 0.0878 | Mask: 0.0550 | Bwd: 0.3032 | Cycle: 0.0038 | Smooth: 0.0001
+Iter 2350 [Img 0] | Loss: 4.2155 | Fwd: 0.0871 | Mask: 0.0551 | Bwd: 0.3032 | Cycle: 0.0036 | Smooth: 0.0001
+Iter 2400 [Img 2] | Loss: 3.9980 | Fwd: 0.0856 | Mask: 0.0551 | Bwd: 0.2831 | Cycle: 0.0036 | Smooth: 0.0001
+Iter 2450 [Img 2] | Loss: 3.9974 | Fwd: 0.0856 | Mask: 0.0551 | Bwd: 0.2831 | Cycle: 0.0035 | Smooth: 0.0001
+
+[Timing] Pure training time (excl. eval & save): 1140.40s
+
+[HD Inference] Camera: 1920x1440, Projector: 1920x1080
+Mask bounding rect: x=572, y=0, w=1348, h=1182
+
+[Timing] Network inference: 1.5947s
+[Timing] Grid sample: 0.0430s
+[Timing] Total inference (net + grid): 1.6377s
+
+All HD results and models saved.
+Camera recon SSIM: 0.2364
+Camera recon (masked) -- SSIM: 0.2414, PSNR: 7.4988, RMSE: 107.5478
+Projector recon SSIM: 0.3611
+Projector recon -- SSIM: 0.3618, PSNR: 7.0486, RMSE: 113.2682
+
+[Visualization] Generating projector-space mask (mask_on_proj)...
+Projector white mask transformed to camera plane: ./neural_results_exp/mask_cam_fake.png
+Projector mask saved to: ./neural_results_exp/Final_Mask_on_Projector_Space.png
+Loss data exported to: ./neural_results_exp/loss_metrics.csv

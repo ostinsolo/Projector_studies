@@ -1,0 +1,70 @@
+{
+  "08_cspr_red": {
+    "file": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/08_cspr_red.png",
+    "device": {
+      "avf_index": 1,
+      "name": "iPhone Camera",
+      "backend": "avfoundation"
+    },
+    "width": 1920,
+    "height": 1440,
+    "metrics": {
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_08_cspr_red_001.jpg",
+      "blur": 29.96571215646992,
+      "clip": 0.011044921875,
+      "contrast": 49.72977944709828,
+      "motion": 0.0,
+      "shape": [
+        1440,
+        1920,
+        3
+      ]
+    },
+    "selection_score": 34.386444007429745,
+    "lock_status": {
+      "api_supports_lock": false,
+      "lens_locked": false,
+      "zoom_locked": false,
+      "focus_locked": false,
+      "exposure_locked": false,
+      "white_balance_locked": false,
+      "note": "Continuity/AVFoundation capture via ffmpeg does not expose confirmed lock APIs; consistency enforced by frame checks."
+    },
+    "ffmpeg_returncode": 0,
+    "timestamp": 1784296218.718068
+  },
+  "09_validation_uncorrected": {
+    "file": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/09_validation_uncorrected.png",
+    "device": {
+      "avf_index": 1,
+      "name": "iPhone Camera",
+      "backend": "avfoundation"
+    },
+    "width": 1920,
+    "height": 1440,
+    "metrics": {
+      "path": "/Users/ostino/Documents/Code/Projector_studies/procam-test-data/runs/flatwall_20260717_141610/camera_captures_raw/.burst_09_validation_uncorrected_001.jpg",
+      "blur": 16.21175202536041,
+      "clip": 0.31679361979166665,
+      "contrast": 15.800116667683238,
+      "motion": 0.0,
+      "shape": [
+        1440,
+        1920,
+        3
+      ]
+    },
+    "selection_score": 1.952082702545403,
+    "lock_status": {
+      "api_supports_lock": false,
+      "lens_locked": false,
+      "zoom_locked": false,
+      "focus_locked": false,
+      "exposure_locked": false,
+      "white_balance_locked": false,
+      "note": "Continuity/AVFoundation capture via ffmpeg does not expose confirmed lock APIs; consistency enforced by frame checks."
+    },
+    "ffmpeg_returncode": 0,
+    "timestamp": 1784296221.004541
+  }
+}

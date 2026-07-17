@@ -1,0 +1,27 @@
+=== Attempt 1: dataset presence ===
+ls: /Users/ostino/Documents/Code/Projector_studies/GS-ProCams/data: No such file or directory
+ls: /Users/ostino/Documents/Code/Projector_studies/GS-ProCams/output: No such file or directory
+=== Attempt 2: CUDA / nvidia ===
+nvidia-smi not found
+(eval):73: command not found: nvidia-smi
+torch 2.13.0 cuda False
+=== Attempt 3: requirements pin ===
+--extra-index-url https://download.pytorch.org/whl/cu118
+
+torch==2.6.0+cu118
+torchvision==0.21.0+cu118
+torchaudio==2.6.0+cu118
+
+numpy
+scipy
+matplotlib
+tqdm
+pyyaml
+scikit-image
+opencv-python
+plyfile
+=== commit ===
+dfb7f449710ce41a63369a447ca728e0cb220d97
+=== conda/env ===
+conda not found
+no conda
