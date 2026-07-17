@@ -377,6 +377,24 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--screen-id", type=int, default=None)
     s.set_defaults(func=cmd_flatwall_homography)
 
+    s = sub.add_parser(
+        "remeasure-v2",
+        help="Recalculate target metrics with consistent evaluation_ids (writes analysis_remeasure_v2/)",
+    )
+    s.add_argument("--run-dir", required=True)
+    s.set_defaults(func=cmd_remeasure_v2)
+
+    s = sub.add_parser(
+        "refine-homography",
+        help="Physical planar residual homography refinement (absolute-accuracy loop)",
+    )
+    s.add_argument("--run-dir", required=True)
+    s.add_argument("--proj-w", type=int, default=1920)
+    s.add_argument("--proj-h", type=int, default=1080)
+    s.add_argument("--settle", type=float, default=0.8)
+    s.add_argument("--screen-id", type=int, default=None)
+    s.set_defaults(func=cmd_refine_homography)
+
     return p
 
 
@@ -392,6 +410,53 @@ def cmd_flatwall_homography(args: argparse.Namespace) -> int:
     )
     print(json.dumps(result, indent=2, default=str))
     return 0 if result.get("pass") else 1
+
+
+def cmd_remeasure_v2(args: argparse.Namespace) -> int:
+    from .residual_refine import remeasure_run_v2
+
+    result = remeasure_run_v2(Path(args.run_dir))
+    print(json.dumps(result, indent=2, default=str))
+    return 0 if (result.get("corrected") or {}).get("valid") else 1
+
+
+def cmd_refine_homography(args: argparse.Namespace) -> int:
+    from .camera_control import CameraController, list_avfoundation_video_devices, select_iphone_camera
+    from .display_control import ProjectorController, list_displays, select_projector_display
+    from .residual_refine import run_homography_refinement
+
+    run_dir = Path(args.run_dir)
+    displays = list_displays()
+    selected = select_projector_display(
+        displays,
+        prefer_resolution=(args.proj_w, args.proj_h),
+        prefer_screen_id=args.screen_id,
+    )
+    if selected is None:
+        print(json.dumps({"error": "no_projector_display"}))
+        return 2
+    projector = ProjectorController(selected, displays)
+    projector.start()
+    devices = list_avfoundation_video_devices()
+    cam = select_iphone_camera(devices)
+    if cam is None:
+        projector.shutdown()
+        print(json.dumps({"error": "no_iphone_camera"}))
+        return 2
+    camera = CameraController(cam)
+    try:
+        result = run_homography_refinement(
+            run_dir,
+            projector,
+            camera,
+            int(selected.width),
+            int(selected.height),
+            settle_s=args.settle,
+        )
+    finally:
+        projector.shutdown()
+    print(json.dumps(result, indent=2, default=str))
+    return 0 if result.get("absolute_gate_pass") else 1
 
 
 def main(argv: list[str] | None = None) -> int:

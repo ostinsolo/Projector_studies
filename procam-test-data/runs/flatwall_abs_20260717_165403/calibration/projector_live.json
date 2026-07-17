@@ -1,0 +1,16 @@
+{
+  "logical": [
+    1920,
+    1080
+  ],
+  "pixels": [
+    1920,
+    1080
+  ],
+  "scale": 1.0,
+  "screen_id": 7,
+  "name": "USB Display: MStar Demo",
+  "is_main": false,
+  "n_displays": 2,
+  "helper": "appkit"
+}

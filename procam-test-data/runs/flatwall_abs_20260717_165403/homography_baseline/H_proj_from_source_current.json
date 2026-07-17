@@ -1,0 +1,41 @@
+{
+  "matrix_name": "H_proj_from_source_current",
+  "source_space": "SourceContent_ProjFB_layout",
+  "destination_space": "ProjFB",
+  "source_resolution": [
+    1920,
+    1080
+  ],
+  "projector_resolution": [
+    1920,
+    1080
+  ],
+  "matrix": [
+    [
+      1.1100205220590313,
+      -0.18849500305170774,
+      57.409166332329356
+    ],
+    [
+      0.22867295043568003,
+      1.3281358256837348,
+      -417.1259629919446
+    ],
+    [
+      4.448806847300303e-05,
+      -3.305990935962922e-05,
+      1.0
+    ]
+  ],
+  "matrix_normalization": "H /= H[2,2]",
+  "opencv_warpPerspective_convention": "dst(p)=src(H^{-1} p); matrix passed is H_proj_from_source (forward point map)",
+  "interpolation": "INTER_LINEAR",
+  "border_mode": "BORDER_CONSTANT",
+  "border_value": [
+    0,
+    0,
+    0
+  ],
+  "pixel_centre_convention": "OpenCV top-left origin; +u right +v down",
+  "distortion_state": "none_applied"
+}

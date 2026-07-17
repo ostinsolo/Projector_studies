@@ -2,42 +2,16 @@
 
 ## Status
 
-**DONE** — flat-wall production path **VALIDATED**
-(ChArUco + planar homography)
+**RUNNING**
 
-## Validation
+## Auto-wall state
 
-`VALIDATION_STATE.md` → **VALIDATED**  
-Report: `FINAL_VALIDATION_REPORT.md`  
-Matrix: `docs/VALIDATION_MATRIX.md`
+`PREFLIGHT`
 
-## Runs
+Run: `/var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/tmpuhi0ofnc/staterun`
 
-| Role | Path |
-|------|------|
-| Canonical (immutable) | `procam-test-data/runs/flatwall_20260717_141610` |
-| Fresh live regression | `procam-test-data/runs/flatwall_live_20260717_154312` |
+Completed stages: (none)
 
-## Production command
+Updated: 2026-07-17T16:56:57.977441
 
-```bash
-procam-calibrate auto-wall --run-dir <NEW_RUN_DIR>
-```
-
-## Decisions
-
-- Production = classical ChArUco + planar homography (`--pipeline homography`).
-- Shared module: `procam_calibrate/charuco.py`.
-- Acceptance uses **independent desired target** metrics (category B), not
-  fit residuals or contour AA alone.
-- CSPR-Net: experimental non-planar only — not in production state machine.
-- GS-ProCams: `REUSABLE_COMPONENTS_ONLY`.
-
-## Live before / after (target-based)
-
-| Metric | Uncorrected | Corrected |
-|--------|-------------|-----------|
-| target_median_err_px | 66.89 | 20.81 |
-| target_p95_err_px | 139.59 | 24.56 |
-| horizontal_axis_deviation_deg | 11.27 | 0.025 |
-| orthogonality_error_deg | 3.00 | 0.084 |
+See `/var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/tmpuhi0ofnc/staterun/auto_wall_state.json` for full machine state.

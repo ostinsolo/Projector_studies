@@ -571,6 +571,36 @@ def detection_coverage(
     }
 
 
+def build_evaluation_ids(
+    cam_ids: dict[int, np.ndarray],
+    desired_ids: dict[int, np.ndarray],
+    proj_ids: Optional[dict[int, np.ndarray]] = None,
+    expected_visible_ids: Optional[list[int]] = None,
+) -> dict:
+    """Single ordered ID set for all production target metrics and coverage."""
+    detected_raw = sorted(cam_ids.keys())
+    desired_set = set(desired_ids.keys())
+    proj_set = set(proj_ids.keys()) if proj_ids is not None else desired_set
+    expected = sorted(expected_visible_ids) if expected_visible_ids is not None else None
+    eval_set = set(detected_raw) & desired_set & proj_set
+    if expected is not None:
+        eval_set &= set(expected)
+    evaluation_ids = sorted(eval_set)
+    expected_set = set(expected) if expected is not None else None
+    return {
+        "detected_raw_ids": detected_raw,
+        "expected_visible_ids": expected,
+        "evaluation_ids": evaluation_ids,
+        "detected_but_not_expected_ids": (
+            sorted(set(detected_raw) - expected_set) if expected_set is not None else []
+        ),
+        "expected_but_not_detected_ids": (
+            sorted(expected_set - set(detected_raw)) if expected_set is not None else []
+        ),
+        "n_evaluation_ids": len(evaluation_ids),
+    }
+
+
 def measure_against_desired_target(
     cam_ids: dict[int, np.ndarray],
     desired: dict,
@@ -580,48 +610,52 @@ def measure_against_desired_target(
     pts_proj: Optional[np.ndarray] = None,
     matched_ids: Optional[list[int]] = None,
     proj_ids: Optional[dict[int, np.ndarray]] = None,
+    expected_visible_ids: Optional[list[int]] = None,
 ) -> dict:
-    """Production correction metrics: detected CamImg vs predetermined desired CamImg."""
+    """Production correction metrics: detected CamImg vs predetermined desired CamImg.
+
+    All geometry uses one ordered evaluation_ids set:
+    detected ∩ projector ∩ desired ∩ expected-visible (when mask present).
+    """
+    del pts_proj, matched_ids  # ordering must come from evaluation_ids only
     desired_ids: dict[int, np.ndarray] = desired["desired_cam_by_id"]
-    common = sorted(set(cam_ids) & set(desired_ids))
-    if len(common) < MIN_CORNERS_VALIDATE:
+    id_sets = build_evaluation_ids(cam_ids, desired_ids, proj_ids, expected_visible_ids)
+    evaluation_ids = id_sets["evaluation_ids"]
+    if len(evaluation_ids) < MIN_CORNERS_VALIDATE:
         return {
             "valid": False,
             "pass": False,
             "tag": tag,
             "metric_category": "B_production_correction",
-            "failure_reason": f"insufficient_matched_to_desired:{len(common)}",
-            "n_valid_measurements": len(common),
+            "failure_reason": f"insufficient_evaluation_ids:{len(evaluation_ids)}",
+            "n_valid_measurements": len(evaluation_ids),
             "target_median_err_px": None,
             "target_p95_err_px": None,
             "target_max_err_px": None,
+            "id_sets": id_sets,
             "detection": det_meta,
             "matching": match_meta,
         }
-    pts_c = np.array([cam_ids[i] for i in common], dtype=np.float64)
-    pts_d = np.array([desired_ids[i] for i in common], dtype=np.float64)
+
+    pts_c = np.array([cam_ids[i] for i in evaluation_ids], dtype=np.float64)
+    pts_d = np.array([desired_ids[i] for i in evaluation_ids], dtype=np.float64)
     err = np.linalg.norm(pts_c - pts_d, axis=1)
-    # Rebuild projector coords in the same ID order as pts_c (never trust external ordering)
     if proj_ids is not None:
-        pts_proj = np.array([proj_ids[i] for i in common], dtype=np.float64)
-    elif pts_proj is not None and matched_ids is not None and list(matched_ids) == list(common):
-        pass  # already aligned
+        pts_proj_eval = np.array([proj_ids[i] for i in evaluation_ids], dtype=np.float64)
     else:
-        # Fall back: use desired Cam positions as a rectangular proxy grid for row/col grouping
-        pts_proj = pts_d.copy()
+        pts_proj_eval = pts_d.copy()
 
-    axis = _axis_angle_deviations(pts_proj, pts_c)
+    axis = _axis_angle_deviations(pts_proj_eval, pts_c)
 
-    # Orthogonality: mean row vs col directions
     ortho = None
     h_dirs, v_dirs = [], []
-    for yv in np.unique(np.round(pts_proj[:, 1], 0)):
-        idx = np.where(np.abs(pts_proj[:, 1] - float(yv)) <= 0.5 + 1e-9)[0]
+    for yv in np.unique(np.round(pts_proj_eval[:, 1], 0)):
+        idx = np.where(np.abs(pts_proj_eval[:, 1] - float(yv)) <= 0.5 + 1e-9)[0]
         if len(idx) >= 2:
             d = pts_c[idx[-1]] - pts_c[idx[0]]
             h_dirs.append(d / (np.linalg.norm(d) + 1e-12))
-    for xv in np.unique(np.round(pts_proj[:, 0], 0)):
-        idx = np.where(np.abs(pts_proj[:, 0] - float(xv)) <= 0.5 + 1e-9)[0]
+    for xv in np.unique(np.round(pts_proj_eval[:, 0], 0)):
+        idx = np.where(np.abs(pts_proj_eval[:, 0] - float(xv)) <= 0.5 + 1e-9)[0]
         if len(idx) >= 2:
             d = pts_c[idx[-1]] - pts_c[idx[0]]
             v_dirs.append(d / (np.linalg.norm(d) + 1e-12))
@@ -632,23 +666,13 @@ def measure_against_desired_target(
         ang = float(np.degrees(np.arccos(cos)))
         ortho = abs(90.0 - ang)
 
-    # Outer corners: extreme desired ids by position
-    des_all = np.array(list(desired_ids.values()), dtype=np.float64)
-    # Parallelism / aspect from detected hull
-    rect = cv2.minAreaRect(pts_c.astype(np.float32))
-    (_cxy), (rw, rh), _ang = rect
-    rw, rh = float(max(rw, rh)), float(min(rw, rh)) if min(rw, rh) > 1 else float(max(rw, 1))
-    # keep width>=height naming as longer/shorter for aspect vs desired
-    measured_aspect = float(max(rect[1][0], rect[1][1]) / max(min(rect[1][0], rect[1][1]), 1e-6))
-    desired_aspect = float(desired.get("desired_aspect_ratio") or 1.0)
-    # Prefer comparing board extent aspect in desired space
-    dmin, dmax = des_all.min(0), des_all.max(0)
-    desired_aspect = float((dmax[0] - dmin[0]) / max(dmax[1] - dmin[1], 1e-6))
+    # Aspect: same evaluation_ids for measured and desired extents
+    dmin, dmax = pts_d.min(0), pts_d.max(0)
     cmin, cmax = pts_c.min(0), pts_c.max(0)
+    desired_aspect = float((dmax[0] - dmin[0]) / max(dmax[1] - dmin[1], 1e-6))
     measured_aspect = float((cmax[0] - cmin[0]) / max(cmax[1] - cmin[1], 1e-6))
     aspect_err = abs(measured_aspect - desired_aspect) / max(desired_aspect, 1e-6)
 
-    # Four outer corners by desired extremes
     corner_errs = []
     for selector in (
         lambda a: (a[:, 0] + a[:, 1]).argmin(),
@@ -656,32 +680,35 @@ def measure_against_desired_target(
         lambda a: (a[:, 0] + a[:, 1]).argmax(),
         lambda a: (-a[:, 0] + a[:, 1]).argmax(),
     ):
-        # pick among common by desired positions
-        di = np.array([desired_ids[i] for i in common])
-        j = int(selector(di))
+        j = int(selector(pts_d))
         corner_errs.append(float(err[j]))
 
+    rect = cv2.minAreaRect(pts_c.astype(np.float32))
     box = cv2.boxPoints(rect).astype(np.float64)
-    # opposite edge parallelism
-    e01 = box[1] - box[0]
-    e12 = box[2] - box[1]
-    e23 = box[3] - box[2]
-    e30 = box[0] - box[3]
+    e01, e12, e23, e30 = box[1] - box[0], box[2] - box[1], box[3] - box[2], box[0] - box[3]
+
     def _ang(a, b):
         a = a / (np.linalg.norm(a) + 1e-12)
         b = b / (np.linalg.norm(b) + 1e-12)
         return float(np.degrees(np.arccos(np.clip(abs(np.dot(a, b)), 0, 1))))
 
     parallelism = float(np.mean([_ang(e01, e23), _ang(e12, e30)]))
-
     secondary = secondary_aa_hull_metric(pts_c)
+    residuals = (pts_c - pts_d).tolist()
+
     result = {
         "valid": True,
         "pass": True,
         "tag": tag,
         "metric_category": "B_production_correction",
-        "n_valid_measurements": len(common),
-        "matched_ids": common,
+        "n_valid_measurements": len(evaluation_ids),
+        "matched_ids": evaluation_ids,
+        "evaluation_ids": evaluation_ids,
+        "id_sets": id_sets,
+        "per_id_residuals_cam_px": {
+            str(i): {"dx": residuals[k][0], "dy": residuals[k][1], "mag": float(err[k])}
+            for k, i in enumerate(evaluation_ids)
+        },
         "target_median_err_px": float(np.median(err)),
         "target_p95_err_px": float(np.percentile(err, 95)),
         "target_max_err_px": float(err.max()),
@@ -693,11 +720,11 @@ def measure_against_desired_target(
         "aspect_ratio_error": float(aspect_err),
         "measured_aspect_ratio": measured_aspect,
         "desired_aspect_ratio": desired_aspect,
+        "aspect_note": "both extents use the same evaluation_ids",
         "horizontal_axis_deviation_deg_median": axis.get("horizontal_axis_deviation_deg_median"),
         "vertical_axis_deviation_deg_median": axis.get("vertical_axis_deviation_deg_median"),
         "horizontal_axis_deviation_deg_max": axis.get("horizontal_axis_deviation_deg_max"),
         "vertical_axis_deviation_deg_max": axis.get("vertical_axis_deviation_deg_max"),
-        # aliases for compare helpers / older keys
         "median_reproj_px": float(np.median(err)),
         "p95_reproj_px": float(np.percentile(err, 95)),
         "max_reproj_px": float(err.max()),
@@ -787,10 +814,18 @@ def compare_reproj(unc: dict, cor: dict) -> dict:
         or axis_improve
         or ortho_improve
     )
-    abs_pass = bool(geo_ok and med_c <= 5.0 and p95_c <= 12.0 and (target_improve or already_good))
+    cov_ok = cor.get("coverage", {}).get("coverage_gate_pass", True)
+    abs_pass = bool(
+        geo_ok
+        and cov_ok
+        and med_c <= 5.0
+        and p95_c <= 12.0
+        and (target_improve or already_good)
+    )
     rel_pass = bool(
         (target_improve or already_good)
         and geo_ok
+        and cov_ok
         and (
             already_good
             or (
@@ -801,10 +836,9 @@ def compare_reproj(unc: dict, cor: dict) -> dict:
             )
         )
     )
-    cov_ok = cor.get("coverage", {}).get("coverage_gate_pass", True)
     sec_u = (unc.get("secondary_aa_hull_metric") or {}).get("aa_corner_median_err_px")
     sec_c = (cor.get("secondary_aa_hull_metric") or {}).get("aa_corner_median_err_px")
-    acceptance = bool((abs_pass or rel_pass) and cov_ok)
+    acceptance = bool(abs_pass or rel_pass)
     return {
         "valid": True,
         "improvement": improvement,
