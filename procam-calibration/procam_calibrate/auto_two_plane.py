@@ -435,7 +435,7 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
         assert self.camera
         # Ensure projector is black so architecture is natural scene
         if self.projector is not None:
-            self.projector.show_image(make_black(self.cfg.proj_h, self.cfg.proj_w))
+            self.projector.show_black()
             time.sleep(self.cfg.settle_s)
         frames = []
         for i in range(3):
@@ -514,7 +514,7 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
         assert self.projector and self.camera
         path_p = self.run_dir / "preflight" / f"{stem}_proj.png"
         cv2.imwrite(str(path_p), img)
-        self.projector.show_image(img)
+        self.projector.show_path(path_p)
         time.sleep(self.cfg.settle_s)
         cap_path = self.run_dir / "preflight" / f"{stem}_cam.png"
         meta = self.camera.capture_frame(cap_path, settle_s=0.35, flush_n=flush_n)

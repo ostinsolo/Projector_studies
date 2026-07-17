@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
+import tempfile
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Optional
+
+import numpy as np
 
 
 @dataclass
@@ -90,6 +94,7 @@ class ProjectorController:
         self.all_displays = all_displays
         self._proc: Optional[subprocess.Popen] = None
         self._helper = Path(__file__).with_name("projector_helper_appkit.py")
+        self._frame_path = Path(tempfile.gettempdir()) / f"procam_proj_frame_{os.getpid()}.png"
 
     def start(self) -> None:
         if self._proc and self._proc.poll() is None:
@@ -148,6 +153,16 @@ class ProjectorController:
         resp = self._cmd(f"SHOW {Path(path).resolve()}")
         if not resp.startswith("OK"):
             raise RuntimeError(resp)
+
+    def show_image(self, img: np.ndarray, path: Optional[Path] = None) -> None:
+        """Write a BGR image and display it (for in-memory frames / video)."""
+        import cv2
+
+        out = Path(path) if path is not None else self._frame_path
+        out.parent.mkdir(parents=True, exist_ok=True)
+        if not cv2.imwrite(str(out), img):
+            raise RuntimeError(f"failed to write projector frame: {out}")
+        self.show_path(out)
 
     def show_black(self) -> None:
         resp = self._cmd("BLACK")
