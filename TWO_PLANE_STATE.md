@@ -4,33 +4,29 @@
 
 **DONE / VALIDATED / ABSOLUTE PASS**
 
-## Two-plane piecewise homography + oblique video
+## Two-plane + oblique video
 
-**SOFTWARE_READY_FOR_OBLIQUE_VIDEO_VALIDATION**
+**PHYSICAL_IN_PROGRESS** (not yet `VALIDATED_OBLIQUE_VIDEO`)
 
-Architecture decision remains **CONTINUE_CURRENT_ARCHITECTURE**.
+Architecture: **CONTINUE_CURRENT_ARCHITECTURE**
 
 | Phase | Status |
 |-------|--------|
-| Architectural empty-scene analysis | implemented |
-| Target region prior | implemented |
-| Multi-frame ChArUco + dual-H + seam verify | implemented |
-| Active / excluded plane classification (ceiling) | implemented |
-| Wall–ceiling boundary + usable/exclusion masks | implemented |
-| Maximum inscribed video rectangle | implemented |
-| Piecewise video remap + diagnostic + play-video | implemented |
-| Core synthetic suite | **14/14 PASS** |
-| Extended synthetic suite | **25/25 PASS** |
-| Oblique video synthetic suite | **PASS** |
-| Package tests | **78+ passed** |
-| Adversarial self-review | 2 passes (ceiling-as-content, bbox/leakage) |
-| Physical two-wall / oblique video validation | **not run** |
+| Software gates (ceiling / max rect / play-video) | **SOFTWARE_READY** — commit `38843a4`+ |
+| Package tests | **80 passed** |
+| Physical run | `procam-test-data/runs/two_plane_oblique_20260717_180931` |
+| Two-plane model | selected (`prefer_two_plane` spatial fold) |
+| Corrected median / p95 | **~1.83 / ~2.49** cam px |
+| Seam | OK (median mismatch ~0.34) |
+| Ceiling leakage (self-check) | **0** |
+| Max video region | valid (~37% of usable mask) |
+| `play-video --diagnostic` | **ok** (60 frames projected) |
+| Absolute gate | **failed coverage** (sparse corrected ChArUco IDs) |
+| Full VALIDATED_OBLIQUE_VIDEO | **not claimed** |
 
-## Straightness note
+## Exact next command (coverage / finalize)
 
-“Straight” is defined in **camera / audience** coordinates. Other viewpoints may look distorted.
-
-## Exact next command (when hardware ready)
+Keep devices fixed. Re-run on a **new** directory (or resume after fixing coverage lighting):
 
 ```bash
 procam-calibrate auto-two-plane \
@@ -39,17 +35,12 @@ procam-calibrate auto-two-plane \
   --setup-confirmed
 ```
 
-Then:
+Playback of current calibration:
 
 ```bash
 procam-calibrate play-video \
-  --calibration-run <RUN_DIR> \
-  --diagnostic \
-  --loop
+  --calibration-run procam-test-data/runs/two_plane_oblique_20260717_180931 \
+  --diagnostic --loop
 ```
 
-Checklist: `docs/TWO_PLANE_PHYSICAL_RUNBOOK.md`  
-Oblique setup: `docs/PHYSICAL_OBLIQUE_SETUP.md`  
-Ceiling / max region / playback: `docs/CEILING_EXCLUSION.md`, `docs/MAXIMUM_VIDEO_REGION.md`, `docs/VIDEO_PLAYBACK.md`
-
-Immutable synthetic: `procam-test-data/runs/two_plane_synthetic_20260717`
+Checklist: `docs/TWO_PLANE_PHYSICAL_RUNBOOK.md` · `docs/PHYSICAL_OBLIQUE_SETUP.md`
