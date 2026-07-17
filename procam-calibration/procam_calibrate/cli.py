@@ -482,6 +482,23 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--max-frames", type=int, default=None, help="Optional frame cap (tests)")
     s.set_defaults(func=cmd_play_video)
 
+    s = sub.add_parser(
+        "optimise-video-region",
+        help=(
+            "Search larger/shifted camera video rectangles using a saved calibration. "
+            "Writes evidence under <run>/region_optimisation/ without modifying baseline artifacts."
+        ),
+    )
+    s.add_argument("--calibration-run", required=True)
+    s.add_argument("--aspect", default="16:9")
+    s.add_argument("--physical", action="store_true", help="Project/capture candidates on hardware")
+    s.add_argument("--resume", action="store_true", help="Continue prior optimisation directory")
+    s.add_argument("--region-scale", type=float, default=None)
+    s.add_argument("--region-offset-x", type=float, default=0.0)
+    s.add_argument("--region-offset-y", type=float, default=0.0)
+    s.add_argument("--screen-id", type=int, default=None)
+    s.set_defaults(func=cmd_optimise_video_region)
+
     return p
 
 
@@ -639,6 +656,29 @@ def cmd_auto_two_plane(args: argparse.Namespace) -> int:
     if st == "DONE":
         return 0
     if st == "USER_ACTION_REQUIRED":
+        return 3
+    return 1
+
+
+def cmd_optimise_video_region(args: argparse.Namespace) -> int:
+    from .optimise_video_region import OptimiseConfig, run_optimise_video_region
+
+    cfg = OptimiseConfig(
+        calibration_run=Path(args.calibration_run),
+        aspect=args.aspect,
+        physical=bool(args.physical),
+        resume=bool(args.resume),
+        region_scale=args.region_scale,
+        region_offset_x=float(args.region_offset_x),
+        region_offset_y=float(args.region_offset_y),
+        screen_id=args.screen_id,
+    )
+    summary = run_optimise_video_region(cfg)
+    print(json.dumps(summary, indent=2, default=str))
+    term = summary.get("terminal")
+    if term in ("OFFLINE_SEARCH_COMPLETE", "PHYSICAL_CANDIDATES_CAPTURED", "REGION_EXPANSION_VALIDATED"):
+        return 0
+    if term == "USER_ACTION_REQUIRED":
         return 3
     return 1
 

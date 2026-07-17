@@ -6,41 +6,29 @@
 
 ## Two-plane + oblique video
 
-**PHYSICAL_IN_PROGRESS** (not yet `VALIDATED_OBLIQUE_VIDEO`)
+**PHYSICAL_IN_PROGRESS** — not `VALIDATED_OBLIQUE_VIDEO` / not `REGION_EXPANSION_VALIDATED`
 
-Architecture: **CONTINUE_CURRENT_ARCHITECTURE**
+Run: `procam-test-data/runs/two_plane_oblique_20260717_180931`
 
-| Phase | Status |
-|-------|--------|
-| Software gates (ceiling / max rect / play-video) | **SOFTWARE_READY** — commit `38843a4`+ |
-| Package tests | **80 passed** |
-| Physical run | `procam-test-data/runs/two_plane_oblique_20260717_180931` |
-| Two-plane model | selected (`prefer_two_plane` spatial fold) |
-| Corrected median / p95 | **~1.83 / ~2.49** cam px |
-| Seam | OK (median mismatch ~0.34) |
-| Ceiling leakage (self-check) | **0** |
-| Max video region | valid (~37% of usable mask) |
-| `play-video --diagnostic` | **ok** (60 frames projected) |
-| Absolute gate | **failed coverage** (sparse corrected ChArUco IDs) |
-| Full VALIDATED_OBLIQUE_VIDEO | **not claimed** |
+### Answered questions
 
-## Exact next command (coverage / finalize)
+1. **Why ~37% usable?** Irregular small usable footprint (12.6% of frame, 65.7% bbox fill) + axis-aligned 16:9. Not mainly margin. Free-aspect could reach ~52%.
+2. **Lower-right anomaly?** Cell `r3c5` has **0** calib points; LR corner 82 px from nearest support. Residuals where supported stay &lt;2 px. Extrapolation / sparse right-wall coverage — not global H failure.
+3. **Largest reliable 16:9 under local support gates?** Support-safe ≈ **92796 px (26.6% usable)** — *smaller* than the 37% mask-max rectangle.
+4. **Coverage gate?** Validation-pattern detection sparsity (13 IDs), not proof of bad geometry.
 
-Keep devices fixed. Re-run on a **new** directory (or resume after fixing coverage lighting):
+### Evidence
 
-```bash
-procam-calibrate auto-two-plane \
-  --run-dir procam-test-data/runs/two_plane_oblique_$(date +%Y%m%d_%H%M%S) \
-  --mode physical \
-  --setup-confirmed
-```
+- `region_forensics/FORENSIC_37PCT_REPORT.md`
+- `region_optimisation/` (offline search + physical captures)
+- `docs/REGION_EXPANSION_FORENSICS.md`
 
-Playback of current calibration:
+### To enlarge past support-safe
+
+Need denser lower-right / wall-B correspondences (extra calib patterns or Gray-code) — **not** a full discard of current Hs unless devices moved.
 
 ```bash
-procam-calibrate play-video \
+procam-calibrate optimise-video-region \
   --calibration-run procam-test-data/runs/two_plane_oblique_20260717_180931 \
-  --diagnostic --loop
+  --aspect 16:9 --physical --resume
 ```
-
-Checklist: `docs/TWO_PLANE_PHYSICAL_RUNBOOK.md` · `docs/PHYSICAL_OBLIQUE_SETUP.md`
