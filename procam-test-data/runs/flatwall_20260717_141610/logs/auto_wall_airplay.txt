@@ -2,7 +2,7 @@ STATE PREFLIGHT
 STATE DISCOVER_CAMERA
 STATE DISCOVER_PROJECTOR
 AirPlay/Apple TV display detected — using settle_s=1.2s
-ERROR in DISCOVER_PROJECTOR: Projector helper failed to start: 2026-07-17 14:37:20.228 Python[83420:4786283] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/org.python.python.savedState
+ERROR in DISCOVER_PROJECTOR: Projector helper failed to start: 2026-07-17 14:37:20.228 Python[83420:4786283] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to <REDACTED_TEMP_PATH>
 Traceback (most recent call last):
   File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
     handlers[st]()
@@ -10,11 +10,11 @@ Traceback (most recent call last):
     self.projector.start()
   File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/display_control.py", line 166, in start
     raise RuntimeError(f"Projector helper failed to start: {line}")
-RuntimeError: Projector helper failed to start: 2026-07-17 14:37:20.228 Python[83420:4786283] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/org.python.python.savedState
+RuntimeError: Projector helper failed to start: 2026-07-17 14:37:20.228 Python[83420:4786283] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to <REDACTED_TEMP_PATH>
 
 STATE DISCOVER_PROJECTOR
 AirPlay/Apple TV display detected — using settle_s=1.2s
-ERROR in DISCOVER_PROJECTOR: Projector helper failed to start: 2026-07-17 14:37:21.395 Python[83423:4786396] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/org.python.python.savedState
+ERROR in DISCOVER_PROJECTOR: Projector helper failed to start: 2026-07-17 14:37:21.395 Python[83423:4786396] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to <REDACTED_TEMP_PATH>
 Traceback (most recent call last):
   File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
     handlers[st]()
@@ -22,11 +22,11 @@ Traceback (most recent call last):
     self.projector.start()
   File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/display_control.py", line 166, in start
     raise RuntimeError(f"Projector helper failed to start: {line}")
-RuntimeError: Projector helper failed to start: 2026-07-17 14:37:21.395 Python[83423:4786396] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/org.python.python.savedState
+RuntimeError: Projector helper failed to start: 2026-07-17 14:37:21.395 Python[83423:4786396] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to <REDACTED_TEMP_PATH>
 
 STATE DISCOVER_PROJECTOR
 AirPlay/Apple TV display detected — using settle_s=1.2s
-ERROR in DISCOVER_PROJECTOR: Projector helper failed to start: 2026-07-17 14:37:22.559 Python[83428:4786488] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/org.python.python.savedState
+ERROR in DISCOVER_PROJECTOR: Projector helper failed to start: 2026-07-17 14:37:22.559 Python[83428:4786488] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to <REDACTED_TEMP_PATH>
 Traceback (most recent call last):
   File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/auto_wall.py", line 191, in run
     handlers[st]()
@@ -34,5 +34,5 @@ Traceback (most recent call last):
     self.projector.start()
   File "/Users/ostino/Documents/Code/Projector_studies/procam-calibration/procam_calibrate/display_control.py", line 166, in start
     raise RuntimeError(f"Projector helper failed to start: {line}")
-RuntimeError: Projector helper failed to start: 2026-07-17 14:37:22.559 Python[83428:4786488] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/org.python.python.savedState
+RuntimeError: Projector helper failed to start: 2026-07-17 14:37:22.559 Python[83428:4786488] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to <REDACTED_TEMP_PATH>
 

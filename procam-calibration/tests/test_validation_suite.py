@@ -345,10 +345,11 @@ def test_gate9_run_lock_second_process():
 
     tmp = Path(tempfile.mkdtemp()) / "lockrun"
     tmp.mkdir()
-    cfg = AutoWallConfig(run_dir=tmp, pipeline="homography")
+    live = tmp / "PROJECT_STATE_LIVE.md"
+    cfg = AutoWallConfig(run_dir=tmp, pipeline="homography", project_state_path=live)
     a = AutoWall(cfg)
     a._acquire_run_lock()
-    b = AutoWall(AutoWallConfig(run_dir=tmp, pipeline="homography"))
+    b = AutoWall(AutoWallConfig(run_dir=tmp, pipeline="homography", project_state_path=live))
     with pytest.raises(RuntimeError, match="Another auto-wall process"):
         b._acquire_run_lock()
     # release lock held by a
@@ -365,7 +366,11 @@ def test_gate9_production_handlers_exclude_cspr_when_homography():
 
     # Production default pipeline must not *enter* FIT_CSPR from discover
     assert "HOMOGRAPHY_CALIBRATE" in STATES
-    cfg = AutoWallConfig(run_dir=Path(tempfile.mkdtemp()), pipeline="homography")
+    cfg = AutoWallConfig(
+        run_dir=Path(tempfile.mkdtemp()),
+        pipeline="homography",
+        project_state_path=Path(tempfile.mkdtemp()) / "ps.md",
+    )
     assert cfg.pipeline == "homography"
 
 
@@ -374,9 +379,11 @@ def test_gate9_atomic_state_write():
 
     tmp = Path(tempfile.mkdtemp()) / "staterun"
     tmp.mkdir()
-    aw = AutoWall(AutoWallConfig(run_dir=tmp, pipeline="homography"))
+    live = tmp / "PROJECT_STATE_LIVE.md"
+    aw = AutoWall(AutoWallConfig(run_dir=tmp, pipeline="homography", project_state_path=live))
     aw.state["state"] = "PREFLIGHT"
     aw._save_state()
     assert (tmp / "auto_wall_state.json").exists()
     data = json.loads((tmp / "auto_wall_state.json").read_text())
     assert data["state"] == "PREFLIGHT"
+    assert live.exists()

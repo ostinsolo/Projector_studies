@@ -93,6 +93,9 @@ class AutoWallConfig:
     prefer_screen_id: Optional[int] = None
     # Production flat-wall path is planar ChArUco homography (not CSPR).
     pipeline: str = "homography"
+    # If set, live auto-wall status is written here. None = do not write project state.
+    # Tests must always pass a temporary path; never leave this pointing at the repo root.
+    project_state_path: Optional[Path] = None
 
 
 class AutoWall:
@@ -177,8 +180,14 @@ class AutoWall:
         self._save_state()
 
     def _update_project_state_file(self) -> None:
-        ps = self.roots.integration.parent / "PROJECT_STATE.md"
-        status = "RUNNING"
+        """Write live auto-wall status only to the configured path (never inferred).
+
+        When ``project_state_path`` is None, this is a no-op so tests and offline
+        replay cannot mutate the repository-level PROJECT_STATE.md.
+        """
+        ps = self.cfg.project_state_path
+        if ps is None:
+            return
         st = self.state["state"]
         if st == "DONE":
             status = "DONE"
@@ -188,7 +197,7 @@ class AutoWall:
             status = "BLOCKED_EXTERNAL"
         else:
             status = "RUNNING"
-        body = f"""# PROJECT_STATE
+        body = f"""# PROJECT_STATE (live auto-wall)
 
 ## Status
 
@@ -208,6 +217,8 @@ See `{self.state_path}` for full machine state.
 """
         if st in ("BLOCKED_EXTERNAL", "ACCEPTANCE_FAILED"):
             body += f"\n## Notes\n\n{self.state.get('data', {}).get('blocker', '')}\n"
+        ps = Path(ps)
+        ps.parent.mkdir(parents=True, exist_ok=True)
         ps.write_text(body)
 
     def _log(self, msg: str) -> None:

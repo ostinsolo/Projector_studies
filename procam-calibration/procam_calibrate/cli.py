@@ -262,8 +262,15 @@ def cmd_synthetic(args: argparse.Namespace) -> int:
 
 def cmd_auto_wall(args: argparse.Namespace) -> int:
     from .auto_wall import run_auto_wall
+    from .paths import Roots
 
     run_dir = Path(args.run_dir)
+    # Live status stays under the run by default. Repo PROJECT_STATE.md is only
+    # touched when --update-project-state is explicitly requested.
+    if getattr(args, "update_project_state", False):
+        project_state_path = Roots.resolve().integration.parent / "PROJECT_STATE.md"
+    else:
+        project_state_path = run_dir / "PROJECT_STATE_LIVE.md"
     return run_auto_wall(
         run_dir,
         proj_w=args.proj_w,
@@ -274,6 +281,7 @@ def cmd_auto_wall(args: argparse.Namespace) -> int:
         allow_main_display_fallback=args.allow_main_display,
         prefer_screen_id=args.screen_id,
         pipeline=args.pipeline,
+        project_state_path=project_state_path,
     )
 
 
@@ -364,6 +372,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Allow using the main laptop display as projector (debug only; not exact external ProjFB)",
     )
     s.add_argument("--screen-id", type=int, default=None, help="Preferred NSScreenNumber")
+    s.add_argument(
+        "--update-project-state",
+        action="store_true",
+        help="Write live auto-wall status to repository PROJECT_STATE.md (default: run-dir PROJECT_STATE_LIVE.md only)",
+    )
     s.set_defaults(func=cmd_auto_wall)
 
     s = sub.add_parser(

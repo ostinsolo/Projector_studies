@@ -1,17 +1,36 @@
 # PROJECT_STATE
 
-## Status
+## Flat-wall MVP
 
-**RUNNING**
+**DONE / VALIDATED**
 
-## Auto-wall state
+## Absolute-accuracy enhancement
 
-`PREFLIGHT`
+**COMPLETE**
 
-Run: `/var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/tmpuhi0ofnc/staterun`
+## Production
 
-Completed stages: (none)
+ChArUco + planar homography + optional planar residual refinement
 
-Updated: 2026-07-17T16:56:57.977441
+## Best physical runs
 
-See `/var/folders/70/5bvwqkq55md4j2y7xwd_spvm0000gn/T/tmpuhi0ofnc/staterun/auto_wall_state.json` for full machine state.
+| Role | Run ID |
+|------|--------|
+| Absolute-pass calibrate | `flatwall_abs_20260717_165506` |
+| Absolute-pass refine | `flatwall_abs_refine_20260717_165533` |
+
+## Best corrected results
+
+| Metric | Value |
+|--------|-------|
+| target_median_err_px | **0.34** |
+| target_p95_err_px | **0.64** |
+
+See `ACCURACY_STATE.md` for full before/after and residual diagnosis.
+
+## Experimental
+
+| Component | Status |
+|-----------|--------|
+| CSPR-Net | experimental non-planar only |
+| GS-ProCams | `REUSABLE_COMPONENTS_ONLY` |
