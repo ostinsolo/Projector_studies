@@ -30,13 +30,14 @@ See `ACCURACY_STATE.md` for full before/after and residual diagnosis.
 
 ## Two-plane piecewise homography
 
-**USER_ACTION_REQUIRED**
+**SOFTWARE_READY_FOR_PHYSICAL_VALIDATION** · architecture **CONTINUE_CURRENT_ARCHITECTURE**
 
 - Flat-wall status above is unchanged and must not be replaced by two-plane state
-- Command: `procam-calibrate auto-two-plane --run-dir <NEW_RUN_DIR> --mode physical`
+- Reuse audit: `docs/2025_2026_REUSE_AUDIT.md` (complete — no external drop-in)
+- Architectural priors + extended synthetic suite integrated
 - State: `TWO_PLANE_STATE.md`
-- Synthetic suite: **PASS** (`docs/TWO_PLANE_SYNTHETIC_RESULTS.md`)
-- Physical setup: **USER_ACTION_REQUIRED** (`docs/TWO_PLANE_PHYSICAL_SETUP_REQUEST.md`)
+- Synthetic: core 14/14 + extended 25/25; package tests 71 passed
+- Physical: awaiting hardware — `docs/TWO_PLANE_PHYSICAL_RUNBOOK.md`
 
 ## Experimental
 

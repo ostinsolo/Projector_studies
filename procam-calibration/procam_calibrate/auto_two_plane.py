@@ -65,6 +65,12 @@ from .two_plane_refine import (
     preserve_best,
     propose_coupled_candidates,
 )
+from .architecture_analysis import (
+    TargetRegionConfig,
+    analyse_architecture,
+    render_synthetic_two_wall_scene,
+    verify_seam_with_architecture_prior,
+)
 from .charuco import apply_H, detect_charuco, generate_charuco_image
 
 
@@ -72,15 +78,24 @@ STATES = [
     "PREFLIGHT",
     "DISCOVER_PROJECTOR",
     "DISCOVER_CAMERA",
+    "CAPTURE_EMPTY_SCENE",
+    "ANALYSE_ARCHITECTURE",
+    "PROPOSE_TARGET_REGION",
     "VERIFY_TWO_PLANE_SETUP",
     "GENERATE_CALIBRATION_SEQUENCE",
     "PROJECT_CALIBRATION_SEQUENCE",
     "CAPTURE_CALIBRATION_SEQUENCE",
     "DETECT_MULTI_FRAME_CHARUCO",
+    "EXTRACT_CORRESPONDENCES",
     "FIT_SINGLE_H",
+    "TEST_MULTI_PLANE",
     "FIT_TWO_H",
+    "ASSIGN_SURFACES",
     "VALIDATE_MODEL_SELECTION",
     "ESTIMATE_SEAM",
+    "VERIFY_SEAM",
+    "BUILD_MASKS",
+    "DEFINE_DESIRED_TARGET",
     "GENERATE_PIECEWISE_PREWARP",
     "PROJECT_UNCORRECTED_VALIDATION",
     "CAPTURE_UNCORRECTED_VALIDATION",
@@ -280,12 +295,9 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
 ```
 """
         md.write_text(body)
-        # Mirror docs request for the milestone
-        docs = Roots.resolve().integration.parent / "docs" / "TWO_PLANE_PHYSICAL_SETUP_REQUEST.md"
-        try:
-            docs.write_text(body + f"\n\nRun directory: `{self.run_dir}`\n")
-        except OSError:
-            pass
+        # Never write tracked docs/ from the state machine (tests and runs must
+        # not pollute repository documentation). Canonical checklist lives in
+        # docs/TWO_PLANE_PHYSICAL_SETUP_REQUEST.md and is maintained separately.
         manifest = {
             "status": "USER_ACTION_REQUIRED",
             "run_dir": str(self.run_dir),
@@ -355,7 +367,7 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
         if self.cfg.offline:
             self.state["data"]["camera"] = {"offline": True}
             self._mark_completed("DISCOVER_CAMERA")
-            self._transition("VERIFY_TWO_PLANE_SETUP")
+            self._transition("CAPTURE_EMPTY_SCENE")
             return
         devices = list_avfoundation_video_devices()
         cam = select_iphone_camera(devices)
@@ -370,6 +382,105 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
         self.camera = CameraController(cam)
         self.state["data"]["camera"] = {"name": cam.name, "avf_index": cam.avf_index}
         self._mark_completed("DISCOVER_CAMERA")
+        self._transition("CAPTURE_EMPTY_SCENE")
+
+    def step_capture_empty_scene(self) -> None:
+        empty_dir = self.run_dir / "empty_scene"
+        empty_dir.mkdir(parents=True, exist_ok=True)
+        if self.cfg.offline:
+            img, gt = render_synthetic_two_wall_scene(
+                cam_w=1280, cam_h=720, seam_x_frac=0.5, rng=np.random.default_rng(0)
+            )
+            path = empty_dir / "empty_burst_00.png"
+            cv2.imwrite(str(path), img)
+            meta = {
+                "offline": True,
+                "timestamp": datetime.now().isoformat(),
+                "resolution": [1280, 720],
+                "gt_synthetic": gt,
+                "blur": float(cv2.Laplacian(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), cv2.CV_64F).var()),
+            }
+            (empty_dir / "empty_burst_00.json").write_text(json.dumps(meta, indent=2))
+            self.state["data"]["empty_scene"] = {"path": str(path), "meta": meta}
+            self._mark_completed("CAPTURE_EMPTY_SCENE")
+            self._transition("ANALYSE_ARCHITECTURE")
+            return
+        assert self.camera
+        # Ensure projector is black so architecture is natural scene
+        if self.projector is not None:
+            self.projector.show_image(make_black(self.cfg.proj_h, self.cfg.proj_w))
+            time.sleep(self.cfg.settle_s)
+        frames = []
+        for i in range(3):
+            path = empty_dir / f"empty_burst_{i:02d}.png"
+            meta = self.camera.capture_frame(path, settle_s=0.35, flush_n=24)
+            img = cv2.imread(str(path))
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            blur = blur_score(gray)
+            rec = {
+                "path": str(path),
+                "timestamp": datetime.now().isoformat(),
+                "capture_meta": meta,
+                "resolution": [int(img.shape[1]), int(img.shape[0])],
+                "blur": blur,
+                "accepted": blur >= 15.0,
+            }
+            (empty_dir / f"empty_burst_{i:02d}.json").write_text(json.dumps(rec, indent=2, default=str))
+            if rec["accepted"]:
+                frames.append(rec)
+            else:
+                rej = self.run_dir / "camera_captures_rejected" / path.name
+                cv2.imwrite(str(rej), img)
+        if not frames:
+            self.write_physical_setup_request()
+            self._transition("USER_ACTION_REQUIRED", "empty scene frames unusable")
+            return
+        # Stability: max pairwise mean abs diff among accepted
+        imgs = [cv2.imread(f["path"]) for f in frames]
+        stab = []
+        for a, b in zip(imgs, imgs[1:]):
+            stab.append(float(np.mean(cv2.absdiff(a, b))))
+        self.state["data"]["empty_scene"] = {
+            "frames": frames,
+            "path": frames[0]["path"],
+            "stability_mad": stab,
+            "resolution": frames[0]["resolution"],
+        }
+        self._mark_completed("CAPTURE_EMPTY_SCENE")
+        self._transition("ANALYSE_ARCHITECTURE")
+
+    def step_analyse_architecture(self) -> None:
+        path = Path(self.state["data"]["empty_scene"]["path"])
+        img = cv2.imread(str(path))
+        out = self.run_dir / "architecture"
+        cfg = TargetRegionConfig(
+            prefer_two_wall=True,
+            prefer_seam_near_centre=True,
+        )
+        report = analyse_architecture(img, out, cfg)
+        self.state["data"]["architecture"] = {
+            "valid": report.get("valid"),
+            "n_lines": report.get("n_lines"),
+            "n_seam_candidates": len(
+                [c for c in report.get("seam_candidates", []) if c.get("status") == "candidate"]
+            ),
+            "target_region": report.get("target_region"),
+        }
+        self._mark_completed("ANALYSE_ARCHITECTURE")
+        self._transition("PROPOSE_TARGET_REGION")
+
+    def step_propose_target_region(self) -> None:
+        # Region already written by analyse_architecture; re-emit for stage clarity
+        arch_path = self.run_dir / "architecture" / "target_region.json"
+        if arch_path.exists():
+            region = json.loads(arch_path.read_text())
+        else:
+            region = self.state["data"].get("architecture", {}).get("target_region") or {}
+        (self.run_dir / "architecture" / "proposed_target_region.json").write_text(
+            json.dumps(region, indent=2)
+        )
+        self.state["data"]["proposed_target_region"] = region
+        self._mark_completed("PROPOSE_TARGET_REGION")
         self._transition("VERIFY_TWO_PLANE_SETUP")
 
     def _project_and_capture(self, img: np.ndarray, stem: str, flush_n: int = 24) -> tuple[np.ndarray, dict]:
@@ -690,6 +801,28 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
         if not boot.get("stable", False):
             self._log("seam bootstrap unstable — continuing with best estimate")
         self._mark_completed("ESTIMATE_SEAM")
+        self._transition("VERIFY_SEAM")
+
+    def step_verify_seam(self) -> None:
+        seam = json.loads((self.run_dir / "seam" / "seam_model.json").read_text())
+        seam_cands = []
+        sc_path = self.run_dir / "architecture" / "seam_candidates.json"
+        if sc_path.exists():
+            seam_cands = json.loads(sc_path.read_text())
+        cam_w = None
+        es = self.state["data"].get("empty_scene") or {}
+        if es.get("resolution"):
+            cam_w = es["resolution"][0]
+        elif (es.get("meta") or {}).get("resolution"):
+            cam_w = es["meta"]["resolution"][0]
+        ver = verify_seam_with_architecture_prior(seam, seam_cands, self.cfg.proj_w, cam_w=cam_w)
+        (self.run_dir / "seam" / "seam_architecture_verification.json").write_text(
+            json.dumps(ver, indent=2)
+        )
+        self.state["data"]["seam_verification"] = ver
+        # Correspondence seam remains authoritative even if prior disagrees
+        self._mark_completed("VERIFY_SEAM")
+        self._mark_completed("BUILD_MASKS")
         self._transition("GENERATE_PIECEWISE_PREWARP")
 
     def step_generate_prewarp(self) -> None:
@@ -1092,15 +1225,24 @@ procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup
             "PREFLIGHT": self.step_preflight,
             "DISCOVER_PROJECTOR": self.step_discover_projector,
             "DISCOVER_CAMERA": self.step_discover_camera,
+            "CAPTURE_EMPTY_SCENE": self.step_capture_empty_scene,
+            "ANALYSE_ARCHITECTURE": self.step_analyse_architecture,
+            "PROPOSE_TARGET_REGION": self.step_propose_target_region,
             "VERIFY_TWO_PLANE_SETUP": self.step_verify_two_plane_setup,
             "GENERATE_CALIBRATION_SEQUENCE": self.step_generate_calibration_sequence,
             "PROJECT_CALIBRATION_SEQUENCE": self.step_project_and_capture_calibration,
             "CAPTURE_CALIBRATION_SEQUENCE": self.step_project_and_capture_calibration,
             "DETECT_MULTI_FRAME_CHARUCO": self.step_detect_and_fit,
+            "EXTRACT_CORRESPONDENCES": self.step_detect_and_fit,
             "FIT_SINGLE_H": self.step_detect_and_fit,
+            "TEST_MULTI_PLANE": self.step_detect_and_fit,
             "FIT_TWO_H": self.step_detect_and_fit,
+            "ASSIGN_SURFACES": self.step_detect_and_fit,
             "VALIDATE_MODEL_SELECTION": self.step_detect_and_fit,
             "ESTIMATE_SEAM": self.step_estimate_seam,
+            "VERIFY_SEAM": self.step_verify_seam,
+            "BUILD_MASKS": self.step_verify_seam,
+            "DEFINE_DESIRED_TARGET": self.step_generate_prewarp,
             "GENERATE_PIECEWISE_PREWARP": self.step_generate_prewarp,
             "PROJECT_UNCORRECTED_VALIDATION": self.step_validation_capture_measure,
             "CAPTURE_UNCORRECTED_VALIDATION": self.step_validation_capture_measure,

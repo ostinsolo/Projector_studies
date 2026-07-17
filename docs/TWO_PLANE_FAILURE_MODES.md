@@ -1,20 +1,17 @@
 # Two-Plane Failure Modes
 
-| Failure | Automatic recovery | When to ask user |
-|---------|--------------------|------------------|
-| Insufficient points on one plane | Alternate shifted/scaled ChArUco patterns; retry capture | Only if alternate sequence still fails |
-| Stale Continuity frame | Increase flush; timestamp/diff check; recapture | — |
-| Blur / exposure | Retry with longer settle; keep rejected frames | Room lighting if persistent |
-| Plane-label swap | Canonicalize by projector-space centroid | — |
-| Unstable seam | Bootstrap; exclusion band; more observations | Stronger fold if still unstable |
-| One-H selected | Confirm distribution; alternate patterns | Stronger physical fold / wider coverage |
-| Software exception | `ACCEPTANCE_FAILED` with traceback | Never classify as `BLOCKED_EXTERNAL` |
-| No projector / iPhone | Setup request | `USER_ACTION_REQUIRED` |
-| Genuine platform/hardware limit | Document alternatives | `BLOCKED_EXTERNAL` only with evidence |
-
-## Terminal states
-
-- `DONE` — absolute physical gate pass
-- `USER_ACTION_REQUIRED` — hardware placement pending
-- `ACCEPTANCE_FAILED` / measured physical limit — best matrices retained
-- `BLOCKED_EXTERNAL` — external only
+| Failure | Recovery | Terminal if stuck |
+|---------|----------|-------------------|
+| Blurry empty scene | Retry / flush; USER_ACTION if persistent | USER_ACTION_REQUIRED |
+| False architectural seam (shadow) | Prior only; correspondence overrides | — |
+| Low-contrast fold | Arch prior weak; correspondence seam | — |
+| Insufficient points one plane | Alternate ChArUco patterns / retries | ACCEPTANCE_FAILED |
+| One-H selected on real fold | Alternate patterns; then stronger fold request | USER_ACTION_REQUIRED |
+| Unstable seam | Bootstrap + exclusion band | ACCEPTANCE_FAILED |
+| Plane label swap | Centroid canonicalize | — |
+| Mask overlap/gap | Assert exclusive masks | ACCEPTANCE_FAILED |
+| Wrong matrix direction | Convention tests + composition check | — |
+| Mirrored pre-warp | `detect_mirrored_or_inverted` | ACCEPTANCE_FAILED |
+| Stale Continuity frame | Flush + reject | retry |
+| Root state pollution | `project_state_path=None` by default | — |
+| Software exception | ACCEPTANCE_FAILED + traceback (not BLOCKED_EXTERNAL) | ACCEPTANCE_FAILED |

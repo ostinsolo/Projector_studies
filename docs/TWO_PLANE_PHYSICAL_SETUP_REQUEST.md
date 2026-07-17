@@ -1,10 +1,13 @@
-# Two-plane physical setup required
+# Two-Plane Physical Setup Request
 
-## Status: USER_ACTION_REQUIRED
+## Status: SOFTWARE_READY_FOR_PHYSICAL_VALIDATION
 
-Complete these **physical** actions only. Do not capture images, edit JSON,
-select points, or run commands — the agent will do all software steps after you
-confirm readiness.
+Software (including architectural empty-scene analysis and extended synthetic
+gates) is complete. Complete these **physical** actions only. Do not capture
+images, edit JSON, select points, or run commands — the agent will execute all
+software steps after you confirm readiness.
+
+## User actions only
 
 1. Use two rigid, matte, light-coloured flat panels or two walls meeting in a
    clear vertical corner.
@@ -18,13 +21,16 @@ confirm readiness.
 7. Ensure the complete projection and the fold are visible in the iPhone frame
    (camera may be above, below, left, or right of the projector).
 8. Darken the room enough for reliable ChArUco detection.
-9. Do not move either device after confirming readiness.
+9. Disable macOS mirroring; use the external 1920×1080 projector display.
+10. Do not move either device after confirming readiness.
 
-Reply that the setup is ready. The agent will then run:
+## After confirmation
 
+```bash
+procam-calibrate auto-two-plane \
+  --run-dir procam-test-data/runs/two_plane_phys_$(date +%Y%m%d_%H%M%S) \
+  --mode physical \
+  --setup-confirmed
 ```
-procam-calibrate auto-two-plane --run-dir <THIS_RUN_DIR> --mode physical --setup-confirmed
-```
 
-
-Run directory: `procam-test-data/runs/two_plane_phys_setup_20260717_171953`
+See `docs/TWO_PLANE_PHYSICAL_RUNBOOK.md`.

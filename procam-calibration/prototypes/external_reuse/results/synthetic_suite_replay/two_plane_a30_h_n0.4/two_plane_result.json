@@ -1,0 +1,13 @@
+{
+  "model": "two_plane",
+  "valid": true,
+  "reason": "ok",
+  "two_plane_hypothesis": true,
+  "seam_metrics": {
+    "n_samples": 40,
+    "median_seam_mismatch_px": 0.27519133854012423,
+    "p95_seam_mismatch_px": 0.47413737423429697,
+    "max_seam_mismatch_px": 0.5085072997304855,
+    "pass": true
+  }
+}

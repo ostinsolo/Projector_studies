@@ -554,20 +554,34 @@ def cmd_auto_two_plane(args: argparse.Namespace) -> int:
     run_dir.mkdir(parents=True, exist_ok=True)
 
     if mode == "synthetic":
+        from .synthetic_two_plane import run_extended_synthetic_suite
+
         summary = run_synthetic_mode(run_dir, args.proj_w, args.proj_h)
+        ext = run_extended_synthetic_suite(run_dir / "extended_suite")
+        (run_dir / "TWO_PLANE_EXTENDED_SYNTHETIC_SUMMARY.json").write_text(
+            json.dumps(ext, indent=2, default=str)
+        )
         print(
             json.dumps(
                 {
                     "mode": "synthetic",
                     "hardware": False,
-                    "all_pass": summary["all_pass"],
-                    "n_pass": summary["n_pass"],
-                    "n_cases": summary["n_cases"],
+                    "core": {
+                        "all_pass": summary["all_pass"],
+                        "n_pass": summary["n_pass"],
+                        "n_cases": summary["n_cases"],
+                    },
+                    "extended": {
+                        "all_pass": ext["all_pass"],
+                        "n_pass": ext["n_pass"],
+                        "n_cases": ext["n_cases"],
+                        "core_14_all_pass": ext.get("core_14_all_pass"),
+                    },
                 },
                 indent=2,
             )
         )
-        return 0 if summary.get("all_pass") else 1
+        return 0 if summary.get("all_pass") and ext.get("all_pass") else 1
 
     cfg = AutoTwoPlaneConfig(
         run_dir=run_dir,

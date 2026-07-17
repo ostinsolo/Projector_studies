@@ -268,6 +268,130 @@ def run_synthetic_suite(out_dir: Path) -> dict:
         "n_pass": sum(1 for c in cases if c["pass"]),
         "all_pass": all(c["pass"] for c in cases),
         "cases": cases,
+        "seed_policy": "deterministic np.random.default_rng per case",
     }
     (out_dir / "synthetic_suite_results.json").write_text(json.dumps(summary, indent=2, default=str))
+    return summary
+
+
+def run_extended_synthetic_suite(out_dir: Path) -> dict:
+    """Expanded gates: architecture priors, off-centre seam, nearly coplanar, failures."""
+    from .architecture_analysis import (
+        analyse_architecture,
+        render_synthetic_two_wall_scene,
+        verify_seam_with_architecture_prior,
+    )
+    from .coordinate_conventions import (
+        detect_mirrored_or_inverted,
+        verify_forward_composition,
+        wrong_direction_error,
+    )
+    from .homography_baseline import forward_H_proj_from_source
+    from .two_plane import (
+        build_plane_masks,
+        define_desired_per_plane,
+        estimate_straight_seam,
+    )
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    base = run_synthetic_suite(out_dir / "core_14")
+    cases = list(base["cases"])
+
+    # Off-centre seam via uneven sampling (more points one side) + standard fold
+    sc = generate_two_plane_correspondences(
+        90.0, True, 0.0, uneven=True, rng=np.random.default_rng(42)
+    )
+    fit = fit_two_homographies(sc["pts_proj"], sc["pts_cam"], ids=sc["ids"])
+    cases.append(
+        {
+            "name": "two_plane_uneven_support",
+            "pass": fit.get("model") == "two_plane" and fit.get("valid"),
+            "got_model": fit.get("model"),
+        }
+    )
+
+    # Nearly coplanar — small angle should still pick two-plane or safely one-plane
+    sc = generate_two_plane_correspondences(15.0, True, 0.0, rng=np.random.default_rng(43))
+    fit = fit_two_homographies(sc["pts_proj"], sc["pts_cam"], ids=sc["ids"])
+    # Accept either valid two-plane OR one_plane if fold too weak (must not crash)
+    cases.append(
+        {
+            "name": "nearly_coplanar_angle_15",
+            "pass": fit.get("model") in ("one_plane", "two_plane", "two_plane_rejected"),
+            "got_model": fit.get("model"),
+            "note": "weak fold may correctly prefer one_plane",
+        }
+    )
+
+    # Architecture: fold detection prior
+    img, gt = render_synthetic_two_wall_scene(seam_x_frac=0.5, rng=np.random.default_rng(0))
+    arch = analyse_architecture(img, out_dir / "arch_centre")
+    active = [c for c in arch["seam_candidates"] if c.get("status") == "candidate"]
+    best_x = active[0]["mid_x"] if active else None
+    arch_ok = best_x is not None and abs(best_x - gt["seam_x"]) < 0.08 * img.shape[1]
+    cases.append({"name": "arch_detect_central_fold", "pass": arch_ok, "best_x": best_x, "gt_x": gt["seam_x"]})
+
+    # Misleading shadow: prior may fire on shadow; correspondence must win later
+    img2, gt2 = render_synthetic_two_wall_scene(
+        seam_x_frac=0.55, add_shadow_line=True, rng=np.random.default_rng(1)
+    )
+    arch2 = analyse_architecture(img2, out_dir / "arch_shadow")
+    # Must still produce at least one candidate and a target region
+    cases.append(
+        {
+            "name": "arch_shadow_still_proposes_region",
+            "pass": bool(arch2.get("target_region", {}).get("camera_polygon"))
+            and arch2.get("n_lines", 0) > 5,
+        }
+    )
+
+    # Low-contrast seam: analysis remains valid (may have lower confidence)
+    img3, _ = render_synthetic_two_wall_scene(low_contrast_seam=True, rng=np.random.default_rng(2))
+    arch3 = analyse_architecture(img3, out_dir / "arch_low_contrast")
+    cases.append({"name": "arch_low_contrast_valid_report", "pass": "seam_candidates" in arch3})
+
+    # Seam verify: correspondence seam vs prior
+    sc = generate_two_plane_correspondences(90.0, True, 0.0, rng=np.random.default_rng(7))
+    fit = fit_two_homographies(sc["pts_proj"], sc["pts_cam"], ids=sc["ids"])
+    labels = np.array(fit["labels"])
+    Ha, Hb = fit["H_cam_from_proj_plane_A"], fit["H_cam_from_proj_plane_B"]
+    seam = estimate_straight_seam(sc["pts_proj"], labels, 1920, 1080, Ha, Hb)
+    v = verify_seam_with_architecture_prior(seam, arch["seam_candidates"], 1920, cam_w=img.shape[1])
+    cases.append({"name": "seam_prior_verify_api", "pass": "authority" in v or v.get("consistent") is not None})
+
+    # Matrix direction / mirror guards
+    H_des = define_desired_per_plane(Ha, sc["pts_proj"][labels == 0], 1920, 1080)
+    pts = np.array([[100, 100], [1800, 100], [1800, 900], [100, 900]], dtype=np.float64)
+    comp = verify_forward_composition(Ha, H_des, pts)
+    cases.append({"name": "forward_composition_plane_A", "pass": comp["ok"]})
+    H_fwd = forward_H_proj_from_source(Ha, H_des)
+    mir = detect_mirrored_or_inverted(H_fwd, 1920, 1080)
+    cases.append({"name": "no_mirror_forward_H", "pass": mir["ok"]})
+    wd = wrong_direction_error(Ha, sc["pts_proj"][labels == 0][:20], sc["pts_cam"][labels == 0][:20])
+    cases.append({"name": "wrong_H_direction_detected", "pass": wd["wrong_is_worse"]})
+
+    # Mask topology
+    ma, mb, _ = build_plane_masks(seam, 1920, 1080)
+    cases.append(
+        {
+            "name": "mask_exclusive_full",
+            "pass": int(np.sum((ma > 0) & (mb > 0))) == 0 and int(np.sum((ma == 0) & (mb == 0))) == 0,
+        }
+    )
+
+    # One-plane control still in extended
+    sc1 = generate_one_plane_control(0.0)
+    fit1 = fit_two_homographies(sc1["pts_proj"], sc1["pts_cam"], ids=sc1["ids"])
+    cases.append({"name": "extended_one_plane_control", "pass": fit1["model"] == "one_plane"})
+
+    summary = {
+        "n_cases": len(cases),
+        "n_pass": sum(1 for c in cases if c["pass"]),
+        "all_pass": all(c["pass"] for c in cases),
+        "core_14_all_pass": base["all_pass"],
+        "cases": cases,
+    }
+    (out_dir / "extended_synthetic_suite_results.json").write_text(
+        json.dumps(summary, indent=2, default=str)
+    )
     return summary

@@ -2,9 +2,12 @@
 
 ## Status
 
-**PASS** — 14/14 cases
+**PASS** — core **14/14** cases (immutable checkpoint)  
+**PASS** — extended **25/25** cases (`run_extended_synthetic_suite`)
 
-Artifacts: `procam-test-data/runs/two_plane_synthetic_20260717/suite/`
+Artifacts: `procam-test-data/runs/two_plane_synthetic_20260717/suite/`  
+Extended cases add architecture priors, matrix-direction guards, uneven support,
+nearly-coplanar behaviour, and mask topology checks.
 
 ## Cases
 
