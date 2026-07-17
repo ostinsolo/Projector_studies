@@ -1,0 +1,167 @@
+{
+  "benchmark": "two_plane_vs_single_H_baselines",
+  "cases": [
+    {
+      "case": "one_plane_control",
+      "our_model": "one_plane",
+      "our_valid": true,
+      "single_H_median": 7.020057233227586e-06,
+      "single_H_p95": 2.4522602066164247e-05,
+      "runtime_s": 0.002679582976270467,
+      "external_full_intrinsic_applicable": false,
+      "reason": "synthetic sparse correspondences only; no Gray-code stack"
+    },
+    {
+      "case": "two_plane_a60.0_v_n0.0",
+      "our_model": "two_plane",
+      "our_valid": true,
+      "assignment_acc": 1.0,
+      "single_H_median": 0.00019215690297335648,
+      "single_H_p95": 508.2133790758977,
+      "two_H_median": 6.211696479201386e-06,
+      "two_H_p95": 1.6609591716443604e-05,
+      "runtime_s": 0.0034605000109877437,
+      "mask_exclusive": true,
+      "mask_full_coverage": true,
+      "seam_midpoint": [
+        959.2319056636685,
+        539.500004212935
+      ]
+    },
+    {
+      "case": "two_plane_a60.0_v_n0.4",
+      "our_model": "two_plane",
+      "our_valid": true,
+      "assignment_acc": 0.9259259259259259,
+      "single_H_median": 0.9001068105103243,
+      "single_H_p95": 508.0087175956938,
+      "two_H_median": 0.38703420070751504,
+      "two_H_p95": 0.9512237082387497,
+      "runtime_s": 0.0019432080152910203,
+      "mask_exclusive": true,
+      "mask_full_coverage": true,
+      "seam_midpoint": [
+        959.8491783809662,
+        539.500004196167
+      ]
+    },
+    {
+      "case": "two_plane_a60.0_h_n0.0",
+      "our_model": "two_plane",
+      "our_valid": true,
+      "assignment_acc": 1.0,
+      "single_H_median": 29.755038367546987,
+      "single_H_p95": 298.36654448830285,
+      "two_H_median": 6.534902746114819e-06,
+      "two_H_p95": 3.2808256870938394e-05,
+      "runtime_s": 0.002301333996001631,
+      "mask_exclusive": true,
+      "mask_full_coverage": true,
+      "seam_midpoint": [
+        959.3849430790654,
+        539.5000042385525
+      ]
+    },
+    {
+      "case": "two_plane_a60.0_h_n0.4",
+      "our_model": "two_plane",
+      "our_valid": true,
+      "assignment_acc": 1.0,
+      "single_H_median": 30.217814047667794,
+      "single_H_p95": 301.1374979333393,
+      "two_H_median": 0.42852014623145906,
+      "two_H_p95": 0.8429328760634593,
+      "runtime_s": 0.0022400419984478503,
+      "mask_exclusive": true,
+      "mask_full_coverage": true,
+      "seam_midpoint": [
+        959.3849430790654,
+        538.9433264718232
+      ]
+    },
+    {
+      "case": "two_plane_a90.0_v_n0.0",
+      "our_model": "two_plane",
+      "our_valid": true,
+      "assignment_acc": 1.0,
+      "single_H_median": 0.0002940282609837561,
+      "single_H_p95": 762.3200647504929,
+      "two_H_median": 5.775590472804733e-06,
+      "two_H_p95": 6.459346642539468e-05,
+      "runtime_s": 0.0018681669898796827,
+      "mask_exclusive": true,
+      "mask_full_coverage": true,
+      "seam_midpoint": [
+        959.2319056636685,
+        539.500004212935
+      ]
+    },
+    {
+      "case": "two_plane_a90.0_v_n0.4",
+      "our_model": "two_plane",
+      "our_valid": true,
+      "assignment_acc": 0.9259259259259259,
+      "single_H_median": 0.7160174255402052,
+      "single_H_p95": 762.2369189546546,
+      "two_H_median": 0.4274573054671822,
+      "two_H_p95": 0.9419132197194584,
+      "runtime_s": 0.0023010000004433095,
+      "mask_exclusive": true,
+      "mask_full_coverage": true,
+      "seam_midpoint": [
+        959.5379838953961,
+        540.315952531584
+      ]
+    },
+    {
+      "case": "two_plane_a90.0_h_n0.0",
+      "our_model": "two_plane",
+      "our_valid": true,
+      "assignment_acc": 1.0,
+      "single_H_median": 44.632555235555365,
+      "single_H_p95": 447.5498199063702,
+      "two_H_median": 5.287840710876578e-06,
+      "two_H_p95": 1.9112740123641816e-05,
+      "runtime_s": 0.0020406249968800694,
+      "mask_exclusive": true,
+      "mask_full_coverage": true,
+      "seam_midpoint": [
+        959.3849430790654,
+        539.5000042385525
+      ]
+    },
+    {
+      "case": "two_plane_a90.0_h_n0.4",
+      "our_model": "two_plane",
+      "our_valid": true,
+      "assignment_acc": 1.0,
+      "single_H_median": 45.125599878397686,
+      "single_H_p95": 450.56294594337095,
+      "two_H_median": 0.4337290875705253,
+      "two_H_p95": 0.8429328760634593,
+      "runtime_s": 0.0026050419837702066,
+      "mask_exclusive": true,
+      "mask_full_coverage": true,
+      "seam_midpoint": [
+        959.3849430790654,
+        538.9433264718232
+      ]
+    }
+  ],
+  "full_suite": {
+    "all_pass": true,
+    "n_pass": 14,
+    "n_cases": 14,
+    "runtime_s": 1.2627322079788428
+  },
+  "external_notes": {
+    "kamino410": "Gray-code + chessboard stereo; requires multi-pose planar board; not two unknown walls",
+    "cho_kim": "no public code; requires custom multi-plane target + phase shift",
+    "jin_seo_han": "no public code; semi-automated reference alignment + surface markers",
+    "benjumea": "MATLAB; screen+mirror+aux camera; not wall fold mapping",
+    "roomalive": "Kinect+Windows; depth mandatory",
+    "gs_procams": "CUDA + noncommercial; out of milestone",
+    "cspr": "experimental nonplanar neural; out of milestone"
+  },
+  "decision_hint": "CONTINUE_CURRENT_ARCHITECTURE unless Cho/Kim or Jin code becomes available"
+}

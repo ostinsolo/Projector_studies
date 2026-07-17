@@ -408,6 +408,80 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--screen-id", type=int, default=None)
     s.set_defaults(func=cmd_refine_homography)
 
+    s = sub.add_parser(
+        "auto-two-plane",
+        help=(
+            "Two connected planes: dual-H + seam + piecewise pre-warp. "
+            "Use --mode synthetic (no hardware) or --mode physical (projector + iPhone)."
+        ),
+    )
+    s.add_argument("--run-dir", required=True)
+    s.add_argument(
+        "--mode",
+        choices=("synthetic", "physical"),
+        default=None,
+        help="synthetic: software suite only (no devices). physical: full hardware pipeline.",
+    )
+    s.add_argument(
+        "--synthetic-only",
+        action="store_true",
+        default=False,
+        help="Deprecated alias for --mode synthetic (conflicts with --mode physical).",
+    )
+    s.add_argument(
+        "--allow-physical",
+        action="store_true",
+        default=False,
+        help="Deprecated alias for --mode physical (conflicts with --mode synthetic).",
+    )
+    s.add_argument(
+        "--setup-confirmed",
+        action="store_true",
+        help="Resume physical pipeline after USER_ACTION_REQUIRED hardware placement.",
+    )
+    s.add_argument(
+        "--offline",
+        action="store_true",
+        help="Physical state machine without devices (fixture / tests only).",
+    )
+    s.add_argument("--proj-w", type=int, default=1920)
+    s.add_argument("--proj-h", type=int, default=1080)
+    s.add_argument("--settle", type=float, default=0.8)
+    s.add_argument("--screen-id", type=int, default=None)
+    s.add_argument(
+        "--two-plane-state-path",
+        default=None,
+        help="Optional path for live TWO_PLANE_STATE write (default: run_dir only).",
+    )
+    s.set_defaults(func=cmd_auto_two_plane)
+
+    s = sub.add_parser(
+        "play-video",
+        help=(
+            "Play diagnostic or user video using saved piecewise calibration. "
+            "Uses projector display; does not modify calibration artifacts."
+        ),
+    )
+    s.add_argument("--calibration-run", required=True, help="Physical/offline run with video_playback/")
+    s.add_argument("--input", default=None, help="Video file path (omit with --diagnostic)")
+    s.add_argument("--diagnostic", action="store_true", help="Play generated diagnostic animation")
+    s.add_argument("--loop", action="store_true", help="Loop playback")
+    s.add_argument(
+        "--video-fit",
+        choices=("contain", "cover", "stretch"),
+        default="contain",
+        help="How source video fits the desired camera rectangle (default: contain)",
+    )
+    s.add_argument(
+        "--alignment",
+        choices=("camera", "architecture", "custom-angle"),
+        default="camera",
+        help="Straightness reference (default: camera / audience viewpoint)",
+    )
+    s.add_argument("--screen-id", type=int, default=None)
+    s.add_argument("--max-frames", type=int, default=None, help="Optional frame cap (tests)")
+    s.set_defaults(func=cmd_play_video)
+
     return p
 
 
@@ -470,6 +544,138 @@ def cmd_refine_homography(args: argparse.Namespace) -> int:
         projector.shutdown()
     print(json.dumps(result, indent=2, default=str))
     return 0 if result.get("absolute_gate_pass") else 1
+
+
+def _resolve_two_plane_mode(args: argparse.Namespace) -> str:
+    """Resolve --mode vs deprecated flags; reject conflicts before device access."""
+    mode = getattr(args, "mode", None)
+    syn = bool(getattr(args, "synthetic_only", False))
+    phys = bool(getattr(args, "allow_physical", False))
+    if syn and phys:
+        raise SystemExit(
+            "Conflicting flags: --synthetic-only and --allow-physical. "
+            "Use --mode synthetic or --mode physical."
+        )
+    if mode == "synthetic" and phys:
+        raise SystemExit("Conflicting flags: --mode synthetic with --allow-physical.")
+    if mode == "physical" and syn:
+        raise SystemExit("Conflicting flags: --mode physical with --synthetic-only.")
+    if mode is not None:
+        return mode
+    if syn:
+        return "synthetic"
+    if phys:
+        return "physical"
+    raise SystemExit(
+        "auto-two-plane requires --mode synthetic|physical "
+        "(or deprecated --synthetic-only / --allow-physical)."
+    )
+
+
+def cmd_auto_two_plane(args: argparse.Namespace) -> int:
+    """Two-plane entry: synthetic suite or physical state machine."""
+    from .auto_two_plane import AutoTwoPlane, AutoTwoPlaneConfig, run_synthetic_mode
+
+    mode = _resolve_two_plane_mode(args)
+    run_dir = Path(args.run_dir)
+    run_dir.mkdir(parents=True, exist_ok=True)
+
+    if mode == "synthetic":
+        from .synthetic_two_plane import run_extended_synthetic_suite
+        from .synthetic_oblique_video import run_oblique_video_suite
+
+        summary = run_synthetic_mode(run_dir, args.proj_w, args.proj_h)
+        ext = run_extended_synthetic_suite(run_dir / "extended_suite")
+        obl = run_oblique_video_suite(run_dir / "oblique_video_suite")
+        (run_dir / "TWO_PLANE_EXTENDED_SYNTHETIC_SUMMARY.json").write_text(
+            json.dumps(ext, indent=2, default=str)
+        )
+        (run_dir / "OBLIQUE_VIDEO_SYNTHETIC_SUMMARY.json").write_text(
+            json.dumps(obl, indent=2, default=str)
+        )
+        print(
+            json.dumps(
+                {
+                    "mode": "synthetic",
+                    "hardware": False,
+                    "core": {
+                        "all_pass": summary["all_pass"],
+                        "n_pass": summary["n_pass"],
+                        "n_cases": summary["n_cases"],
+                    },
+                    "extended": {
+                        "all_pass": ext["all_pass"],
+                        "n_pass": ext["n_pass"],
+                        "n_cases": ext["n_cases"],
+                        "core_14_all_pass": ext.get("core_14_all_pass"),
+                    },
+                    "oblique_video": {
+                        "all_pass": obl["all_pass"],
+                        "n_pass": obl["n_pass"],
+                        "n_cases": obl["n_cases"],
+                    },
+                },
+                indent=2,
+            )
+        )
+        return 0 if summary.get("all_pass") and ext.get("all_pass") and obl.get("all_pass") else 1
+
+    cfg = AutoTwoPlaneConfig(
+        run_dir=run_dir,
+        mode="physical",
+        proj_w=args.proj_w,
+        proj_h=args.proj_h,
+        settle_s=args.settle,
+        prefer_screen_id=args.screen_id,
+        setup_confirmed=bool(args.setup_confirmed),
+        offline=bool(args.offline),
+        two_plane_state_path=Path(args.two_plane_state_path) if args.two_plane_state_path else None,
+        project_state_path=None,  # never pollute root PROJECT_STATE.md
+    )
+    machine = AutoTwoPlane(cfg)
+    result = machine.run()
+    print(json.dumps({"mode": "physical", "hardware": not args.offline, **result}, indent=2, default=str))
+    st = result.get("state")
+    if st == "DONE":
+        return 0
+    if st == "USER_ACTION_REQUIRED":
+        return 3
+    return 1
+
+
+def cmd_play_video(args: argparse.Namespace) -> int:
+    from .video_playback import play_video_on_projector
+
+    calib = Path(args.calibration_run)
+    if not (calib / "video_playback" / "piecewise_remap.npz").exists():
+        # Allow rebuild note
+        print(
+            json.dumps(
+                {
+                    "error": "missing_video_playback_bundle",
+                    "need": str(calib / "video_playback" / "piecewise_remap.npz"),
+                    "hint": "Run oblique/two-plane calibration that writes video_playback/",
+                },
+                indent=2,
+            )
+        )
+        return 2
+    if not args.diagnostic and not args.input:
+        print(json.dumps({"error": "provide --input or --diagnostic"}, indent=2))
+        return 2
+    result = play_video_on_projector(
+        calib,
+        input_path=Path(args.input) if args.input else None,
+        diagnostic=bool(args.diagnostic),
+        loop=bool(args.loop),
+        screen_id=args.screen_id,
+        max_frames=args.max_frames if args.max_frames is not None else (120 if args.diagnostic else None),
+    )
+    # alignment / video-fit are recorded at calibration time; report requested flags
+    result["requested_video_fit"] = args.video_fit
+    result["requested_alignment"] = args.alignment
+    print(json.dumps(result, indent=2, default=str))
+    return 0 if result.get("ok") else 1
 
 
 def main(argv: list[str] | None = None) -> int:

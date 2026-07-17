@@ -1,0 +1,7 @@
+{
+  "status": "USER_ACTION_REQUIRED",
+  "run_dir": "procam-test-data/runs/two_plane_phys_setup_20260717_171953",
+  "user_actions_only": true,
+  "software_complete": true,
+  "next_flag": "--setup-confirmed"
+}

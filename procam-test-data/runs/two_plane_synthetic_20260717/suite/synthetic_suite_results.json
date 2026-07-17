@@ -1,0 +1,247 @@
+{
+  "n_cases": 14,
+  "n_pass": 14,
+  "all_pass": true,
+  "cases": [
+    {
+      "name": "one_plane_noise_0.0",
+      "expect_model": "one_plane",
+      "got_model": "one_plane",
+      "pass": true
+    },
+    {
+      "name": "one_plane_noise_0.5",
+      "expect_model": "one_plane",
+      "got_model": "one_plane",
+      "pass": true
+    },
+    {
+      "name": "two_plane_a30_v_n0.0",
+      "expect_model": "two_plane",
+      "got_model": "two_plane",
+      "assignment_accuracy": 1.0,
+      "single_H_fails": true,
+      "single_H_median": 0.00010256079356579456,
+      "single_H_p95": 254.10667605521618,
+      "plane_A_median": 4.247474341089084e-06,
+      "plane_B_median": 6.175512020871074e-06,
+      "seam": {
+        "n_samples": 40,
+        "median_seam_mismatch_px": 0.11468689216997895,
+        "p95_seam_mismatch_px": 0.1146962814110449,
+        "max_seam_mismatch_px": 0.11469732471219089,
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "name": "two_plane_a30_v_n0.4",
+      "expect_model": "two_plane",
+      "got_model": "two_plane",
+      "assignment_accuracy": 0.9259259259259259,
+      "single_H_fails": true,
+      "single_H_median": 0.49200309187034985,
+      "single_H_p95": 254.66683769667964,
+      "plane_A_median": 0.342825885163493,
+      "plane_B_median": 0.5228491742806786,
+      "seam": {
+        "n_samples": 40,
+        "median_seam_mismatch_px": 0.46417287588312484,
+        "p95_seam_mismatch_px": 0.6406986781910505,
+        "max_seam_mismatch_px": 0.6417126593871304,
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "name": "two_plane_a30_h_n0.0",
+      "expect_model": "two_plane",
+      "got_model": "two_plane",
+      "assignment_accuracy": 1.0,
+      "single_H_fails": true,
+      "single_H_median": 14.8775214995389,
+      "single_H_p95": 149.18326907023578,
+      "plane_A_median": 5.3745113644078134e-06,
+      "plane_B_median": 4.977978023273989e-06,
+      "seam": {
+        "n_samples": 40,
+        "median_seam_mismatch_px": 1.258093562403704e-05,
+        "p95_seam_mismatch_px": 1.5624471443074993e-05,
+        "max_seam_mismatch_px": 1.579680263832456e-05,
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "name": "two_plane_a30_h_n0.4",
+      "expect_model": "two_plane",
+      "got_model": "two_plane",
+      "assignment_accuracy": 0.9814814814814815,
+      "single_H_fails": true,
+      "single_H_median": 5.10469071791163,
+      "single_H_p95": 148.22804331587,
+      "plane_A_median": 0.4967726524516178,
+      "plane_B_median": 0.45400338262907314,
+      "seam": {
+        "n_samples": 40,
+        "median_seam_mismatch_px": 0.27519133854007816,
+        "p95_seam_mismatch_px": 0.47413737423429697,
+        "max_seam_mismatch_px": 0.5085072997304855,
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "name": "two_plane_a60_v_n0.0",
+      "expect_model": "two_plane",
+      "got_model": "two_plane",
+      "assignment_accuracy": 1.0,
+      "single_H_fails": true,
+      "single_H_median": 9.884004515825319e-05,
+      "single_H_p95": 381.59657112504976,
+      "plane_A_median": 4.247474341089084e-06,
+      "plane_B_median": 8.768914538305984e-06,
+      "seam": {
+        "n_samples": 40,
+        "median_seam_mismatch_px": 0.04499716292150983,
+        "p95_seam_mismatch_px": 0.045034294313435315,
+        "max_seam_mismatch_px": 0.04503842005796978,
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "name": "two_plane_a60_v_n0.4",
+      "expect_model": "two_plane",
+      "got_model": "two_plane",
+      "assignment_accuracy": 0.9565217391304348,
+      "single_H_fails": true,
+      "single_H_median": 0.5025521717571286,
+      "single_H_p95": 381.1820472210326,
+      "plane_A_median": 0.38137406877397106,
+      "plane_B_median": 0.4405516274540333,
+      "seam": {
+        "n_samples": 40,
+        "median_seam_mismatch_px": 0.44108193577438637,
+        "p95_seam_mismatch_px": 0.7240011876629343,
+        "max_seam_mismatch_px": 0.7551783488217539,
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "name": "two_plane_a60_h_n0.0",
+      "expect_model": "two_plane",
+      "got_model": "two_plane",
+      "assignment_accuracy": 1.0,
+      "single_H_fails": true,
+      "single_H_median": 6.844131411743163e-06,
+      "single_H_p95": 298.36473035647214,
+      "plane_A_median": 5.3745113644078134e-06,
+      "plane_B_median": 8.214426814505213e-06,
+      "seam": {
+        "n_samples": 40,
+        "median_seam_mismatch_px": 0.2079992593344382,
+        "p95_seam_mismatch_px": 0.20801300841823375,
+        "max_seam_mismatch_px": 0.20801454088752883,
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "name": "two_plane_a60_h_n0.4",
+      "expect_model": "two_plane",
+      "got_model": "two_plane",
+      "assignment_accuracy": 0.9777777777777777,
+      "single_H_fails": true,
+      "single_H_median": 0.6404952096367816,
+      "single_H_p95": 296.4317777235143,
+      "plane_A_median": 0.3808748412299786,
+      "plane_B_median": 0.44113864140519343,
+      "seam": {
+        "n_samples": 40,
+        "median_seam_mismatch_px": 0.2474506773788286,
+        "p95_seam_mismatch_px": 0.38299131803317166,
+        "max_seam_mismatch_px": 0.3963415248143116,
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "name": "two_plane_a90_v_n0.0",
+      "expect_model": "two_plane",
+      "got_model": "two_plane",
+      "assignment_accuracy": 1.0,
+      "single_H_fails": true,
+      "single_H_median": 0.006314744697619053,
+      "single_H_p95": 762.3016075761195,
+      "plane_A_median": 2.7630255100348067e-05,
+      "plane_B_median": 3.3509210360525627e-06,
+      "seam": {
+        "n_samples": 40,
+        "median_seam_mismatch_px": 0.1408665026293668,
+        "p95_seam_mismatch_px": 0.14089610823921583,
+        "max_seam_mismatch_px": 0.1408993976223215,
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "name": "two_plane_a90_v_n0.4",
+      "expect_model": "two_plane",
+      "got_model": "two_plane",
+      "assignment_accuracy": 0.96,
+      "single_H_fails": true,
+      "single_H_median": 0.7489433876061163,
+      "single_H_p95": 759.9339330195519,
+      "plane_A_median": 0.45288943986336544,
+      "plane_B_median": 0.4461808472746866,
+      "seam": {
+        "n_samples": 40,
+        "median_seam_mismatch_px": 0.4292830927078736,
+        "p95_seam_mismatch_px": 0.7631778752326077,
+        "max_seam_mismatch_px": 0.8047429970376403,
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "name": "two_plane_a90_h_n0.0",
+      "expect_model": "two_plane",
+      "got_model": "two_plane",
+      "assignment_accuracy": 1.0,
+      "single_H_fails": true,
+      "single_H_median": 44.63256263597709,
+      "single_H_p95": 447.54982491120865,
+      "plane_A_median": 7.244119867422724e-06,
+      "plane_B_median": 8.791266332772831e-06,
+      "seam": {
+        "n_samples": 40,
+        "median_seam_mismatch_px": 0.16792512811969174,
+        "p95_seam_mismatch_px": 0.16793757973013354,
+        "max_seam_mismatch_px": 0.1679389631467587,
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "name": "two_plane_a90_h_n0.4",
+      "expect_model": "two_plane",
+      "got_model": "two_plane",
+      "assignment_accuracy": 1.0,
+      "single_H_fails": true,
+      "single_H_median": 45.01406612487036,
+      "single_H_p95": 447.83874446189594,
+      "plane_A_median": 0.46154971813887213,
+      "plane_B_median": 0.4257824128407788,
+      "seam": {
+        "n_samples": 40,
+        "median_seam_mismatch_px": 0.5850286636976123,
+        "p95_seam_mismatch_px": 1.175670182990802,
+        "max_seam_mismatch_px": 1.257850215943299,
+        "pass": true
+      },
+      "pass": true
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+Searching input files ...
+ './capture_0' was found
+ './capture_1' was found
+ './capture_2' was found
+ './capture_3' was found
+ './capture_4' was found
+Calibrating ...
+  patch size : 17
+  checking './capture_0'
+  checking './capture_1'
+    Warning : corner 794 721 was skiped because decoded pixels were too few
+    Warning : corner 741 718 was skiped because decoded pixels were too few
+  checking './capture_2'
+  checking './capture_3'
+  checking './capture_4'
+Initial solution of camera's parameters
+  RMS : 0.3162580151687676
+Initial solution of projector's parameters
+  RMS : 0.2030330625584101
+Stereocalibration
+  RMS : 0.3109525300550194
+Wrote /Users/ostino/Documents/Code/Projector_studies/procam-calibration/prototypes/external_reuse/results/kamino410_sample.json

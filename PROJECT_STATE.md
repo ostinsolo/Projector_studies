@@ -2,7 +2,7 @@
 
 ## Flat-wall MVP
 
-**DONE / VALIDATED**
+**DONE / VALIDATED / ABSOLUTE PASS**
 
 ## Absolute-accuracy enhancement
 
@@ -27,6 +27,16 @@ ChArUco + planar homography + optional planar residual refinement
 | target_p95_err_px | **0.64** |
 
 See `ACCURACY_STATE.md` for full before/after and residual diagnosis.
+
+## Two-plane piecewise homography + oblique video
+
+**SOFTWARE_READY_FOR_OBLIQUE_VIDEO_VALIDATION** · architecture **CONTINUE_CURRENT_ARCHITECTURE**
+
+- Flat-wall status above is unchanged and must not be replaced by two-plane state
+- Ceiling exclusion + max straight video region + `play-video` integrated
+- State: `TWO_PLANE_STATE.md`
+- Synthetic: core 14/14 + extended 25/25 + oblique video suite; package tests 78+
+- Physical oblique validation: awaiting hardware — `docs/TWO_PLANE_PHYSICAL_RUNBOOK.md`
 
 ## Experimental
 

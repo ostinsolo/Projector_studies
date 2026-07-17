@@ -1,0 +1,9 @@
+{
+  "run_id": "two_plane_phys_setup_20260717_171953",
+  "created": "2026-07-17T17:19:53.254974",
+  "mode": "physical",
+  "proj_w": 1920,
+  "proj_h": 1080,
+  "pipeline": "two_plane_piecewise_homography",
+  "cspr": false
+}

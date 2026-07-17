@@ -1,0 +1,5 @@
+# Keep manifest; ignore full clones and local venvs (reproducible via CLONE_MANIFEST.md)
+*
+!.gitignore
+!CLONE_MANIFEST.md
+!README.md
